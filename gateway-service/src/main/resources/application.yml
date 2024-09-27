@@ -1,0 +1,43 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enable: true
+      routes:
+        - id: user-service
+          uri: http://localhost:9002
+          predicates:
+            - Path=/api/users/**
+        - id: ticket-service
+          uri: http://localhost:9003
+          predicates:
+            - Path=/api/tickets/**
+            - Path=/api/tickets/generic/**
+            - Path=/api/events/**
+            - Path=/api/categories/**
+        - id: admin-service
+          uri: http://localhost:9004
+          predicates:
+            - Path=/api/admin/**
+            - Path=/api/policy/**
+        - id: staff-service
+          uri: http://localhost:9005
+          predicates:
+            - Path=/api/staffs/**
+        - id: report-service
+          uri: http://localhost:9006
+          predicates:
+            - Path=/api/reports/**
+
+
+
+
+
+
+

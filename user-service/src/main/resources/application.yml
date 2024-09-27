@@ -1,0 +1,27 @@
+server:
+  port: 9002
+
+spring:
+  application:
+    name: user-service
+
+  datasource:
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://localhost:1433;databaseName=SWP391_TicketResellPlatform;encrypt=true;trustServerCertificate=true;
+    username: sa
+    password: 12345
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.SQLServerDialect
+    hibernate:
+      ddl-auto: update
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5MB
+      max-request-size: 10MB
