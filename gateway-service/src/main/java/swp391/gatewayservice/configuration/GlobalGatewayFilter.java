@@ -17,6 +17,8 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
     @Autowired
     private RouterValidator routerValidator;
 
+    // /api/users/get-info
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         System.out.println("Global filter.....");

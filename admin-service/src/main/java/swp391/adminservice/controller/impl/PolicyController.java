@@ -17,7 +17,7 @@ import swp391.adminservice.service.impl.PolicyService;
 public class PolicyController implements IPolicyController {
 
     private final PolicyService policyService;
-//spring.main.allow-bean-definition-overriding=true
+
     @Override
     @GetMapping("/get/selling")
     public ApiResponse<PolicyResponse> getSellingPolicy() {
