@@ -14,4 +14,6 @@ public interface IEventService {
 
     ApiResponse<List<EventResponse>> getHappeningEvents();
 
+    ApiResponse<List<EventResponse>> getByCategory(String categoryName);
+
 }

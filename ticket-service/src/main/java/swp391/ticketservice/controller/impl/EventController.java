@@ -34,5 +34,9 @@ public class EventController implements IEventController {
         return eventService.getHappeningEvents();
     }
 
-
+    @Override
+    @GetMapping("/get-happening-events/{categoryName}")
+    public ApiResponse<List<EventResponse>> getByCategory(@PathVariable String categoryName) {
+        return eventService.getByCategory(categoryName);
+    }
 }

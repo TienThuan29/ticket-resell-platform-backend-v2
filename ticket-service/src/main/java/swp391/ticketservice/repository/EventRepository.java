@@ -14,4 +14,10 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     @Query("SELECT e FROM Event e WHERE e.isDeleted = false")
     List<Event> getHappeningEvents();
 
+    @Query("SELECT DISTINCT e " +
+            "FROM Event e " +
+            "INNER JOIN GenericTicket gt ON e.id = gt.event.id " +
+            "INNER JOIN Category ct ON gt.category.id = ct.id " +
+            "WHERE ct.name LIKE ?1")
+    List<Event> getEventsByCategory(String categoryName);
 }

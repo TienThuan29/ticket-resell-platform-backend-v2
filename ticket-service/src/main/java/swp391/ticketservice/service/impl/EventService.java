@@ -15,6 +15,7 @@ import swp391.ticketservice.config.MessageConfiguration;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -43,6 +44,15 @@ public class EventService implements IEventService {
                 eventRepository.getHappeningEvents().stream()
                         .map(eventMapper::toResponse).toList()
         );
+    }
+
+    @Override
+    public ApiResponse<List<EventResponse>> getByCategory(String categoryName) {
+        return new ApiResponse<>(HttpStatus.OK,
+                "",
+                eventRepository.getEventsByCategory(categoryName).stream()
+                        .map(eventMapper::toResponse)
+                        .collect(Collectors.toList())) ;
     }
 
 
