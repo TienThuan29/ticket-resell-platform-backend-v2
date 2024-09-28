@@ -42,7 +42,7 @@ public class UserController implements IUserController {
     }
 
     @Override
-        @PutMapping("/update/seller/agree/{id}")
+    @PutMapping("/update/seller/agree/{id}")
     public ApiResponse<?> updateIsSeller(@PathVariable("id") Long id) {
         return userService.updateIsSeller(id);
     }

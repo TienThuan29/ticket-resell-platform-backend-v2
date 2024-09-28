@@ -6,6 +6,20 @@ spring:
     name: api-gateway
   cloud:
     gateway:
+      globalcors:
+        cors-configurations:
+          [/**]:
+            allowedOrigins: "http://localhost:3000"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+              - HEAD
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
       discovery:
         locator:
           enable: true
@@ -14,22 +28,42 @@ spring:
           uri: http://localhost:9002
           predicates:
             - Path=/api/users/**
+
+        - id: ticket-service
+          uri: http://localhost:9003
+          predicates:
+            - Path=/api/events/**
+
         - id: ticket-service
           uri: http://localhost:9003
           predicates:
             - Path=/api/tickets/**
+
+        - id: ticket-service
+          uri: http://localhost:9003
+          predicates:
             - Path=/api/tickets/generic/**
-            - Path=/api/events/**
+
+        - id: ticket-service
+          uri: http://localhost:9003
+          predicates:
             - Path=/api/categories/**
+
         - id: admin-service
           uri: http://localhost:9004
           predicates:
             - Path=/api/admin/**
+
+        - id: admin-service
+          uri: http://localhost:9004
+          predicates:
             - Path=/api/policy/**
+
         - id: staff-service
           uri: http://localhost:9005
           predicates:
             - Path=/api/staffs/**
+
         - id: report-service
           uri: http://localhost:9006
           predicates:
