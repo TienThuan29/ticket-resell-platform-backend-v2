@@ -52,9 +52,22 @@ public class GenericTicketService implements IGenericTicketService {
         genericTicket.setEvent(event);
         genericTicket.setSeller(seller);
 
-        return new ApiResponse<>(HttpStatus.OK,
+        return new ApiResponse<>(
+                HttpStatus.OK,
                 message.SUCCESS_OPERATION,
-                genericTicketMapper.toResponse(genericTicketRepository.save(genericTicket)));
+                genericTicketMapper.toResponse(genericTicketRepository.save(genericTicket))
+        );
+    }
+
+    @Override
+    public ApiResponse<GenericTicketResponse> updateAllFields(Long id, GenericTicketRequest genericTicketRequest) {
+        GenericTicket newGenericTicket= genericTicketMapper.toEntity(genericTicketRequest);
+        newGenericTicket.setId(id);
+        return new ApiResponse<>(
+                HttpStatus.OK,
+                message.UPDATE_GENERIC_SUCCESS,
+                genericTicketMapper.toResponse(genericTicketRepository.save(newGenericTicket))
+        );
     }
 
     @Override

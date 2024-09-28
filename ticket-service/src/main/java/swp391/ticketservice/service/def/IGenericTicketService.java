@@ -17,6 +17,8 @@ public interface IGenericTicketService {
 
     ApiResponse<GenericTicketResponse> create(GenericTicketRequest genericTicketRequest);
 
+    ApiResponse<GenericTicketResponse> updateAllFields(Long id, GenericTicketRequest genericTicketRequest);
+
     ApiResponse<?> updatePriceAndExpiredDate(Long id, Long price, Date date);
 
     ApiResponse<List<GenericTicketResponse>> getAll();

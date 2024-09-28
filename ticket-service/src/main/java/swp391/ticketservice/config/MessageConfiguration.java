@@ -18,6 +18,8 @@ public class MessageConfiguration {
     public final String INVALID_PROCESS;
     public final String INVALID_BUYER;
     public final String SUCCESS_ADD_EVENT;
+    public final String INVALID_GENERIC_TICKET_ID;
+    public final String UPDATE_GENERIC_SUCCESS;
 
     public MessageConfiguration() {
         this.INVALID_GENERICTICKET = "Vé tổng quan không hợp lệ";
@@ -31,5 +33,7 @@ public class MessageConfiguration {
         this.INVALID_PROCESS = "Quá trình không hợp lệ";
         this.INVALID_BUYER= "Người bán không hợp lệ";
         this.SUCCESS_ADD_EVENT = "Thêm sự kiện thành công";
+        this.INVALID_GENERIC_TICKET_ID = "Có sự cố khi cập nhật thông tin vé! Vui lòng tạo lại vé!";
+        this.UPDATE_GENERIC_SUCCESS = "Cập nhật vé thành công!";
     }
 }

@@ -20,4 +20,11 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
             "INNER JOIN Category ct ON gt.category.id = ct.id " +
             "WHERE ct.name LIKE ?1")
     List<Event> getEventsByCategory(String categoryName);
+
+    @Query("SELECT DISTINCT e " +
+            "FROM Event e " +
+            "WHERE e.id not in"+
+            "(select id from GenericTicket )"
+    )
+    List<Event> getOtherEvent();
 }

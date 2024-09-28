@@ -48,10 +48,10 @@ public class TicketMapper {
                 .isBought(ticket.isBought())
                 .isValid(ticket.isValid())
                 .note(ticket.getNote())
-                .process(ticket.getProcess().content)
+                .process(ticket.getProcess())
                 .boughtDate(ticket.getBoughtDate())
                 .genericTicketId(ticket.getGenericTicket().getId())
-                .verifyStaffId(ticket.getVerifyStaff()==null?null:ticket.getVerifyStaff().getId())
+                .verifyStaffId( ticket.getVerifyStaff() == null ? null : ticket.getVerifyStaff().getId() )
                 .buyerId(ticket.getBuyerId())
                 .build();
     }

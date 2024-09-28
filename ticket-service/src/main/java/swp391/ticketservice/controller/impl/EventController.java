@@ -39,4 +39,10 @@ public class EventController implements IEventController {
     public ApiResponse<List<EventResponse>> getByCategory(@PathVariable String categoryName) {
         return eventService.getByCategory(categoryName);
     }
+
+    @GetMapping("/get-happening-events/notin")
+    public ApiResponse<List<EventResponse>> getEventsNotInAnyCategory() {
+        return eventService.getEventsNotInAnyCategory();
+    }
+
 }

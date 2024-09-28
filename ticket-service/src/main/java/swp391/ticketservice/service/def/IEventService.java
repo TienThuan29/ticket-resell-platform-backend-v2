@@ -16,4 +16,6 @@ public interface IEventService {
 
     ApiResponse<List<EventResponse>> getByCategory(String categoryName);
 
+    ApiResponse<List<EventResponse>> getEventsNotInAnyCategory();
+
 }

@@ -22,12 +22,20 @@ public class GenericTicketController implements IGenericTicketController {
     @Autowired
     private IGenericTicketService genericTicketService;
 
-    @PostMapping("/create")
     @Override
+    @PostMapping("/create")
     public ApiResponse<GenericTicketResponse> createGenericTicket(
             @RequestBody @Valid GenericTicketRequest genericTicketRequest
     ) {
         return genericTicketService.create(genericTicketRequest);
+    }
+
+    @Override
+    @PutMapping("/update-all/{id}")
+    public ApiResponse<GenericTicketResponse> updateGenericTicket(
+            @PathVariable("id") Long id, @RequestBody @Valid GenericTicketRequest genericTicketRequest
+    ) {
+        return genericTicketService.updateAllFields(id, genericTicketRequest);
     }
 
     @Override

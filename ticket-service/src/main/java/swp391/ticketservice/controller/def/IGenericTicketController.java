@@ -13,6 +13,8 @@ public interface IGenericTicketController {
 
     ApiResponse<GenericTicketResponse> createGenericTicket(GenericTicketRequest genericTicketRequest);
 
+    ApiResponse<GenericTicketResponse> updateGenericTicket(Long id, GenericTicketRequest genericTicketRequest);
+
     ApiResponse<?> updatePriceAndExpiredDate(Long id, Long price, Date date);
 
     ApiResponse<List<GenericTicketResponse>> getAll();

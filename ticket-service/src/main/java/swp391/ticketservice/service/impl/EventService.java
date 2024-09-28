@@ -48,12 +48,22 @@ public class EventService implements IEventService {
 
     @Override
     public ApiResponse<List<EventResponse>> getByCategory(String categoryName) {
-        return new ApiResponse<>(HttpStatus.OK,
+        return new ApiResponse<>(
+                HttpStatus.OK,
                 "",
                 eventRepository.getEventsByCategory(categoryName).stream()
                         .map(eventMapper::toResponse)
-                        .collect(Collectors.toList())) ;
+                        .collect(Collectors.toList())
+        ) ;
     }
 
+    public ApiResponse<List<EventResponse>> getEventsNotInAnyCategory() {
+        return new ApiResponse<>(
+                HttpStatus.OK,
+                "",
+                eventRepository.getOtherEvent().stream()
+                        .map(eventMapper::toResponse).toList()
+        );
+    }
 
 }
