@@ -1,6 +1,5 @@
 package swp391.userservice.dto.reponse;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 

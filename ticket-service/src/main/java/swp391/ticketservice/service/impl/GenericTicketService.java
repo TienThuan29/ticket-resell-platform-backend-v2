@@ -9,6 +9,7 @@ import swp391.ticketservice.config.MessageConfiguration;
 import swp391.ticketservice.dto.request.GenericTicketRequest;
 import swp391.ticketservice.dto.response.ApiResponse;
 import swp391.ticketservice.dto.response.GenericTicketResponse;
+import swp391.ticketservice.dto.response.TicketResponse;
 import swp391.ticketservice.exception.def.NotFoundException;
 import swp391.ticketservice.mapper.GenericTicketMapper;
 import swp391.ticketservice.repository.*;
@@ -25,11 +26,17 @@ import java.util.stream.Collectors;
 public class GenericTicketService implements IGenericTicketService {
 
     private final GenericTicketMapper genericTicketMapper;
+
     private final MessageConfiguration message;
+
     private final GenericTicketRepository genericTicketRepository;
+
     private final PolicyRepository policyRepository;
+
     private final UserRepository userRepository;
+
     private final EventRepository eventRepository;
+
     private final CategoryRepository categoryRepository;
 
     @Override
@@ -117,4 +124,24 @@ public class GenericTicketService implements IGenericTicketService {
                 .collect(Collectors.toList());
         return new ApiResponse<>(HttpStatus.OK, message.SUCCESS_OPERATION, genericTicketResponses);
     }
+
+    @Override
+    public ApiResponse<Integer> getTotalTicketsInGenericTicket(Long genericTicketId) {
+        return new ApiResponse<>(
+                HttpStatus.OK, "",
+                genericTicketRepository.getTotalTicketsInGenericTicket(genericTicketId)
+        );
+    }
+
+    @Override
+    public ApiResponse<List<GenericTicketResponse>> getAllGenericTicketBySeller(Long sellerId) {
+        User seller = userRepository.findById(sellerId).get();
+        List<GenericTicketResponse> genericTicketResponses = genericTicketRepository.findBySeller(seller)
+                .stream().map(genericTicketMapper::toResponse).toList();
+        return new ApiResponse<>(
+                HttpStatus.OK, "",
+                genericTicketResponses
+        );
+    }
+
 }

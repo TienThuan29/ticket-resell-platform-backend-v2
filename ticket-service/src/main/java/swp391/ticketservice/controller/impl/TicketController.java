@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import swp391.entity.Ticket;
 import swp391.entity.fixed.GeneralProcess;
 import swp391.ticketservice.controller.def.ITicketController;
 import swp391.ticketservice.dto.request.TicketRequest;
@@ -67,6 +68,11 @@ public class TicketController implements ITicketController {
     @Override
     public ApiResponse<List<TicketResponse>> getTicketByProcess(@PathVariable GeneralProcess process) {
         return ticketService.getTicketsByProcess(process);
+    }
+
+    @GetMapping("/get-tickets-of-seller/{sellerId}")
+    public ApiResponse<List<TicketResponse>> getGenericTickeWithTicketsOfSeller(@PathVariable("sellerId") Long sellerId) {
+        return ticketService.getGenericTickeWithTicketsOfSeller(sellerId);
     }
 
 }

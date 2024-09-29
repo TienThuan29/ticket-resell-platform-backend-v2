@@ -54,15 +54,4 @@ public class UserMapper {
                 .build();
     }
 
-    public SellerResponse toSellerResponse(User user){
-        return SellerResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .lastname(user.getLastname())
-                .firstname(user.getFirstname())
-                .avatar(user.getAvatar())
-                .email(user.getEmail())
-                .build();
-    }
-
 }

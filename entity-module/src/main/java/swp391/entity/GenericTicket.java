@@ -44,7 +44,7 @@ public class GenericTicket {
     @Column(name = "is_paper")
     private boolean isPaper;
 
-    @OneToMany(mappedBy = "genericTicket")
+    @OneToMany(mappedBy = "genericTicket", fetch = FetchType.EAGER)
     private Collection<Ticket> tickets;
 
     @ManyToOne

@@ -68,8 +68,18 @@ public class GenericTicketController implements IGenericTicketController {
 
     @GetMapping("/get-by-event/{eventId}")
     @Override
-    public ApiResponse<List<GenericTicketResponse>> getByEvent(@PathVariable Integer eventId) {
+    public ApiResponse<List<GenericTicketResponse>> getByEvent(@PathVariable("eventId") Integer eventId) {
         return genericTicketService.getByEvent(eventId);
     }
 
+    @Override
+    @GetMapping("/get-total-ticket/{genericTicketId}")
+    public ApiResponse<Integer> getTotalTicketsInGenericTicket(@PathVariable("genericTicketId") Long genericTicketId) {
+        return genericTicketService.getTotalTicketsInGenericTicket(genericTicketId);
+    }
+
+    @GetMapping("/get-all-by-seller/{sellerId}")
+    public ApiResponse<List<GenericTicketResponse>> getAllGenericTicketBySeller(@PathVariable("sellerId") Long sellerId) {
+        return genericTicketService.getAllGenericTicketBySeller(sellerId);
+    }
 }

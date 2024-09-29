@@ -19,7 +19,9 @@ public class UserMapper {
                 .username(user.getUsername())
                 .lastname(user.getLastname())
                 .firstname(user.getFirstname())
-                .avatar(user.getAvatar())
+                .avatar(
+                        user.getAvatar() == null ? null :  ImageUtil.decompressImage(user.getAvatar())
+                )
                 .email(user.getEmail())
                 .build();
     }

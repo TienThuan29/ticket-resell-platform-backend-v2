@@ -3,16 +3,18 @@ package swp391.ticketservice.dto.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
+import swp391.entity.GenericTicket;
 import swp391.entity.fixed.GeneralProcess;
 import java.util.Date;
+import java.util.List;
+
 /**
  * Author: Nguyen Nhat Truong
  */
 @Data
 @Builder
 public class TicketResponse {
-    @JsonProperty("ticketSerial")
-    private String ticketSerial;
+    @JsonProperty("ticketSerial") private String ticketSerial;
 
     @JsonProperty("image") private String image;
 
@@ -33,4 +35,6 @@ public class TicketResponse {
     @JsonProperty("buyerId") private Long buyerId;
 
     @JsonProperty("verifyStaffId") private Long verifyStaffId;
+
+    @JsonProperty("genericTicketObject") private GenericTicketResponse genericTicketObject;
 }

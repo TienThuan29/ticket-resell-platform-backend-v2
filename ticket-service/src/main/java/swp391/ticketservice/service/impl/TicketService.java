@@ -4,21 +4,28 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import swp391.entity.GenericTicket;
 import swp391.entity.Ticket;
+import swp391.entity.User;
 import swp391.entity.fixed.GeneralProcess;
 import swp391.ticketservice.config.MessageConfiguration;
 import swp391.ticketservice.dto.request.TicketRequest;
 import swp391.ticketservice.dto.response.ApiResponse;
+import swp391.ticketservice.dto.response.GenericTicketResponse;
 import swp391.ticketservice.dto.response.TicketResponse;
 import swp391.ticketservice.exception.def.InvalidProcessException;
 import swp391.ticketservice.exception.def.NotFoundException;
+import swp391.ticketservice.mapper.GenericTicketMapper;
 import swp391.ticketservice.mapper.TicketMapper;
+import swp391.ticketservice.repository.GenericTicketRepository;
 import swp391.ticketservice.repository.StaffRepository;
 import swp391.ticketservice.repository.TicketRepository;
+import swp391.ticketservice.repository.UserRepository;
 import swp391.ticketservice.service.def.ITicketService;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -32,9 +39,19 @@ import java.util.stream.Collectors;
 public class TicketService implements ITicketService {
 
     private final TicketRepository ticketRepository;
+
     private final TicketMapper ticketMapper;
+
     private final StaffRepository staffRepository;
+
     private final MessageConfiguration message;
+
+    private final UserRepository userRepository;
+
+    private final GenericTicketRepository genericTicketRepository;
+
+    private final GenericTicketMapper genericTicketMapper;
+
     @Override
     public ApiResponse<List<TicketResponse>> getAll() {
         List<Ticket> tickets= ticketRepository.findAll();
@@ -114,6 +131,28 @@ public class TicketService implements ITicketService {
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public ApiResponse<List<TicketResponse>> getGenericTickeWithTicketsOfSeller(Long sellerId) {
+
+        User seller = userRepository.findById(sellerId).get();
+
+        List<GenericTicket> genericTickets = genericTicketRepository.findBySeller(seller);
+
+        List<Ticket> ticketList = new ArrayList<>();
+
+        for (GenericTicket genTicket : genericTickets){
+            ticketList.addAll(ticketRepository.findByGenericTicket(genTicket));
+        }
+
+        List<TicketResponse> ticketResponses = ticketList.stream().map(ticketMapper::toResponse).toList();
+        for (TicketResponse ticketResponse : ticketResponses) {
+            GenericTicket genericTicket = genericTicketRepository.findById(ticketResponse.getGenericTicketId()).get();
+            ticketResponse.setGenericTicketObject(genericTicketMapper.toResponse(genericTicket));
+        }
+
+        return new ApiResponse<>(HttpStatus.OK, "", ticketResponses);
     }
 
 }

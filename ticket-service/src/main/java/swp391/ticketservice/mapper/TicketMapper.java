@@ -55,4 +55,7 @@ public class TicketMapper {
                 .buyerId(ticket.getBuyerId())
                 .build();
     }
+
+
+
 }

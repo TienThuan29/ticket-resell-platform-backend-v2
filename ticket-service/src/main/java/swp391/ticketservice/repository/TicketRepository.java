@@ -1,7 +1,9 @@
 package swp391.ticketservice.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import swp391.entity.GenericTicket;
 import swp391.entity.Ticket;
 import swp391.entity.fixed.GeneralProcess;
 
@@ -12,4 +14,14 @@ import java.util.Optional;
 public interface TicketRepository extends JpaRepository<Ticket, String> {
 
     Optional<List<Ticket>> findByProcess(GeneralProcess process);
+
+    List<Ticket> findByGenericTicket(GenericTicket genericTicket);
+
+//    @Query(
+//            "SELECT t FROM Ticket t " +
+//            "INNER JOIN GenericTicket gt ON t.genericTicket.id = gt.id " +
+//            "INNER JOIN User u ON u.id = gt.seller.id " +
+//            "WHERE u.id =: userId"
+//    )
+//    List<Ticket> findByUserId(Long userId);
 }

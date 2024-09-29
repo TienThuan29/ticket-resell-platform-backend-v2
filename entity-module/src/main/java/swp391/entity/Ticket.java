@@ -44,7 +44,7 @@ public class Ticket {
     @Column(name = "bought_date")
     private Date boughtDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "generic_ticket_id")
     private GenericTicket genericTicket;
 

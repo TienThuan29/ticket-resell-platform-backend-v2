@@ -28,4 +28,9 @@ public interface IGenericTicketService {
     ApiResponse<List<GenericTicketResponse>> getByCategory(Integer categoryId);
 
     ApiResponse<List<GenericTicketResponse>> getByEvent(Integer eventId);
+
+    ApiResponse<Integer> getTotalTicketsInGenericTicket(Long genericTicketId);
+
+    ApiResponse<List<GenericTicketResponse>> getAllGenericTicketBySeller(Long sellerId);
+
 }

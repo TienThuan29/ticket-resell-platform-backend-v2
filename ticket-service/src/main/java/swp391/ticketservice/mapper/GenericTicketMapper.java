@@ -31,6 +31,8 @@ public class GenericTicketMapper {
     private final EventMapper eventMapper;
 
     private final UserMapper userMapper;
+
+
     public GenericTicket toEntity(GenericTicketRequest genericTicketRequest){
         return GenericTicket
                 .builder()
@@ -70,4 +72,5 @@ public class GenericTicketMapper {
                 .seller(userMapper.toSellerResponse(genericTicket.getSeller()))
                 .build();
     }
+
 }
