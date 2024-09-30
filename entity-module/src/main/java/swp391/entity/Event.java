@@ -38,7 +38,7 @@ public class Event {
     @Column(name = "is_deleted", columnDefinition = "bit default 0")
     private boolean isDeleted;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "hashtag_event",
             joinColumns = {@JoinColumn(name = "event_id")},

@@ -24,7 +24,8 @@ public class GatewayConfiguration {
                                 "/api/tickets/**",
                                 "/api/tickets/generic/**",
                                 "/api/events/**",
-                                "/api/categories/**"
+                                "/api/categories/**",
+                                "/api/hashtags/**"
                         )
                        .uri("http://localhost:9003")
                 )

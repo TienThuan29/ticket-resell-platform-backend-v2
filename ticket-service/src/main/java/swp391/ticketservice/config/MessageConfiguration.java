@@ -20,6 +20,11 @@ public class MessageConfiguration {
     public final String SUCCESS_ADD_EVENT;
     public final String INVALID_GENERIC_TICKET_ID;
     public final String UPDATE_GENERIC_SUCCESS;
+    public final String SUCCESS_ADD_HASHTAG;
+    public final String FAIL_TO_DELETE_HASHTAG;
+    public final String SUCCESS_DELETE_HASHTAG;
+    public final String INVALID_HASHTAG_ID;
+    public final String SUCCESS_UPDATE_HASHTAG;
 
     public MessageConfiguration() {
         this.INVALID_GENERICTICKET = "Vé tổng quan không hợp lệ";
@@ -35,5 +40,10 @@ public class MessageConfiguration {
         this.SUCCESS_ADD_EVENT = "Thêm sự kiện thành công";
         this.INVALID_GENERIC_TICKET_ID = "Có sự cố khi cập nhật thông tin vé! Vui lòng tạo lại vé!";
         this.UPDATE_GENERIC_SUCCESS = "Cập nhật vé thành công!";
+        this.SUCCESS_ADD_HASHTAG = "Thêm #hashtag thành công!";
+        this.FAIL_TO_DELETE_HASHTAG = "Xóa #hashtag không thành công! Vui lòng thử lại!";
+        this.SUCCESS_DELETE_HASHTAG = "Xóa #hashtag thành công!";
+        this.INVALID_HASHTAG_ID = "HashtagId không hợp lệ!";
+        this.SUCCESS_UPDATE_HASHTAG = "Cập nhật #hashtag thành công!";
     }
 }
