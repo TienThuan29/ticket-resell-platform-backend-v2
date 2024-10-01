@@ -47,7 +47,7 @@ public class UserController implements IUserController {
         return userService.updateIsSeller(id);
     }
 
-    @GetMapping("/register/verify-email")
+    @PutMapping("/register/verify-email")
     @Override
     public ApiResponse<?> registerVerificcationEmail(@RequestParam String verificationCode) {
         return userService.verifyEmail(verificationCode);

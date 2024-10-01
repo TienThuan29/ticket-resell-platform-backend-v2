@@ -20,9 +20,6 @@ public class VerificationUser {
     @Column(name = "start_time")
     private Long startTime;
 
-    @Column(name = "expiration_time")
-    private Long expirationTime;
-
     @Column(name = "verifiaction_code", length = 10)
     private String verificationCode;
 

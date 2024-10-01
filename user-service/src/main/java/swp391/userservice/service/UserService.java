@@ -138,21 +138,21 @@ public class UserService implements IUserService {
         var userOpt = userRepository.findById(verifyUser.getUserId());
 
         if (userOpt.isEmpty()) {
-            return new ApiResponse<>(HttpStatus.OK, messageConfig.ERROR_NOT_FOUND_USERID);
+            return new ApiResponse<>(HttpStatus.OK, messageConfig.ERROR_NOT_FOUND_USERID, Boolean.FALSE);
         }
 
         var user = userOpt.get();
         long period = System.currentTimeMillis() - verifyUser.getStartTime();
 
-        if (period < 300000) {
+        if (period < 300000) { // Thành công
             user.setIsEnable(Boolean.TRUE);
             userRepository.save(user);
             verificationRepository.delete(verifyUser);
-            return new ApiResponse<>(HttpStatus.OK, messageConfig.ERROR_REGISTER_SUCCESS);
+            return new ApiResponse<>(HttpStatus.OK, messageConfig.ERROR_REGISTER_SUCCESS, Boolean.TRUE);
         } else { // Nếu OTP hết hạn
             verificationRepository.delete(verifyUser);
             userRepository.delete(user);
-            return new ApiResponse<>(HttpStatus.OK, messageConfig.ERROR_OTP_ISEXPIRED);
+            return new ApiResponse<>(HttpStatus.OK, messageConfig.ERROR_OTP_ISEXPIRED, Boolean.FALSE);
         }
     }
 
@@ -174,8 +174,8 @@ public class UserService implements IUserService {
         );
     }
 
-    @Scheduled(fixedDelay = 6000000)//
-    private void resetVerifyCode() {
+    @Scheduled(fixedDelay = 300000)// 5 phút reset một lần
+    public void resetVerifyCode() {
         long currentTime = System.currentTimeMillis();
         long otpValidityPeriod = 300000; // 300000 milliseconds = 5 minute
 
