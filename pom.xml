@@ -18,5 +18,6 @@
     <module>gateway-service</module>
     <module>cloud-config-service</module>
     <module>email-service</module>
+    <module>payments-service</module>
   </modules>
 </project>

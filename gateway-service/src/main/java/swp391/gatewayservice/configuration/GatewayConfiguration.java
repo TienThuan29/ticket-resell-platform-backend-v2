@@ -51,6 +51,20 @@ public class GatewayConfiguration {
                         )
                         .uri("http://localhost:9006")
                 )
+                .route(
+                        "email-service",
+                        r -> r.path(
+                                        "/api/email/**"
+                                )
+                                .uri("http://localhost:9007")
+                )
+                .route(
+                        "payments-service",
+                        r -> r.path(
+                                        "/api/payments/**"
+                                )
+                                .uri("http://localhost:9008")
+                )
                 .build();
     }
 

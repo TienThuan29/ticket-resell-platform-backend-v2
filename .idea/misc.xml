@@ -18,6 +18,7 @@
         <option value="$PROJECT_DIR$/report-module/pom.xml" />
         <option value="$PROJECT_DIR$/email-service/pom.xml" />
         <option value="$PROJECT_DIR$/payment-service/pom.xml" />
+        <option value="$PROJECT_DIR$/payments-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
