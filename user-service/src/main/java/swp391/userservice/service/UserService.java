@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import swp391.entity.User;
-import swp391.entity.fixed.Role;
+import swp391.entity.VerificationUser;
+import swp391.entity.fixed.VerificationType;
 import swp391.userservice.configuration.MessageConfiguration;
 import swp391.userservice.dto.reponse.ApiResponse;
 import swp391.userservice.dto.reponse.UserDTO;
@@ -17,10 +19,13 @@ import swp391.userservice.dto.request.UpdateInfoRequest;
 import swp391.userservice.exception.def.NotFoundException;
 import swp391.userservice.mapper.UserMapper;
 import swp391.userservice.repository.UserRepository;
+import swp391.userservice.repository.VerificationUserRepository;
 import swp391.userservice.utils.ImageUtil;
+import swp391.userservice.utils.RandomUtil;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Author: Nguyen Tien Thuan
@@ -32,9 +37,15 @@ public class UserService implements IUserService {
 
     private final UserRepository userRepository;
 
+    private final VerificationUserRepository verificationRepository;
+
     private final MessageConfiguration messageConfig;
 
     private final UserMapper userMapper;
+
+    private final EmailServiceFeign emailService;
+
+    private final RandomUtil randomUtil;
 
     @Override
     public ApiResponse<UserDTO> getById(Long id) {
@@ -93,8 +104,48 @@ public class UserService implements IUserService {
         var user = userRepository.findByUsername(registerRequest.getUsername());
         if (user.isPresent())
             return new ApiResponse<>(HttpStatus.CONFLICT, messageConfig.ERROR_USERNAME_EXIST, null);
-        userRepository.save(userMapper.registerRequestToEntity(registerRequest));
+        User newUser= userRepository.save(userMapper.registerRequestToEntity(registerRequest));
+
+        VerificationUser verificationUser= VerificationUser.builder()
+                .userId(newUser.getId())
+                .startTime(System.currentTimeMillis())
+                .verificationCode(randomUtil.generateRandomCode(6))
+                .verificationType(VerificationType.VERIFY_EMAIL).build();
+        verificationRepository.save(verificationUser);
+        emailService.sendOtpEmail(verificationUser, newUser.getEmail());
+
         return new ApiResponse<>(HttpStatus.CREATED, messageConfig.ERROR_REGISTER_SUCCESS, null);
+    }
+
+    @Override
+    public ApiResponse<?> verifyEmail(String verificationOTP) {
+        // 300000 milliseconds = 5 minute
+        var verifyUserOpt = verificationRepository.findByVerificationCode(verificationOTP);
+
+        if (verifyUserOpt.isEmpty()) {
+            return new ApiResponse<>(HttpStatus.OK, messageConfig.ERROR_OTP_INVALID);
+        }
+
+        var verifyUser = verifyUserOpt.get();
+        var userOpt = userRepository.findById(verifyUser.getUserId());
+
+        if (userOpt.isEmpty()) {
+            return new ApiResponse<>(HttpStatus.OK, messageConfig.ERROR_NOT_FOUND_USERID);
+        }
+
+        var user = userOpt.get();
+        long period = System.currentTimeMillis() - verifyUser.getStartTime();
+
+        if (period < 300000) {
+            user.setIsEnable(Boolean.TRUE);
+            userRepository.save(user);
+            verificationRepository.delete(verifyUser);
+            return new ApiResponse<>(HttpStatus.OK, messageConfig.ERROR_REGISTER_SUCCESS);
+        } else { // Nếu OTP hết hạn
+            verificationRepository.delete(verifyUser);
+            userRepository.delete(user);
+            return new ApiResponse<>(HttpStatus.OK, messageConfig.ERROR_OTP_ISEXPIRED);
+        }
     }
 
     @Override
@@ -115,5 +166,28 @@ public class UserService implements IUserService {
         );
     }
 
+    @Scheduled(fixedDelay = 6000000)//
+    private void resetVerifyCode() {
+        long currentTime = System.currentTimeMillis();
+        long otpValidityPeriod = 300000; // 300000 milliseconds = 5 minute
 
+        var expiredOtps = verificationRepository.findAll()
+                .stream()
+                .filter(verificationUser -> verificationUser.getVerificationType() == VerificationType.VERIFY_EMAIL)
+                .filter(verificationUser -> currentTime > verificationUser.getStartTime() + otpValidityPeriod)
+                .collect(Collectors.toList());
+
+        for (VerificationUser expiredOtp : expiredOtps) {
+            var userOpt = userRepository.findById(expiredOtp.getUserId());
+
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+
+                if (!user.getIsEnable()) {
+                    userRepository.delete(user);
+                }
+            }
+            verificationRepository.delete(expiredOtp);
+        }
+    }
 }

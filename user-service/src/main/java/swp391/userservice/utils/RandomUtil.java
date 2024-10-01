@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import swp391.userservice.repository.UserRepository;
+import swp391.userservice.repository.VerificationUserRepository;
 
+import java.util.Random;
 import java.util.UUID;
 
 @Component("userServiceRandomUtil")
@@ -12,6 +14,9 @@ public class RandomUtil {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private VerificationUserRepository verificationUserRepository;
 
     public String randomCustomerCode() {
         String customerCode;
@@ -25,4 +30,18 @@ public class RandomUtil {
         return userRepository.findByCustomerCode(customerCode).isPresent();
     }
 
+    public String generateRandomCode(int length) {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(length);
+
+        do{
+            for (int i = 0; i < length; i++) {
+                int randomIndex = random.nextInt(characters.length());
+                sb.append(characters.charAt(randomIndex));
+            }
+        }while (verificationUserRepository.findByVerificationCode(sb.toString()).isPresent());
+
+        return sb.toString();
+    }
 }

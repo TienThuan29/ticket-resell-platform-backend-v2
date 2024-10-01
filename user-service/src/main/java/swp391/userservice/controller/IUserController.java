@@ -24,4 +24,6 @@ public interface IUserController {
 
     ApiResponse<?> updateIsSeller(Long id);
 
+    ApiResponse<?> registerVerificcationEmail(String verificationCode);
+
 }
