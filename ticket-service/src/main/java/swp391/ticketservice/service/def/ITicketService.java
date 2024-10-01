@@ -30,5 +30,5 @@ public interface ITicketService {
 
     ApiResponse<List<TicketResponse>> getTicketsByProcess(GeneralProcess process);
 
-    ApiResponse<List<TicketResponse>> getGenericTickeWithTicketsOfSeller(Long sellerId);
+    ApiResponse<List<TicketResponse>> getGenericTicketWithTicketsOfSeller(Long sellerId);
 }

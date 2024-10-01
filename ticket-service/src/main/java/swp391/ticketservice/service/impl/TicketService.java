@@ -134,7 +134,7 @@ public class TicketService implements ITicketService {
     }
 
     @Override
-    public ApiResponse<List<TicketResponse>> getGenericTickeWithTicketsOfSeller(Long sellerId) {
+    public ApiResponse<List<TicketResponse>> getGenericTicketWithTicketsOfSeller(Long sellerId) {
 
         User seller = userRepository.findById(sellerId).get();
 

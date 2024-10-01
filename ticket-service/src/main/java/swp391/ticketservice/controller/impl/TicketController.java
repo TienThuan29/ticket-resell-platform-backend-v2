@@ -71,8 +71,8 @@ public class TicketController implements ITicketController {
     }
 
     @GetMapping("/get-tickets-of-seller/{sellerId}")
-    public ApiResponse<List<TicketResponse>> getGenericTickeWithTicketsOfSeller(@PathVariable("sellerId") Long sellerId) {
-        return ticketService.getGenericTickeWithTicketsOfSeller(sellerId);
+    public ApiResponse<List<TicketResponse>> getGenericTicketWithTicketsOfSeller(@PathVariable("sellerId") Long sellerId) {
+        return ticketService.getGenericTicketWithTicketsOfSeller(sellerId);
     }
 
 }

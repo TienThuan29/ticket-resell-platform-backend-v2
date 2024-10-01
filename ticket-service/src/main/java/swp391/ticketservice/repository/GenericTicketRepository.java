@@ -14,7 +14,17 @@ import java.util.List;
 public interface GenericTicketRepository extends JpaRepository<GenericTicket, Long> {
     List<GenericTicket> findByCategory(Category category);
 
-    List<GenericTicket> findByEvent(Event event);
+    @Query(
+            "SELECT gt FROM GenericTicket gt " +
+            "WHERE gt.id IN " +
+            "( " +
+                    "SELECT t.genericTicket.id FROM Ticket t " +
+                    "WHERE t.isValid = true AND t.isChecked = true AND t.isBought = false " +
+                    "GROUP BY t.genericTicket.id HAVING COUNT(t.ticketSerial) > 0" +
+            ") " +
+            "AND gt.event.id =:eventId"
+    )
+    List<GenericTicket> findAllValidGenericTicket(Integer eventId);
 
     List<GenericTicket> findBySeller(User seller);
 

@@ -118,7 +118,7 @@ public class GenericTicketService implements IGenericTicketService {
     public ApiResponse<List<GenericTicketResponse>> getByEvent(Integer eventId) {
         Event event= eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException(message.INVALID_EVENT+" :"+eventId));
-        List<GenericTicket> genericTickets= genericTicketRepository.findByEvent(event);
+        List<GenericTicket> genericTickets= genericTicketRepository.findAllValidGenericTicket(event.getId());
         List<GenericTicketResponse> genericTicketResponses= genericTickets.stream()
                 .map(genericTicketMapper::toResponse)
                 .collect(Collectors.toList());
