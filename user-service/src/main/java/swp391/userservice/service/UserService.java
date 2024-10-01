@@ -84,7 +84,7 @@ public class UserService implements IUserService {
 
     @Override
     public ApiResponse<UserDTO> authenticate(AuthenticationRequest authRequest) {
-        var user = userRepository.findByUsername(authRequest.getUsername());
+        var user = userRepository.findEnableAccount(authRequest.getUsername());
 
         ApiResponse<UserDTO> apiResponse = new ApiResponse<>(
                 HttpStatus.FORBIDDEN,
@@ -102,7 +102,8 @@ public class UserService implements IUserService {
     @Override
     public ApiResponse<?> register(RegisterRequest registerRequest) {
         var user = userRepository.findByUsername(registerRequest.getUsername());
-        if (user.isPresent())
+
+        if (user.isPresent() || this.isExistEmail(registerRequest.getEmail()))
             return new ApiResponse<>(HttpStatus.CONFLICT, messageConfig.ERROR_USERNAME_EXIST, null);
         User newUser= userRepository.save(userMapper.registerRequestToEntity(registerRequest));
 
@@ -116,6 +117,13 @@ public class UserService implements IUserService {
 
         return new ApiResponse<>(HttpStatus.CREATED, messageConfig.ERROR_REGISTER_SUCCESS, null);
     }
+
+
+    private boolean isExistEmail(String email) {
+        var user = userRepository.findByEmail(email);
+        return user.isPresent();
+    }
+
 
     @Override
     public ApiResponse<?> verifyEmail(String verificationOTP) {
@@ -175,7 +183,7 @@ public class UserService implements IUserService {
                 .stream()
                 .filter(verificationUser -> verificationUser.getVerificationType() == VerificationType.VERIFY_EMAIL)
                 .filter(verificationUser -> currentTime > verificationUser.getStartTime() + otpValidityPeriod)
-                .collect(Collectors.toList());
+                .toList();
 
         for (VerificationUser expiredOtp : expiredOtps) {
             var userOpt = userRepository.findById(expiredOtp.getUserId());
