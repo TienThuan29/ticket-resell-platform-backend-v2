@@ -16,11 +16,14 @@
         <option value="$PROJECT_DIR$/cloud-config-service/pom.xml" />
         <option value="$PROJECT_DIR$/gateway-service/pom.xml" />
         <option value="$PROJECT_DIR$/report-module/pom.xml" />
+        <option value="$PROJECT_DIR$/email-service/pom.xml" />
+        <option value="$PROJECT_DIR$/payment-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/api-gate-way/pom.xml" />
+        <option value="$PROJECT_DIR$/payment-service/pom.xml" />
       </set>
     </option>
   </component>

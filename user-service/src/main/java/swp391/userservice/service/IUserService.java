@@ -23,6 +23,8 @@ public interface IUserService {
 
     ApiResponse<?> register(RegisterRequest registerRequest);
 
+    ApiResponse<?> verifyEmail(String verificationOTP);
+
     ApiResponse<UserDTO> update(Long id, UpdateInfoRequest updateInfoRequest);
 
 }

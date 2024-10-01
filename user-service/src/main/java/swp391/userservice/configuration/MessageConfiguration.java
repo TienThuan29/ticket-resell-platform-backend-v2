@@ -17,7 +17,8 @@ public class MessageConfiguration {
     public final String ERROR_INVALID_USERNAME_PASSWORD = "Tên đăng nhập hoặc mật khẩu không đúng";
     public final String ERROR_UPDATE_AVATAR_FAIL = "Không thể cập nhật ảnh";
     public final String ERROR_UPDATE_ISSELLER_FAIL = "Có gì đó không ổn! Vui lòng thử lại!";
-
+    public final String ERROR_OTP_INVALID = "Mã OTP không hợp lệ";
+    public final String ERROR_OTP_ISEXPIRED = "Mã OTP hết thời gian hiệu lực";
     // Success message
     public final String MESSAGE_UPDATE_USER_SUCCESS = "Cập nhật thông tin thành công";
     public final String MESSAGE_UPDATE_AVATAR_SUCCESS = " Cập nhật ảnh đại diện thành công";
