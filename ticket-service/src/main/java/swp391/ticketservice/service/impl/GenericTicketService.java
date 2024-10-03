@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import swp391.entity.*;
 import swp391.ticketservice.config.MessageConfiguration;
+import swp391.ticketservice.dto.request.GenericTicketFilter;
 import swp391.ticketservice.dto.request.GenericTicketRequest;
 import swp391.ticketservice.dto.response.ApiResponse;
 import swp391.ticketservice.dto.response.GenericTicketResponse;
@@ -60,7 +61,7 @@ public class GenericTicketService implements IGenericTicketService {
         genericTicket.setSeller(seller);
 
         return new ApiResponse<>(
-                HttpStatus.OK,
+                HttpStatus.CREATED,
                 message.SUCCESS_OPERATION,
                 genericTicketMapper.toResponse(genericTicketRepository.save(genericTicket))
         );
@@ -84,7 +85,7 @@ public class GenericTicketService implements IGenericTicketService {
         genericTicket.setPrice(price);
         genericTicket.setExpiredDateTime(date);
         genericTicketRepository.save(genericTicket);
-        return new ApiResponse<>(HttpStatus.OK,message.SUCCESS_OPERATION);
+        return new ApiResponse<>(HttpStatus.NO_CONTENT,message.SUCCESS_OPERATION);
     }
 
     @Override
@@ -142,6 +143,22 @@ public class GenericTicketService implements IGenericTicketService {
                 HttpStatus.OK, "",
                 genericTicketResponses
         );
+    }
+
+    @Override
+    public ApiResponse<List<GenericTicketResponse>> getByFilter(GenericTicketFilter genericTicketFilter) {
+        var genericTickets= genericTicketRepository.findByFilters(
+                genericTicketFilter.getMinPrice(),
+                genericTicketFilter.getMaxPrice(),
+                genericTicketFilter.getTicketName(),
+                genericTicketFilter.getArea(),
+                genericTicketFilter.isPaper()
+        );
+
+        var genericTicketResponses= genericTickets.stream()
+                .map(genericTicketMapper::toResponse)
+                .collect(Collectors.toList());
+        return new ApiResponse<>(HttpStatus.OK, "", genericTicketResponses);
     }
 
 }

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import swp391.ticketservice.controller.def.IGenericTicketController;
+import swp391.ticketservice.dto.request.GenericTicketFilter;
 import swp391.ticketservice.dto.request.GenericTicketRequest;
 import swp391.ticketservice.dto.response.GenericTicketResponse;
 import swp391.ticketservice.dto.response.ApiResponse;
@@ -81,5 +82,11 @@ public class GenericTicketController implements IGenericTicketController {
     @GetMapping("/get-all-by-seller/{sellerId}")
     public ApiResponse<List<GenericTicketResponse>> getAllGenericTicketBySeller(@PathVariable("sellerId") Long sellerId) {
         return genericTicketService.getAllGenericTicketBySeller(sellerId);
+    }
+
+    @GetMapping("/get-by-filter")
+    @Override
+    public ApiResponse<List<GenericTicketResponse>> getByFilter(@RequestBody GenericTicketFilter genericTicketFilter) {
+        return genericTicketService.getByFilter(genericTicketFilter);
     }
 }
