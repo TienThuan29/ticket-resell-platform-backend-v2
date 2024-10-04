@@ -14,7 +14,8 @@ public class GatewayConfiguration {
                 .route(
                         "user-service",
                         r -> r.path(
-                                "/api/users/**"
+                                "/api/users/**",
+                                "/api/auth/**"
                         )
                         .uri("http://localhost:9002")
                 )

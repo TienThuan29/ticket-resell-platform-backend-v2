@@ -12,7 +12,7 @@ import swp391.entity.fixed.Role;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class UserDTO {  
 
     @JsonProperty("id") private Long id;
 

@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import swp391.entity.Token;
 import swp391.entity.User;
 import swp391.entity.VerificationUser;
 import swp391.entity.fixed.VerificationType;
@@ -12,7 +13,8 @@ import swp391.entity.fixed.VerificationType;
 @SpringBootApplication
 @EntityScan(basePackageClasses = {
         User.class,
-        VerificationUser.class
+        VerificationUser.class,
+        Token.class
 })
 @EnableFeignClients
 @EnableScheduling

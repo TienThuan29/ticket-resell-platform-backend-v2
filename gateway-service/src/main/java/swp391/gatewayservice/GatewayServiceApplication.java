@@ -3,11 +3,13 @@ package swp391.gatewayservice;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import swp391.entity.Token;
 import swp391.entity.User;
 
 @SpringBootApplication
 @EntityScan(basePackageClasses = {
-        User.class
+        User.class,
+        Token.class
 })
 public class GatewayServiceApplication {
 

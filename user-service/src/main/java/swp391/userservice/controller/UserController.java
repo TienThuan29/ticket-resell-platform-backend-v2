@@ -3,11 +3,13 @@ package swp391.userservice.controller;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import swp391.userservice.configuration.MessageConfiguration;
 import swp391.userservice.dto.reponse.ApiResponse;
+import swp391.userservice.dto.reponse.AuthenticationResponse;
 import swp391.userservice.dto.reponse.UserDTO;
 import swp391.userservice.dto.request.AuthenticationRequest;
 import swp391.userservice.dto.request.RegisterRequest;
@@ -18,6 +20,7 @@ import swp391.userservice.service.UserService;
 /**
  * Author: Nguyen Tien Thuan
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -30,6 +33,13 @@ public class UserController implements IUserController {
     @GetMapping("/get/info/{id}")
     public ApiResponse<UserDTO> getById(@PathVariable("id") Long id) {
         return userService.getById(id);
+    }
+
+    @Override
+    @GetMapping("/get/info")
+    public ApiResponse<UserDTO> getInfoByToken(@RequestHeader("Authorization") String token) {
+        //log.info("Token: "+token);
+        return userService.getInfoByToken(token);
     }
 
     @Override
@@ -55,8 +65,14 @@ public class UserController implements IUserController {
 
     @Override
     @PostMapping("/authenticate")
-    public ApiResponse<UserDTO> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
+    public ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
         return userService.authenticate(authenticationRequest);
+    }
+
+    @Override
+    @PostMapping("/refresh-token")
+    public ApiResponse<AuthenticationResponse> refreshToken(@RequestParam("refreshToken") String refreshToken) {
+        return userService.refreshToken(refreshToken);
     }
 
     @Override

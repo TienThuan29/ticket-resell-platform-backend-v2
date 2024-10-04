@@ -8,19 +8,34 @@ import java.util.function.Predicate;
 @Service
 public class RouterValidator {
 
+//    public static final List<String> openEndPoints = List.of(
+//            "/api/users/**",
+//            "/api/tickets/**",
+//            "/api/tickets/generic/**",
+//            "/api/events/**",
+//            "/api/categories/**",
+//            "/api/admin/**",
+//            "/api/policy/**",
+//            "/api/staffs/**",
+//            "/api/reports/**",
+//            "/api/hashtags/**",
+//            "/api/email/**",
+//            "/api/payments/**",
+//            "/api/auth/**"
+//    );
+
     public static final List<String> openEndPoints = List.of(
-            "/api/users/**",
-            "/api/tickets/**",
-            "/api/tickets/generic/**",
-            "/api/events/**",
-            "/api/categories/**",
-            "/api/admin/**",
-            "/api/policy/**",
-            "/api/staffs/**",
-            "/api/reports/**",
-            "/api/hashtags/**",
-            "/api/email/**",
-            "/api/payments/**"
+            "/api/users/authenticate",
+            "/api/users/register",
+            "/api/users/refresh-token",
+            "/api/users/register/verify-email",
+            "/api/tickets/generic/get-by-event",
+            "/api/tickets/generic/get-total-ticket",
+            "/api/policy/get/selling",
+            "/api/events/get-happening-events",
+            "/api/events/get-happening-events",
+            "/api/categories/get-using-cate",
+            "/api/email/send-otp"
     );
 
     public Predicate<ServerHttpRequest> isSecured =

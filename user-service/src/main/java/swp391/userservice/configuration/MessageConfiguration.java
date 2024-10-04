@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 public class MessageConfiguration {
 
     // Error message
-
     public final String ERROR_USERNAME_EXIST = "Tên đăng nhập đã tồn tại!";
     public final String ERROR_REGISTER_FAIL = "Đăng ký không thành công!";
     public final String ERROR_REGISTER_SUCCESS = "Đăng ký thành công!";
@@ -19,10 +18,17 @@ public class MessageConfiguration {
     public final String ERROR_UPDATE_ISSELLER_FAIL = "Có gì đó không ổn! Vui lòng thử lại!";
     public final String ERROR_OTP_INVALID = "Mã OTP không hợp lệ";
     public final String ERROR_OTP_ISEXPIRED = "Mã OTP hết thời gian hiệu lực";
+    public final String ERROR_EXIST_EMAIL = "Email này đã được đăng ký!";
+    public final String ERROR_USERNAME_NOTFOUND = "Không tìm thấy tên đăng nhập!";
+    public final String ERROR_LOGIN_SESSION_EXPIRED = "Phiên đăng nhập đã hết hạn! Vui lòng đăng nhập lại!";
+    public final String ERROR_INVALID_TOKEN = "Token không hợp lệ!";
+
     // Success message
     public final String MESSAGE_UPDATE_USER_SUCCESS = "Cập nhật thông tin thành công";
     public final String MESSAGE_UPDATE_AVATAR_SUCCESS = " Cập nhật ảnh đại diện thành công";
     public final String MESSAGE_UPDATE_ISSELLER_SUCCESS = "Bạn đã đồng ý với điều khoản";
+
+
 
 
 }

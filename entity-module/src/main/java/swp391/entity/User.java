@@ -79,10 +79,19 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "buyer", fetch = FetchType.LAZY)
     private Collection<OrderTicket> orderTickets;
 
-    // Security Config
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(roleCode.name()));
+        return roleCode.getAuthorities();
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
     }
 
     @Override

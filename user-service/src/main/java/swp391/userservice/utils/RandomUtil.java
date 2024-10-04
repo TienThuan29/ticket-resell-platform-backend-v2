@@ -31,7 +31,7 @@ public class RandomUtil {
     }
 
     public String generateRandomCode(int length) {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        String characters = "0123456789"; //ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
         Random random = new Random();
         StringBuilder sb = new StringBuilder(length);
 

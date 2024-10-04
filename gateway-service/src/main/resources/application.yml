@@ -29,6 +29,11 @@ spring:
           predicates:
             - Path=/api/users/**
 
+        - id: user-service
+          uri: http://localhost:9002
+          predicates:
+            - Path=/api/auth/**
+
         - id: ticket-service
           uri: http://localhost:9003
           predicates:

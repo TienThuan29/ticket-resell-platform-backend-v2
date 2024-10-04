@@ -2,6 +2,7 @@ package swp391.userservice.mapper;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import swp391.entity.User;
 import swp391.entity.fixed.Role;
@@ -17,10 +18,14 @@ public class UserMapper {
     @Autowired
     private RandomUtil randomUtil;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public User registerRequestToEntity(RegisterRequest registerRequest) {
         return User.builder()
                 .username(registerRequest.getUsername())
-                .password(BCrypt.hashpw(registerRequest.getPassword(), BCrypt.gensalt()))
+//                .password(BCrypt.hashpw(registerRequest.getPassword(), BCrypt.gensalt()))
+                .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .email(registerRequest.getEmail())
                 .customerCode(randomUtil.randomCustomerCode())
                 .balance(0L)

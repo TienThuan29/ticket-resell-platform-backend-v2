@@ -7,23 +7,29 @@ import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import swp391.entity.Token;
 import swp391.entity.User;
 import swp391.entity.VerificationUser;
+import swp391.entity.fixed.TokenType;
 import swp391.entity.fixed.VerificationType;
+import swp391.userservice.configuration.ConstantConfiguration;
 import swp391.userservice.configuration.MessageConfiguration;
 import swp391.userservice.dto.reponse.ApiResponse;
+import swp391.userservice.dto.reponse.AuthenticationResponse;
 import swp391.userservice.dto.reponse.UserDTO;
 import swp391.userservice.dto.request.AuthenticationRequest;
 import swp391.userservice.dto.request.RegisterRequest;
 import swp391.userservice.dto.request.UpdateInfoRequest;
 import swp391.userservice.exception.def.NotFoundException;
 import swp391.userservice.mapper.UserMapper;
+import swp391.userservice.repository.TokenRepository;
 import swp391.userservice.repository.UserRepository;
 import swp391.userservice.repository.VerificationUserRepository;
 import swp391.userservice.utils.ImageUtil;
 import swp391.userservice.utils.RandomUtil;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -47,10 +53,38 @@ public class UserService implements IUserService {
 
     private final RandomUtil randomUtil;
 
+    private final JwtService jwtService;
+
+    private final TokenRepository tokenRepository;
+
+    private final ConstantConfiguration constant;
+
     @Override
     public ApiResponse<UserDTO> getById(Long id) {
         var user = userRepository.findById(id);
         return new ApiResponse<>(HttpStatus.OK, "", userMapper.toUserDTO(user.get()));
+    }
+
+    @Override
+    public ApiResponse<UserDTO> getInfoByToken(String token) {
+        token = token.substring(constant.AUTHENTICATION_HEADER_BEARER.length());
+        if (token.trim().isEmpty())
+            return new ApiResponse<>(HttpStatus.FORBIDDEN, messageConfig.ERROR_INVALID_TOKEN, null);
+
+        String username;
+        try {
+            username = jwtService.extractUsername(token);
+            var user = userRepository.findEnableAccount(username).orElseThrow(
+                    () -> new NotFoundException(messageConfig.ERROR_USERNAME_NOTFOUND)
+            );
+
+            if (!jwtService.isValidToken(token, user)) throw new Exception();
+
+            return new ApiResponse<>(HttpStatus.OK, "", userMapper.toUserDTO(user));
+        }
+        catch (Exception ex) {
+            return new ApiResponse<>(HttpStatus.FORBIDDEN, messageConfig.ERROR_INVALID_TOKEN, null);
+        }
     }
 
     @Override
@@ -82,29 +116,106 @@ public class UserService implements IUserService {
     }
 
 
+//    @Override
+//    public ApiResponse<UserDTO> authenticate(AuthenticationRequest authRequest) {
+//        var user = userRepository.findEnableAccount(authRequest.getUsername());
+//
+//        ApiResponse<UserDTO> apiResponse = new ApiResponse<>(
+//                HttpStatus.FORBIDDEN,
+//                messageConfig.ERROR_INVALID_USERNAME_PASSWORD, null
+//        );
+//
+//        if (user.isPresent()) {
+//            var matchedPassword = BCrypt.checkpw(authRequest.getPassword(), user.get().getPassword());
+//            if (matchedPassword){
+//                apiResponse = new ApiResponse<>(HttpStatus.OK, "", userMapper.toUserDTO(user.get()));
+//            }
+//
+//        }
+//        return apiResponse;
+//    }
+
     @Override
-    public ApiResponse<UserDTO> authenticate(AuthenticationRequest authRequest) {
+    public ApiResponse<AuthenticationResponse> authenticate(AuthenticationRequest authRequest) {
         var user = userRepository.findEnableAccount(authRequest.getUsername());
 
-        ApiResponse<UserDTO> apiResponse = new ApiResponse<>(
+        ApiResponse<AuthenticationResponse> apiResponse = new ApiResponse<>(
                 HttpStatus.FORBIDDEN,
                 messageConfig.ERROR_INVALID_USERNAME_PASSWORD, null
         );
 
         if (user.isPresent()) {
             var matchedPassword = BCrypt.checkpw(authRequest.getPassword(), user.get().getPassword());
-            if (matchedPassword)
-                apiResponse = new ApiResponse<>(HttpStatus.OK, "", userMapper.toUserDTO(user.get()));
+            if (matchedPassword){
+                String jwtToken = jwtService.generateToken(user.get()); // Access token
+                String refreshToken = jwtService.generateRefreshToken(user.get());  // Refresh token
+
+                revokeAllOldUserToken(user.get());
+                saveToken(user.get(), jwtToken);
+                apiResponse = new ApiResponse<>(
+                        HttpStatus.OK, "",
+                        AuthenticationResponse.builder()
+                                .accessToken(jwtToken)
+                                .refreshToken(refreshToken)
+                                .build()
+                );
+            }
         }
         return apiResponse;
+    }
+
+    @Override
+    public ApiResponse<AuthenticationResponse> refreshToken(String refreshToken) {
+        if (refreshToken == null || refreshToken.trim().isEmpty())
+            return new ApiResponse<>(HttpStatus.FORBIDDEN, messageConfig.ERROR_INVALID_TOKEN, null);
+
+        final String username = jwtService.extractUsername(refreshToken);
+
+        if (username != null) {
+            User user = userRepository.findEnableAccount(username).get(); // Get entity
+            if(jwtService.isValidToken(refreshToken, user)) {
+                String newAccessToken = jwtService.generateToken(user);
+                revokeAllOldUserToken(user);
+                saveToken(user, newAccessToken);
+                return new ApiResponse<>(HttpStatus.OK, "",
+                        AuthenticationResponse.builder()
+                                .accessToken(newAccessToken)
+                                .refreshToken(refreshToken)
+                                .build()
+                );
+            }
+        }
+        return new ApiResponse<>(HttpStatus.FORBIDDEN, messageConfig.ERROR_INVALID_TOKEN, null);
+    }
+
+    private void saveToken(User user, String jwtToken) {
+        Token token = Token.builder()
+                .token(jwtToken)
+                .tokenType(TokenType.BEARER)
+                .expired(constant.JWT_EXPIRED_DISABLE)
+                .revoked(constant.JWT_REVOKED_DISABLE)
+                .user(user)
+                .build();
+        tokenRepository.save(token);
+    }
+
+    private void revokeAllOldUserToken(User user) {
+        List<Token> validTokenList = tokenRepository.findAllValidTokenByUser(user.getId());
+        if (!validTokenList.isEmpty()) {
+            tokenRepository.deleteAll(validTokenList);
+        }
     }
 
     @Override
     public ApiResponse<?> register(RegisterRequest registerRequest) {
         var user = userRepository.findByUsername(registerRequest.getUsername());
 
-        if (user.isPresent() || this.isExistEmail(registerRequest.getEmail()))
+        if (user.isPresent())
             return new ApiResponse<>(HttpStatus.CONFLICT, messageConfig.ERROR_USERNAME_EXIST, null);
+
+        if(this.isExistEmail(registerRequest.getEmail()))
+            return new ApiResponse<>(HttpStatus.CONFLICT, messageConfig.ERROR_EXIST_EMAIL, null);
+
         User newUser= userRepository.save(userMapper.registerRequestToEntity(registerRequest));
 
         VerificationUser verificationUser= VerificationUser.builder()
@@ -131,20 +242,21 @@ public class UserService implements IUserService {
         var verifyUserOpt = verificationRepository.findByVerificationCode(verificationOTP);
 
         if (verifyUserOpt.isEmpty()) {
-            return new ApiResponse<>(HttpStatus.OK, messageConfig.ERROR_OTP_INVALID);
+            return new ApiResponse<>(HttpStatus.NOT_FOUND, messageConfig.ERROR_OTP_INVALID);
         }
 
         var verifyUser = verifyUserOpt.get();
         var userOpt = userRepository.findById(verifyUser.getUserId());
 
+        // Http.NOT_FOUND, not OK
         if (userOpt.isEmpty()) {
-            return new ApiResponse<>(HttpStatus.OK, messageConfig.ERROR_NOT_FOUND_USERID, Boolean.FALSE);
+            return new ApiResponse<>(HttpStatus.NOT_FOUND, messageConfig.ERROR_NOT_FOUND_USERID, Boolean.FALSE);
         }
 
         var user = userOpt.get();
         long period = System.currentTimeMillis() - verifyUser.getStartTime();
 
-        if (period < 300000) { // Thành công
+        if (period < 300000) {
             user.setIsEnable(Boolean.TRUE);
             userRepository.save(user);
             verificationRepository.delete(verifyUser);
@@ -152,7 +264,7 @@ public class UserService implements IUserService {
         } else { // Nếu OTP hết hạn
             verificationRepository.delete(verifyUser);
             userRepository.delete(user);
-            return new ApiResponse<>(HttpStatus.OK, messageConfig.ERROR_OTP_ISEXPIRED, Boolean.FALSE);
+            return new ApiResponse<>(HttpStatus.NOT_FOUND, messageConfig.ERROR_OTP_ISEXPIRED, Boolean.FALSE);
         }
     }
 
