@@ -19,3 +19,13 @@ spring:
         dialect: org.hibernate.dialect.SQLServerDialect
     hibernate:
       ddl-auto: update
+
+payment:
+  vnPay:
+    url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+    tmnCode: KPGNIHCM
+    secretKey: 7695BHRJUET0S400W5GHRN04TCZVKYBI
+    returnUrl: http://localhost:8090/api/payments/vn-pay-callback
+    version: 2.1.0
+    command: pay
+    orderType: other

@@ -36,4 +36,17 @@ public interface GenericTicketRepository extends JpaRepository<GenericTicket, Lo
     )
     Integer getTotalTicketsInGenericTicket(Long genericTicketId);
 
+    @Query("SELECT g FROM GenericTicket g WHERE " +
+            "(:minPrice IS NULL OR g.price >= :minPrice) AND " +
+            "(:maxPrice IS NULL OR g.price <= :maxPrice) AND " +
+            "(:ticketName IS NULL OR g.ticketName LIKE %:ticketName%) AND " +
+            "(:area IS NULL OR g.area = :area) AND " +
+            "(:isPaper IS NULL OR g.isPaper = :isPaper)")
+    List<GenericTicket> findByFilters(
+            Long minPrice,
+            Long maxPrice,
+            String ticketName,
+            String area,
+            Boolean isPaper
+    );
 }

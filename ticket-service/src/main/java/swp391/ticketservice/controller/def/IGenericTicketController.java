@@ -1,5 +1,6 @@
 package swp391.ticketservice.controller.def;
 
+import swp391.ticketservice.dto.request.GenericTicketFilter;
 import swp391.ticketservice.dto.request.GenericTicketRequest;
 import swp391.ticketservice.dto.response.ApiResponse;
 import swp391.ticketservice.dto.response.GenericTicketResponse;
@@ -26,4 +27,6 @@ public interface IGenericTicketController {
     ApiResponse<List<GenericTicketResponse>> getByEvent(Integer eventId);
 
     ApiResponse<Integer> getTotalTicketsInGenericTicket(Long genericTicketId);
+
+    ApiResponse<List<GenericTicketResponse>> getByFilter(GenericTicketFilter genericTicketFilter);
 }
