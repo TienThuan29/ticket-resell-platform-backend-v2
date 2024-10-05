@@ -2,7 +2,17 @@ package swp391.staffservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.Import;
+import swp391.entity.ReportFraud;
+import swp391.entity.Staff;
+import swp391.entity.Ticket;
 
+@EntityScan(basePackageClasses = {
+        Staff.class,
+        Ticket.class,
+        ReportFraud.class
+})
 @SpringBootApplication
 public class StaffServiceApplication {
 

@@ -35,7 +35,9 @@ public class RouterValidator {
             "/api/events/get-happening-events",
             "/api/events/get-happening-events",
             "/api/categories/get-using-cate",
-            "/api/email/send-otp"
+            "/api/email/send-otp",
+//            "/api/admin/register-staff",  // Open it if you want to create admin account
+            "/api/system/authentication"
     );
 
     public Predicate<ServerHttpRequest> isSecured =

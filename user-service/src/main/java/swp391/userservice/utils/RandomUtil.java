@@ -1,11 +1,9 @@
 package swp391.userservice.utils;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import swp391.userservice.repository.UserRepository;
 import swp391.userservice.repository.VerificationUserRepository;
-
 import java.util.Random;
 import java.util.UUID;
 
