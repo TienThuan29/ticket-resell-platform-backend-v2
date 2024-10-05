@@ -13,8 +13,13 @@ import java.util.Date;
 @Setter
 @Builder
 public class Ticket {
+
     @Id
-    @Column(name = "ticket_serial", length = 128)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "ticket_serial", length = 128, nullable = false)
     private String ticketSerial;
 
     @Lob

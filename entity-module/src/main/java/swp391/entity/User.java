@@ -3,10 +3,8 @@ package swp391.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import swp391.entity.fixed.Role;
 import java.util.Collection;
-import java.util.List;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity

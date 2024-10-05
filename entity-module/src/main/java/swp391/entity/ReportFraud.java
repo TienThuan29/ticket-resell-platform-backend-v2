@@ -39,7 +39,7 @@ public class ReportFraud {
     private Long reportedUserId;
 
     @OneToOne
-    @JoinColumn(name = "ticket_serial")
+    @JoinColumn(name = "ticket_id")
     private Ticket ticket;
 
     @ManyToOne

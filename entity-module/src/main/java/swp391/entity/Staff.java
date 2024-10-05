@@ -2,8 +2,10 @@ package swp391.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import swp391.entity.fixed.Role;
-
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -13,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class Staff {
+public class Staff implements UserDetails {
 
     @Id
     @Column(name = "id")
@@ -60,4 +62,39 @@ public class Staff {
 
     @OneToMany(mappedBy = "verifyStaff", fetch = FetchType.LAZY)
     private List<Ticket> verifiedTickets;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roleCode.getAuthorities();
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return this.isEnable;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.isEnable;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return this.isEnable;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.isEnable;
+    }
 }
