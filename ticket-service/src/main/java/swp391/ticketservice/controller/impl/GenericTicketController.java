@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import swp391.ticketservice.controller.def.IGenericTicketController;
 import swp391.ticketservice.dto.request.GenericTicketFilter;
 import swp391.ticketservice.dto.request.GenericTicketRequest;
+import swp391.ticketservice.dto.request.OrderTicketRequest;
 import swp391.ticketservice.dto.response.GenericTicketResponse;
 import swp391.ticketservice.dto.response.ApiResponse;
 import swp391.ticketservice.service.def.IGenericTicketService;
@@ -15,6 +16,7 @@ import java.util.List;
 
 /**
  * Author: Nguyen Nhat Truong
+ * Author: Nguyen Tien Thuan
  */
 @RestController
 @RequestMapping("/api/tickets/generic")
@@ -89,4 +91,11 @@ public class GenericTicketController implements IGenericTicketController {
     public ApiResponse<List<GenericTicketResponse>> getByFilter(@RequestBody GenericTicketFilter genericTicketFilter) {
         return genericTicketService.getByFilter(genericTicketFilter);
     }
+
+    @Override
+    @PostMapping("/order")
+    public ApiResponse<?> orderTicket(@RequestBody OrderTicketRequest orderTicketRequest) {
+        return genericTicketService.orderTicket(orderTicketRequest);
+    }
+
 }

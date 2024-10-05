@@ -36,4 +36,7 @@ public class OrderTicket {
 
     @Column(name = "note", columnDefinition = "nvarchar(1024)")
     private String note;
+
+    @Column(name = "total_price")
+    private Long totalPrice;
 }

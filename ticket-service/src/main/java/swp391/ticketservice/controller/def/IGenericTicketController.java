@@ -2,6 +2,7 @@ package swp391.ticketservice.controller.def;
 
 import swp391.ticketservice.dto.request.GenericTicketFilter;
 import swp391.ticketservice.dto.request.GenericTicketRequest;
+import swp391.ticketservice.dto.request.OrderTicketRequest;
 import swp391.ticketservice.dto.response.ApiResponse;
 import swp391.ticketservice.dto.response.GenericTicketResponse;
 import java.util.Date;
@@ -29,4 +30,6 @@ public interface IGenericTicketController {
     ApiResponse<Integer> getTotalTicketsInGenericTicket(Long genericTicketId);
 
     ApiResponse<List<GenericTicketResponse>> getByFilter(GenericTicketFilter genericTicketFilter);
+
+    ApiResponse<?> orderTicket(OrderTicketRequest orderTicketRequest);
 }

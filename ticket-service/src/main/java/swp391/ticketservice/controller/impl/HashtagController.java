@@ -9,6 +9,9 @@ import swp391.ticketservice.dto.response.ApiResponse;
 import swp391.ticketservice.dto.response.HashtagResponse;
 import swp391.ticketservice.service.def.IHashtagService;
 
+/**
+* Author: Le Hoang Cong Huy
+*/
 @RestController
 @RequestMapping("/api/hashtags")
 @RequiredArgsConstructor

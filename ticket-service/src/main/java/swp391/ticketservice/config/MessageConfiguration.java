@@ -25,6 +25,9 @@ public class MessageConfiguration {
     public final String SUCCESS_DELETE_HASHTAG;
     public final String INVALID_HASHTAG_ID;
     public final String SUCCESS_UPDATE_HASHTAG;
+    public final String INVALID_PAYMENT_METHOD_ID;
+    public final String FAIL_ORDER_TICKET;
+    public final String SUCCESS_ORDER_TICKET;
 
     public MessageConfiguration() {
         this.INVALID_GENERICTICKET = "Vé tổng quan không hợp lệ";
@@ -36,7 +39,7 @@ public class MessageConfiguration {
         this.INVALID_TICKET = "Vé không hợp lệ";
         this.INVALID_STAFF = "Nhân viên không hợp lệ";
         this.INVALID_PROCESS = "Quá trình không hợp lệ";
-        this.INVALID_BUYER= "Người bán không hợp lệ";
+        this.INVALID_BUYER= "Người mua không hợp lệ";
         this.SUCCESS_ADD_EVENT = "Thêm sự kiện thành công";
         this.INVALID_GENERIC_TICKET_ID = "Có sự cố khi cập nhật thông tin vé! Vui lòng tạo lại vé!";
         this.UPDATE_GENERIC_SUCCESS = "Cập nhật vé thành công!";
@@ -45,5 +48,8 @@ public class MessageConfiguration {
         this.SUCCESS_DELETE_HASHTAG = "Xóa #hashtag thành công!";
         this.INVALID_HASHTAG_ID = "HashtagId không hợp lệ!";
         this.SUCCESS_UPDATE_HASHTAG = "Cập nhật #hashtag thành công!";
+        this.INVALID_PAYMENT_METHOD_ID = "Phương thức thanh toán không hợp lệ!";
+        this.FAIL_ORDER_TICKET = "Đặt mua vé không thành công!";
+        this.SUCCESS_ORDER_TICKET = "Đặt mua vé thành công. Vui lòng chờ xác nhận từ người bán!";
     }
 }

@@ -13,7 +13,9 @@ import swp391.entity.*;
         Ticket.class,
         Policy.class,
         User.class,
-        Staff.class
+        Staff.class,
+        OrderTicket.class,
+        PaymentMethod.class
 })
 public class TicketServiceApplication {
     public static void main(String[] args) {

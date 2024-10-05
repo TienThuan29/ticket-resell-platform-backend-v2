@@ -3,6 +3,7 @@ package swp391.ticketservice.service.def;
 import org.springframework.stereotype.Service;
 import swp391.ticketservice.dto.request.GenericTicketFilter;
 import swp391.ticketservice.dto.request.GenericTicketRequest;
+import swp391.ticketservice.dto.request.OrderTicketRequest;
 import swp391.ticketservice.dto.response.ApiResponse;
 import swp391.ticketservice.dto.response.GenericTicketResponse;
 import swp391.ticketservice.dto.response.ApiResponse;
@@ -35,4 +36,6 @@ public interface IGenericTicketService {
     ApiResponse<List<GenericTicketResponse>> getAllGenericTicketBySeller(Long sellerId);
 
     ApiResponse<List<GenericTicketResponse>> getByFilter(GenericTicketFilter genericTicketFilter);
+
+    ApiResponse<?> orderTicket(OrderTicketRequest orderTicketRequest);
 }

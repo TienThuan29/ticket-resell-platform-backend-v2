@@ -8,11 +8,13 @@ import swp391.entity.*;
 import swp391.ticketservice.config.MessageConfiguration;
 import swp391.ticketservice.dto.request.GenericTicketFilter;
 import swp391.ticketservice.dto.request.GenericTicketRequest;
+import swp391.ticketservice.dto.request.OrderTicketRequest;
 import swp391.ticketservice.dto.response.ApiResponse;
 import swp391.ticketservice.dto.response.GenericTicketResponse;
 import swp391.ticketservice.dto.response.TicketResponse;
 import swp391.ticketservice.exception.def.NotFoundException;
 import swp391.ticketservice.mapper.GenericTicketMapper;
+import swp391.ticketservice.mapper.OrderTicketMapper;
 import swp391.ticketservice.repository.*;
 import swp391.ticketservice.service.def.IGenericTicketService;
 import java.util.Date;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 
 /**
  * Author: Nguyen Nhat Truong
+ * Author: Nguyen Tien Thuan
  */
 @Service
 @RequiredArgsConstructor
@@ -39,6 +42,10 @@ public class GenericTicketService implements IGenericTicketService {
     private final EventRepository eventRepository;
 
     private final CategoryRepository categoryRepository;
+
+    private final OrderTicketMapper orderTicketMapper;
+
+    private final OrderTicketRepository orderTicketRepository;
 
     @Override
     public ApiResponse<GenericTicketResponse> create(GenericTicketRequest genericTicketRequest) {
@@ -159,6 +166,17 @@ public class GenericTicketService implements IGenericTicketService {
                 .map(genericTicketMapper::toResponse)
                 .collect(Collectors.toList());
         return new ApiResponse<>(HttpStatus.OK, "", genericTicketResponses);
+    }
+
+    @Override
+    public ApiResponse<?> orderTicket(OrderTicketRequest orderTicketRequest) {
+        try {
+            orderTicketRepository.save(orderTicketMapper.toEntity(orderTicketRequest));
+        }
+        catch (Exception ex) {
+            return new ApiResponse<>(HttpStatus.BAD_REQUEST, message.FAIL_ORDER_TICKET, null);
+        }
+        return new ApiResponse<>(HttpStatus.OK, message.SUCCESS_ORDER_TICKET, null);
     }
 
 }
