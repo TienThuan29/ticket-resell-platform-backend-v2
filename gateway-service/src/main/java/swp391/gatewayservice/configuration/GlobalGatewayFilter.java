@@ -34,12 +34,8 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
             }
             final String token =  request.getHeaders().getOrEmpty("Authorization")
                     .get(0).substring(7); // "Bearer ".length()
-            if (token.isEmpty()) {
+            if (token.isEmpty() || jwtService.isTokenExpired(token)) {
                 log.info("Invalid token");
-                return onError(exchange, HttpStatus.UNAUTHORIZED);
-            }
-            if (jwtService.isTokenExpired(token)) {
-                log.info("Token is expired");
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
             }
         }
