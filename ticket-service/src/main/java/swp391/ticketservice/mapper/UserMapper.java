@@ -1,15 +1,9 @@
 package swp391.ticketservice.mapper;
 
-import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import swp391.entity.User;
-import swp391.entity.fixed.Role;
-import swp391.userservice.dto.reponse.SellerResponse;
-import swp391.userservice.dto.reponse.UserDTO;
-import swp391.userservice.dto.request.RegisterRequest;
-import swp391.userservice.utils.ImageUtil;
-import swp391.userservice.utils.RandomUtil;
+import swp391.ticketservice.dto.response.SellerResponse;
+import swp391.ticketservice.utils.ImageUtil;
 
 @Component
 public class UserMapper {

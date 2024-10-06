@@ -9,6 +9,9 @@ import swp391.adminservice.configuration.MessageConfiguration;
 import swp391.adminservice.dto.request.AuthenticationRequest;
 import swp391.adminservice.dto.response.ApiResponse;
 import swp391.adminservice.dto.response.AuthenticationResponse;
+import swp391.adminservice.dto.response.StaffDTO;
+import swp391.adminservice.exception.def.NotFoundException;
+import swp391.adminservice.mapper.StaffMapper;
 import swp391.adminservice.repository.StaffRepository;
 import swp391.adminservice.repository.StaffTokenRepository;
 import swp391.adminservice.service.def.ISystemAuthService;
@@ -32,6 +35,30 @@ public class SystemAuthService implements ISystemAuthService {
 
     private final ConstantConfiguration constant;
 
+    private final StaffMapper staffMapper;
+
+
+    @Override
+    public ApiResponse<StaffDTO> getInfoByToken(String token) {
+        token = token.substring(constant.AUTHENTICATION_HEADER_BEARER.length());
+        if (token.trim().isEmpty())
+            return new ApiResponse<>(HttpStatus.FORBIDDEN, messageConfig.ERROR_INVALID_TOKEN, null);
+
+        String username;
+        try {
+            username = jwtService.extractUsername(token);
+            var staff = staffRepository.findEnableAccount(username).orElseThrow(
+                    () -> new NotFoundException(messageConfig.ERROR_USERNAME_NOTFOUND)
+            );
+
+            if (!jwtService.isValidToken(token, staff)) throw new Exception();
+
+            return new ApiResponse<>(HttpStatus.OK, "", staffMapper.toDTO(staff));
+        }
+        catch (Exception ex) {
+            return new ApiResponse<>(HttpStatus.FORBIDDEN, messageConfig.ERROR_INVALID_TOKEN, null);
+        }
+    }
 
     @Override
     public ApiResponse<AuthenticationResponse> authentication(AuthenticationRequest authRequest) {
@@ -60,6 +87,30 @@ public class SystemAuthService implements ISystemAuthService {
             }
         }
         return apiResponse;
+    }
+
+    @Override
+    public ApiResponse<AuthenticationResponse> refreshToken(String refreshToken) {
+        if (refreshToken == null || refreshToken.trim().isEmpty())
+            return new ApiResponse<>(HttpStatus.FORBIDDEN, messageConfig.ERROR_INVALID_TOKEN, null);
+
+        final String username = jwtService.extractUsername(refreshToken);
+
+        if (username != null) {
+            Staff staff = staffRepository.findEnableAccount(username).get();
+            if(jwtService.isValidToken(refreshToken, staff)) {
+                String newAccessToken = jwtService.generateToken(staff);
+                revokeAllOldUserToken(staff);
+                saveToken(staff, newAccessToken);
+                return new ApiResponse<>(HttpStatus.OK, "",
+                        AuthenticationResponse.builder()
+                                .accessToken(newAccessToken)
+                                .refreshToken(refreshToken)
+                                .build()
+                );
+            }
+        }
+        return new ApiResponse<>(HttpStatus.FORBIDDEN, messageConfig.ERROR_INVALID_TOKEN, null);
     }
 
     private void saveToken(Staff staff, String jwtToken) {
