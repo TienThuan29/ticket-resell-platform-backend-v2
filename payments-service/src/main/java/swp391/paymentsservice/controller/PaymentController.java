@@ -21,14 +21,14 @@ public class PaymentController implements IPaymentController{
 
     private final IPaymentService paymentService;
 
-    @GetMapping("/request")
     @Override
+    @GetMapping("/request")
     public ApiResponse<?> pay(HttpServletRequest request) {
         return paymentService.createVnPayPayment(request);
     }
 
-    @GetMapping("/vn-pay-callback")
     @Override
+    @GetMapping("/vn-pay-callback")
     public ApiResponse<?> payCallBack(
             @RequestParam("vnp_ResponseCode") String responseCode,
             @RequestParam("vnp_TransactionStatus") String transactionStatus,

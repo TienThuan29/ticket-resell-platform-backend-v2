@@ -14,6 +14,9 @@ import java.util.List;
 @Data
 @Builder
 public class TicketResponse {
+
+    @JsonProperty("ticketId") private Long ticketId;
+
     @JsonProperty("ticketSerial") private String ticketSerial;
 
     @JsonProperty("image") private String image;

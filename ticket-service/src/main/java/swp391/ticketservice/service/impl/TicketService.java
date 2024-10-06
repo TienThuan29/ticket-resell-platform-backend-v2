@@ -62,9 +62,9 @@ public class TicketService implements ITicketService {
     }
 
     @Override
-    public ApiResponse<TicketResponse> getById(String id) {
-        Ticket ticket= ticketRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(message.INVALID_TICKET+" :"+id));
+    public ApiResponse<TicketResponse> getById(Long ticketId) {
+        Ticket ticket= ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new NotFoundException(message.INVALID_TICKET+" :"+ticketId));
         return new ApiResponse<>(HttpStatus.OK, message.SUCCESS_OPERATION, ticketMapper.toResponse(ticket));
     }
 
@@ -83,10 +83,11 @@ public class TicketService implements ITicketService {
     }
 
     @Override
-    public ApiResponse<?> markBought(String id) {
-        LocalDateTime localDateTime = LocalDateTime.now();
-        Date boughtDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        System.out.println(boughtDate);
+    public ApiResponse<?> markBought(Long id) {
+        ZoneId zoneId = ZoneId.of("UTC+7");
+        LocalDateTime localDateTime = LocalDateTime.now(zoneId);
+        Date boughtDate = Date.from(localDateTime.atZone(zoneId).toInstant());
+
         Ticket ticket= ticketRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(message.INVALID_TICKET+" :"+id));
         ticket.setBought(Boolean.TRUE);
@@ -96,7 +97,7 @@ public class TicketService implements ITicketService {
     }
 
     @Override
-    public ApiResponse<?> markStaffCheck(String id, Long staffId) {
+    public ApiResponse<?> markStaffCheck(Long id, Long staffId) {
         Ticket ticket= ticketRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(message.INVALID_TICKET+" :"+id));
         ticket.setChecked(Boolean.TRUE);
@@ -107,7 +108,7 @@ public class TicketService implements ITicketService {
     }
 
     @Override
-    public ApiResponse<?> updateProcess(String id, String process) {
+    public ApiResponse<?> updateProcess(Long id, String process) {
         Ticket ticket= ticketRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(message.INVALID_TICKET+" :"+id));
         ticket.setProcess(getProcess(process)

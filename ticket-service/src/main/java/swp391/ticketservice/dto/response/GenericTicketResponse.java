@@ -3,8 +3,6 @@ package swp391.ticketservice.dto.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
-import swp391.entity.Ticket;
-import swp391.userservice.dto.reponse.SellerResponse;
 
 import java.util.Collection;
 import java.util.Date;

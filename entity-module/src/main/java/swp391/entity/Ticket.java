@@ -1,5 +1,6 @@
 package swp391.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import swp391.entity.fixed.GeneralProcess;

@@ -28,6 +28,9 @@ public class ReportFraud {
     @Enumerated(value = EnumType.STRING)
     private GeneralProcess process;
 
+    @Column(name = "note", columnDefinition = "nvarchar(MAX)")
+    private String note;
+
     @ManyToOne
     @JoinColumn(name = "report_type_id")
     private ReportType reportType;

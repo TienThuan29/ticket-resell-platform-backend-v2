@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import swp391.entity.*;
 
+import java.util.TimeZone;
+
 @SpringBootApplication
 @EntityScan(basePackageClasses = {
         Category.class,
