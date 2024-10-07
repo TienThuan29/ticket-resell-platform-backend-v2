@@ -330,7 +330,7 @@ public class UserService implements IUserService {
         var user= userRepository.findByEmail(email).get();
         user.setPassword(passwordEncoder.encode(newPass));
         userRepository.save(user);
-        return new ApiResponse<>(HttpStatus.OK, "Success");
+        return new ApiResponse<>(HttpStatus.OK, messageConfig.MESSAGE_RESET_PASSWORD_SUCCSESS);
     }
 
     @Scheduled(fixedDelay = 300000)// 5 phút reset một lần
