@@ -1,5 +1,6 @@
 package swp391.ticketservice.mapper;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import swp391.entity.Event;
 import swp391.ticketservice.dto.request.EventRequest;
@@ -8,7 +9,10 @@ import swp391.ticketservice.utils.DateUtil;
 import swp391.ticketservice.utils.ImageUtil;
 
 @Component
+@RequiredArgsConstructor
 public class EventMapper {
+
+    private final  HashtagMapper hashtagMapper;
 
     public Event toEntity(EventRequest eventRequest) {
         return Event.builder()
@@ -17,6 +21,7 @@ public class EventMapper {
                 .startDate(eventRequest.getStartDate())
                 .endDate(eventRequest.getEndDate())
                 .detail(eventRequest.getDetail())
+                .isDeleted(Boolean.FALSE)
                 .build();
     }
 
@@ -28,6 +33,7 @@ public class EventMapper {
                 .endDate(DateUtil.fixDateTime(event.getEndDate()))
                 .image(ImageUtil.decompressImage(event.getImage()))
                 .detail(event.getDetail())
+                .hashtags(event.getHashtags().stream().map(hashtagMapper::toResponse).toList())
                 .build();
     }
 

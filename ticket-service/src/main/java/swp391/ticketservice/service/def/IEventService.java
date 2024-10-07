@@ -18,4 +18,6 @@ public interface IEventService {
 
     ApiResponse<List<EventResponse>> getEventsNotInAnyCategory();
 
+    ApiResponse<List<EventResponse>> getAllEvents();
+
 }

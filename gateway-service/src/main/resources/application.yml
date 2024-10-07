@@ -72,7 +72,7 @@ spring:
         - id: admin-service
           uri: http://localhost:9004
           predicates:
-            - Path=/api/system/authentication
+            - Path=/api/system/**
 
         - id: staff-service
           uri: http://localhost:9005

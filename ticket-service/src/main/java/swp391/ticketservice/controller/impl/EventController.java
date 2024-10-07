@@ -40,9 +40,17 @@ public class EventController implements IEventController {
         return eventService.getByCategory(categoryName);
     }
 
+    @Override
+    @GetMapping("/get-all")
+    public ApiResponse<List<EventResponse>> getAllEvents() {
+        return eventService.getAllEvents();
+    }
+
     @GetMapping("/get-happening-events/notin")
     public ApiResponse<List<EventResponse>> getEventsNotInAnyCategory() {
         return eventService.getEventsNotInAnyCategory();
     }
+
+
 
 }
