@@ -22,4 +22,8 @@ public class Template {
                 "</html>";
     }
 
+
+    public final String sendOTPResetPassword(String otp){
+        return "Your OTP: "+otp;
+    }
 }

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import swp391.entity.Token;
@@ -58,6 +59,8 @@ public class UserService implements IUserService {
     private final TokenRepository tokenRepository;
 
     private final ConstantConfiguration constant;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public ApiResponse<UserDTO> getById(Long id) {
@@ -235,7 +238,6 @@ public class UserService implements IUserService {
         return user.isPresent();
     }
 
-
     @Override
     public ApiResponse<?> verifyEmail(String verificationOTP) {
         // 300000 milliseconds = 5 minute
@@ -284,6 +286,51 @@ public class UserService implements IUserService {
                 messageConfig.MESSAGE_UPDATE_USER_SUCCESS,
                 userMapper.toUserDTO(userRepository.save(user))
         );
+    }
+
+    @Override
+    public ApiResponse<?> resetPassword(String email) {
+        if(!isExistEmail(email)){
+            throw new NotFoundException(messageConfig.ERROR_INVALID_EMAIL);
+        }
+        var user= userRepository.findByEmail(email).get();
+        VerificationUser verificationUser= VerificationUser.builder()
+                .userId(user.getId())
+                .startTime(System.currentTimeMillis())
+                .verificationCode(randomUtil.generateRandomCode(6))
+                .verificationType(VerificationType.RESET_PASSWORD).build();
+        verificationRepository.save(verificationUser);
+        emailService.sendResetOTP(verificationUser, email);
+        return new ApiResponse<>(HttpStatus.OK, "", Boolean.TRUE);
+    }
+
+    @Override
+    public ApiResponse<?> verifyResetOTP(String verificationOTP) {
+        var verifyUser = verificationRepository.findByVerificationCode(verificationOTP)
+                .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_OTP_INVALID+" :"+verificationOTP));
+        var user = userRepository.findById(verifyUser.getUserId())
+                .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_NOT_FOUND_USERID));
+
+        long period = System.currentTimeMillis() - verifyUser.getStartTime();
+
+        if (period < 300000) {
+            user.setIsEnable(Boolean.TRUE);
+            userRepository.save(user);
+            verificationRepository.delete(verifyUser);
+            return new ApiResponse<>(HttpStatus.OK, "", Boolean.TRUE);
+        } else { // Nếu OTP hết hạn
+            verificationRepository.delete(verifyUser);
+            userRepository.delete(user);
+            return new ApiResponse<>(HttpStatus.NOT_FOUND, messageConfig.ERROR_OTP_ISEXPIRED, Boolean.FALSE);
+        }
+    }
+
+    @Override
+    public ApiResponse<?> changePass(String newPass, String email) {
+        var user= userRepository.findByEmail(email).get();
+        user.setPassword(passwordEncoder.encode(newPass));
+        userRepository.save(user);
+        return new ApiResponse<>(HttpStatus.OK, "Success");
     }
 
     @Scheduled(fixedDelay = 300000)// 5 phút reset một lần

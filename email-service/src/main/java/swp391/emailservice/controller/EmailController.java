@@ -18,4 +18,10 @@ public class EmailController implements IEmailController{
     public ApiResponse<?> sendOTP(@RequestBody VerificationRequest request, @RequestParam String email) {
         return emailService.sendOTP(request, email);
     }
+
+    @Override
+    @PostMapping("/send-reset-otp")
+    public ApiResponse<?> sendResetOTP(@RequestBody VerificationRequest request, @RequestParam String email) {
+        return emailService.sendResetOTP(request, email);
+    }
 }

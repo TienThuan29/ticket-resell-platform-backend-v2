@@ -29,6 +29,11 @@ public interface IUserController {
 
     ApiResponse<?> updateIsSeller(Long id);
 
-    ApiResponse<?> registerVerificcationEmail(String verificationCode);
+    ApiResponse<?> registerVerificationEmail(String verificationCode);
 
+    ApiResponse<?> resetPassword(String email);
+
+    ApiResponse<?> verifyResetOTP(String verificationCode);
+
+    ApiResponse<?> changePass(String newPass, String email);
 }
