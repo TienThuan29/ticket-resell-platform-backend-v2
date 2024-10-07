@@ -16,4 +16,6 @@ public interface IEventController {
 
     ApiResponse<List<EventResponse>> getByCategory(String categoryName);
 
+    ApiResponse<List<EventResponse>> getAllEvents();
+
 }

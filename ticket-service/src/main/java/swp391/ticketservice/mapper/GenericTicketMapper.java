@@ -10,6 +10,7 @@ import swp391.ticketservice.exception.def.NotFoundException;
 import swp391.ticketservice.repository.CategoryRepository;
 import swp391.ticketservice.repository.EventRepository;
 import swp391.ticketservice.repository.UserRepository;
+import swp391.ticketservice.utils.DateUtil;
 
 /**
  * Author: Nguyen Nhat Truong
@@ -63,7 +64,7 @@ public class GenericTicketMapper {
                 .price(genericTicket.getPrice())
                 .salePercent(genericTicket.getSalePercent())
                 .area(genericTicket.getArea())
-                .expiredDateTime(genericTicket.getExpiredDateTime())
+                .expiredDateTime(DateUtil.fixDateTime(genericTicket.getExpiredDateTime()))
                 .linkEvent(genericTicket.getLinkEvent())
                 .description(genericTicket.getDescription())
                 .isPaper(genericTicket.isPaper())

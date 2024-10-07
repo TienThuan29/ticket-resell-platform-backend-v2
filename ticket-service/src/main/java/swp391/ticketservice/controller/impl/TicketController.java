@@ -33,7 +33,7 @@ public class TicketController implements ITicketController {
 
     @GetMapping("/get/{id}")
     @Override
-    public ApiResponse<TicketResponse> getById(@PathVariable String id) {
+    public ApiResponse<TicketResponse> getById(@PathVariable Long id) {
         return ticketService.getById(id);
     }
 
@@ -48,19 +48,19 @@ public class TicketController implements ITicketController {
 
     @PutMapping("/mark-bought/{id}")
     @Override
-    public ApiResponse<?> markBought(@PathVariable String id) {
+    public ApiResponse<?> markBought(@PathVariable Long id) {
         return ticketService.markBought(id);
     }
 
     @PutMapping("/mark-staff-check/{id}/{staffId}")
     @Override
-    public ApiResponse<?> markStaffCheck(@PathVariable String id, @PathVariable Long staffId) {
+    public ApiResponse<?> markStaffCheck(@PathVariable Long id, @PathVariable Long staffId) {
         return ticketService.markStaffCheck(id, staffId);
     }
 
     @PutMapping("/update-process/{id}/{process}")
     @Override
-    public ApiResponse<?> updateProcess(@PathVariable String id, @PathVariable String process) {
+    public ApiResponse<?> updateProcess(@PathVariable Long id, @PathVariable String process) {
         return ticketService.updateProcess(id, process);
     }
 

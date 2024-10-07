@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,5 +33,8 @@ public class EventResponse {
 
     @JsonProperty("image")
     private byte[] image;
+
+    @JsonProperty("hashtags")
+    private List<HashtagResponse> hashtags;
 
 }

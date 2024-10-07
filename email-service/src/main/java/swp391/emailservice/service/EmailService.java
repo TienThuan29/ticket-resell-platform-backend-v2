@@ -4,6 +4,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -12,6 +13,7 @@ import swp391.emailservice.config.Template;
 import swp391.emailservice.dto.request.VerificationRequest;
 import swp391.emailservice.dto.response.ApiResponse;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class EmailService implements IEmailService{
@@ -38,7 +40,7 @@ public class EmailService implements IEmailService{
             isSuccess= true;
         }
         catch (MessagingException exception){
-            exception.printStackTrace();
+            log.info(exception.getMessage());
         }
         return isSuccess;
     }

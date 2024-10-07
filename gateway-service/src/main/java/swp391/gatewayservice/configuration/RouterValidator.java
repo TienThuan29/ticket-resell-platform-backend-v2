@@ -38,7 +38,8 @@ public class RouterValidator {
             "/api/email/send-otp",
 //            "/api/admin/register-staff",  // Open it if you want to create admin account
             "/api/system/authentication",
-            "/api/system/refresh-token"
+            "/api/system/refresh-token",
+            "/api/tickets/generic/get-by-filter"
     );
 
     public Predicate<ServerHttpRequest> isSecured =
