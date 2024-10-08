@@ -34,4 +34,9 @@ public interface IUserService {
 
     ApiResponse<UserDTO> update(Long id, UpdateInfoRequest updateInfoRequest);
 
+    ApiResponse<?> resetPassword(String email);
+
+    ApiResponse<?> verifyResetOTP(String verificationOTP);
+
+    ApiResponse<?> changePass(String newPass, String email);
 }

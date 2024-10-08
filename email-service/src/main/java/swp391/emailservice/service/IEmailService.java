@@ -8,4 +8,6 @@ import swp391.emailservice.dto.response.ApiResponse;
 public interface IEmailService {
 
     ApiResponse<?> sendOTP(VerificationRequest request, String email);
+
+    ApiResponse<?> sendResetOTP(VerificationRequest request, String email);
 }

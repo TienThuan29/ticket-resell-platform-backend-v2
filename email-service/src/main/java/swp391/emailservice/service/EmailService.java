@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import swp391.emailservice.config.Template;
 import swp391.emailservice.dto.request.VerificationRequest;
 import swp391.emailservice.dto.response.ApiResponse;
+import swp391.emailservice.exception.def.NotFoundException;
+import swp391.emailservice.repository.UserRepository;
 
 @Slf4j
 @Component
@@ -20,6 +22,7 @@ public class EmailService implements IEmailService{
 
     private final JavaMailSender javaMailSender;
     private final Template template;
+    private final UserRepository userRepo;
 
     @Value("${spring.mail.username}")
     private String fromEmailID;
@@ -53,9 +56,16 @@ public class EmailService implements IEmailService{
                 "Mã OTP để hoàn tất việc đăng kí"
                 );
 
-        return new ApiResponse<>(
-                HttpStatus.OK,
-                isSuccess?"Success":"Failed"
-        );
+        return new ApiResponse<>(HttpStatus.OK, "", isSuccess );
+    }
+
+    @Override
+    public ApiResponse<?> sendResetOTP(VerificationRequest request, String email) {
+        boolean isSuccess=
+                sendEmail(email,
+                        template.sendOTPResetPassword(request.getVerificationCode()),
+                        "Mã OTP"
+                );
+        return new ApiResponse<>(HttpStatus.OK, "", isSuccess );
     }
 }

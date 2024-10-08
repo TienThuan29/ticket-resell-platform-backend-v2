@@ -33,7 +33,7 @@ public class TicketMapper {
         return  Ticket
                 .builder()
                 .ticketSerial(ticketRequest.getTicketSerial())
-                .image(ImageUtil.compressImage(ticketRequest.getImage()))
+//                .image(ImageUtil.compressImage(ticketRequest.getImage()))
                 .isChecked(Boolean.FALSE)
                 .isBought(Boolean.FALSE)
                 .isValid(Boolean.FALSE)
@@ -52,15 +52,23 @@ public class TicketMapper {
                 .builder()
                 .ticketId(ticket.getId())
                 .ticketSerial(ticket.getTicketSerial())
+<<<<<<< HEAD
                 .image(
                         ImageUtil.decompressImage(ticket.getImage())
                 )
+=======
+                .image(ImageUtil.decompressImage(ticket.getImage()))
+>>>>>>> 366f6b1a4487c5ec2afb79ec0b6a98e14167a17c
                 .isChecked(ticket.isChecked())
                 .isBought(ticket.isBought())
                 .isValid(ticket.isValid())
                 .note(ticket.getNote())
                 .process(ticket.getProcess())
+<<<<<<< HEAD
                 .boughtDate(ticket.getBoughtDate() != null ? DateUtil.fixDateTime(ticket.getBoughtDate()) : null)
+=======
+                .boughtDate(ticket.getBoughtDate() == null? null : DateUtil.fixDateTime(ticket.getBoughtDate()))
+>>>>>>> 366f6b1a4487c5ec2afb79ec0b6a98e14167a17c
                 .genericTicketId(ticket.getGenericTicket().getId())
                 .verifyStaffId( ticket.getVerifyStaff() == null ? null : ticket.getVerifyStaff().getId() )
                 .buyerId(ticket.getBuyerId())

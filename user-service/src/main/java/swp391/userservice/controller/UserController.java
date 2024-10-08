@@ -57,14 +57,31 @@ public class UserController implements IUserController {
 
     @PutMapping("/register/verify-email")
     @Override
-    public ApiResponse<?> registerVerificcationEmail(@RequestParam String verificationCode) {
+    public ApiResponse<?> registerVerificationEmail(@RequestParam String verificationCode) {
         return userService.verifyEmail(verificationCode);
     }
 
     @Override
-
     public ApiResponse<?> changePassword(Long id, String oldPassword, String newPassword) {
         return userService.changePassword(id, oldPassword, newPassword);
+    }
+
+
+    @PostMapping("/reset-password")
+    public ApiResponse<?> resetPassword(@RequestParam String email) {
+        return userService.resetPassword(email);
+    }
+
+    @Override
+    @PostMapping("/reset-password/verify-reset-otp")
+    public ApiResponse<?> verifyResetOTP(@RequestParam String verificationCode) {
+        return userService.verifyResetOTP(verificationCode);
+    }
+
+    @Override
+    @PutMapping("/reset-password/new-pass")
+    public ApiResponse<?> changePass(@RequestParam String newPass, @RequestParam String email) {
+        return userService.changePass(newPass, email);
     }
 
     @Override
