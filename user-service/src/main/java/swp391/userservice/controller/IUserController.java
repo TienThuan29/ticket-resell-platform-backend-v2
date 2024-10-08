@@ -31,4 +31,5 @@ public interface IUserController {
 
     ApiResponse<?> registerVerificcationEmail(String verificationCode);
 
+    ApiResponse<?> changePassword(Long id, String oldPassword, String newPassword);
 }

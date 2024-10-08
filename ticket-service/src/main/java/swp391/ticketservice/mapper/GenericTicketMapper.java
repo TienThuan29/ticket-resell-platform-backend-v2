@@ -33,6 +33,7 @@ public class GenericTicketMapper {
 
     private final UserMapper userMapper;
 
+    private final TicketMapper ticketMapper;
 
     public GenericTicket toEntity(GenericTicketRequest genericTicketRequest){
         return GenericTicket
@@ -71,6 +72,11 @@ public class GenericTicketMapper {
                 .category(categoryMapper.toResponse(genericTicket.getCategory()))
                 .event(eventMapper.toResponse(genericTicket.getEvent()))
                 .seller(userMapper.toSellerResponse(genericTicket.getSeller()))
+//                .tickets(
+//                        genericTicket.getTickets().stream().map(
+//                                ticketMapper::toResponse
+//                        ).toList()
+//                )
                 .build();
     }
 

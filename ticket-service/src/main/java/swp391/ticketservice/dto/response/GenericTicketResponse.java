@@ -3,7 +3,10 @@ package swp391.ticketservice.dto.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
+import swp391.entity.Ticket;
+
 import java.util.Date;
+import java.util.List;
 
 /**
  * Author: Nguyen Nhat Truong
@@ -36,5 +39,5 @@ public class GenericTicketResponse {
 
     @JsonProperty("seller") private SellerResponse seller;
 
-
+    //@JsonProperty("tickets") private List<TicketResponse> tickets;
 }

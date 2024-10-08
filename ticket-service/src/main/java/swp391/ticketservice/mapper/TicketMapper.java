@@ -26,8 +26,6 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class TicketMapper {
 
-    private final GenericTicketMapper genericTicketMapper;
-    private final UserRepository userRepository;
     private final GenericTicketRepository genericTicketRepository;
     private final MessageConfiguration messageConfig;
 
@@ -54,13 +52,15 @@ public class TicketMapper {
                 .builder()
                 .ticketId(ticket.getId())
                 .ticketSerial(ticket.getTicketSerial())
-                .image(Base64.getEncoder().encodeToString(ImageUtil.decompressImage(ticket.getImage())))
+                .image(
+                        ImageUtil.decompressImage(ticket.getImage())
+                )
                 .isChecked(ticket.isChecked())
                 .isBought(ticket.isBought())
                 .isValid(ticket.isValid())
                 .note(ticket.getNote())
                 .process(ticket.getProcess())
-                .boughtDate(DateUtil.fixDateTime(ticket.getBoughtDate()))
+                .boughtDate(ticket.getBoughtDate() != null ? DateUtil.fixDateTime(ticket.getBoughtDate()) : null)
                 .genericTicketId(ticket.getGenericTicket().getId())
                 .verifyStaffId( ticket.getVerifyStaff() == null ? null : ticket.getVerifyStaff().getId() )
                 .buyerId(ticket.getBuyerId())

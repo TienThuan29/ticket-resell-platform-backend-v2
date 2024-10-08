@@ -26,6 +26,8 @@ public interface IUserService {
 
     ApiResponse<AuthenticationResponse> refreshToken(String refreshToken);
 
+    ApiResponse<?> changePassword(Long id, String oldPassword, String newPassword);
+
     ApiResponse<?> register(RegisterRequest registerRequest);
 
     ApiResponse<?> verifyEmail(String verificationOTP);
