@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * Author: Nguyen Nhat Truong
  * Author: Nguyen Tien Thuan
  */
-@Service
+@Component
 @RequiredArgsConstructor
 public class GenericTicketService implements IGenericTicketService {
 

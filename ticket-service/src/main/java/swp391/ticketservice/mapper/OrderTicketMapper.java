@@ -27,17 +27,17 @@ public class OrderTicketMapper {
     public OrderTicket toEntity(OrderTicketRequest orderTicketRequest) {
         var buyer = userRepo.findById(orderTicketRequest.getBuyerId()).orElseThrow(
                 () -> new NotFoundException(
-                        messageConfig.INVALID_BUYER+ ": "+orderTicketRequest.getBuyerId()
+                        messageConfig.INVALID_BUYER + ": " + orderTicketRequest.getBuyerId()
                 )
         );
         var geneticTicket = genericTicketRepo.findById(orderTicketRequest.getGenericTicketId()).orElseThrow(
                 () -> new NotFoundException(
-                        messageConfig.INVALID_GENERICTICKET+": "+orderTicketRequest.getGenericTicketId()
+                        messageConfig.INVALID_GENERICTICKET + ": " + orderTicketRequest.getGenericTicketId()
                 )
         );
         var paymentMethod = paymentMethodRepo.findById(orderTicketRequest.getPaymentMethodId()).orElseThrow(
                 () -> new NotFoundException(
-                        messageConfig.INVALID_PAYMENT_METHOD_ID+": "+orderTicketRequest.getPaymentMethodId()
+                        messageConfig.INVALID_PAYMENT_METHOD_ID + ": " + orderTicketRequest.getPaymentMethodId()
                 )
         );
         return OrderTicket.builder()

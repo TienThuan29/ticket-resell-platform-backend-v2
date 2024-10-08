@@ -2,7 +2,7 @@ package swp391.reportservice.config;
 
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("reportServiceMessageConfiguration")
 public class MessageConfiguration {
 
     //Success
