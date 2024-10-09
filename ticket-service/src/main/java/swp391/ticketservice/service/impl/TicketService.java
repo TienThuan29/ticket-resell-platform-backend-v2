@@ -81,13 +81,15 @@ public class TicketService implements ITicketService {
         var staff = staffRepository.getStaffHasMinTicket().orElseThrow(
                 () -> new NotFoundException(message.INVALID_STAFF)
         );
-
+        //ticketRequest.setImage(file.getBytes());
+//        ticketRequest.setImage(file.getBytes());
+        log.info(file.getName());
         Ticket ticket= ticketMapper.toEntity(ticketRequest);
         ticket.setImage(ImageUtil.compressImage(file.getBytes()));
-        ticket.setBought(Boolean.FALSE);
-        ticket.setChecked(Boolean.FALSE);
-        ticket.setValid(Boolean.FALSE);
-        ticket.setProcess(GeneralProcess.WAITING);
+//        ticket.setBought(Boolean.FALSE);
+//        ticket.setChecked(Boolean.FALSE);
+//        ticket.setValid(Boolean.FALSE);
+//        ticket.setProcess(GeneralProcess.WAITING);
         ticket.setVerifyStaff(staff);
 
         ticketRepository.save(ticket);

@@ -41,6 +41,12 @@ public class OrderTicketMapper {
                 )
         );
         return OrderTicket.builder()
+                .orderTicketID(
+                        OrderTicketID.builder()
+                                .buyerId(orderTicketRequest.getBuyerId())
+                                .genericTicketId(orderTicketRequest.getGenericTicketId())
+                                .build()
+                )
                 .buyer(buyer)
                 .genericTicket(geneticTicket)
                 .quantity(orderTicketRequest.getQuantity())

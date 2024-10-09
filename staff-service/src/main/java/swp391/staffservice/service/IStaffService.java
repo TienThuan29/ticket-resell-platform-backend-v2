@@ -10,4 +10,8 @@ public interface IStaffService {
     ApiResponse<?> verifyTicket(Long id);
 
     ApiResponse<List<GenericTicketResponse>> getAllGenericTicketNeedVerify(Long staffId);
+
+    ApiResponse<?> markValidTicket(Long ticketId);
+
+    ApiResponse<?> markInvalidTicket(Long ticketId, String note);
 }

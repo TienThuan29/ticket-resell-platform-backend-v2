@@ -1,10 +1,7 @@
 package swp391.staffservice.controller.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import swp391.staffservice.controller.def.IStaffController;
 import swp391.staffservice.dto.response.ApiResponse;
 import swp391.staffservice.dto.response.GenericTicketResponse;
@@ -21,7 +18,6 @@ public class StaffController implements IStaffController {
 
     @Override
     public ApiResponse<?> verifyTicket(Long id) {
-
         return null;
     }
 
@@ -29,6 +25,18 @@ public class StaffController implements IStaffController {
     @GetMapping("/get-generic-ticket/need-verify/{id}")
     public ApiResponse<List<GenericTicketResponse>> getAllGenericTicketNeedVerify(@PathVariable("id") Long staffId) {
         return staffService.getAllGenericTicketNeedVerify(staffId);
+    }
+
+    @Override
+    @PutMapping("/verify/valid/{id}")
+    public ApiResponse<?> markValidTicket(@PathVariable("id") Long ticketId) {
+        return staffService.markValidTicket(ticketId);
+    }
+
+    @Override
+    @PutMapping("/verify/invalid/{id}")
+    public ApiResponse<?> markInvalidTicket(@PathVariable("id") Long ticketId, @RequestParam("note") String note) {
+        return staffService.markInvalidTicket(ticketId, note);
     }
 
 }
