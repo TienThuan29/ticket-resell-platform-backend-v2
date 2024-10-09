@@ -31,7 +31,7 @@ public interface GenericTicketRepository extends JpaRepository<GenericTicket, Lo
     @Query(
             "SELECT COUNT(*) FROM Ticket t " +
             "INNER JOIN GenericTicket gt ON t.genericTicket.id = gt.id " +
-            "WHERE gt.id =:genericTicketId AND t.isBought = false " +
+            "WHERE gt.id =:genericTicketId AND t.isBought = false AND t.isChecked = true AND t.isValid = true " +
             "GROUP BY gt.id"
     )
     Integer getTotalTicketsInGenericTicket(Long genericTicketId);

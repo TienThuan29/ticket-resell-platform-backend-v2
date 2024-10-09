@@ -42,7 +42,8 @@ public class RouterValidator {
             "/api/tickets/generic/get-by-filter",
             "/api/users/reset-password",
             "/api/users/reset-password/verify-reset-otp",
-            "/api/users/reset-password/new-pass"
+            "/api/users/reset-password/new-pass",
+            "/api/tickets/get/not-deleted-payment-method"
     );
 
     public Predicate<ServerHttpRequest> isSecured =

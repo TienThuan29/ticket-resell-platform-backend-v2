@@ -3,6 +3,7 @@ package swp391.ticketservice.controller.impl;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import swp391.ticketservice.controller.def.IGenericTicketController;
 import swp391.ticketservice.dto.request.GenericTicketFilter;

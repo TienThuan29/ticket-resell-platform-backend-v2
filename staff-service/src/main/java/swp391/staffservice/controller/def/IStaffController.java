@@ -11,4 +11,8 @@ public interface IStaffController {
 
     ApiResponse<List<GenericTicketResponse>> getAllGenericTicketNeedVerify(Long staffId);
 
+    ApiResponse<?> markValidTicket(Long ticketId);
+
+    ApiResponse<?> markInvalidTicket(Long ticketId, String note);
+
 }
