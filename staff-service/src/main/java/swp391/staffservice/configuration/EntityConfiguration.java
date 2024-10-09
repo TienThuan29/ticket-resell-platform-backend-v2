@@ -7,7 +7,8 @@ import swp391.entity.*;
 @Import({
         Staff.class,
         Ticket.class,
-        ReportFraud.class
+        ReportFraud.class,
+        GenericTicket.class
 })
 @Configuration("staffServiceEntityConfiguration")
 public class EntityConfiguration {
