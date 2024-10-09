@@ -57,7 +57,8 @@ public class PaymentService implements IPaymentService{
             String vnp_TxnRef,
             Long amount,
             String transactionType,
-            String payDate
+            String payDate,
+            String transactionNo
     ) throws ParseException {
         String customerCode= vnp_TxnRef.substring(8);
         var user= userRepo.findByCustomerCode(customerCode).get();
@@ -72,12 +73,14 @@ public class PaymentService implements IPaymentService{
                 .user(user)
                 .isDone(true)
                 .transDate(date)
+                .transactionNo(transactionNo)
                 .build();
         Long balance= user.getBalance()+amount;
         user.setBalance(balance);
-        userRepo.save(user);
-        transactionRepo.save(transaction);
-
+        if(transactionRepo.findByTransactionNo(transactionNo).isEmpty()){
+            userRepo.save(user);
+            transactionRepo.save(transaction);
+        }
         return new ApiResponse<>(HttpStatus.OK, messageConfig.SUCCESS_TRANSACTION, Boolean.TRUE);
     }
 }

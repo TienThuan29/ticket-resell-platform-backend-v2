@@ -15,6 +15,7 @@ public interface IPaymentService {
             String vnp_TxnRef,
             Long amount,
             String transactionType,
-            String payDate
+            String payDate,
+            String transactionNo
     ) throws ParseException;
 }

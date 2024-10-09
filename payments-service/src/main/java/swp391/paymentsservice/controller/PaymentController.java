@@ -30,11 +30,12 @@ public class PaymentController implements IPaymentController{
             @RequestParam("vnp_Amount") Long amount,
             @RequestParam("vnp_OrderInfo") String transactionType,
             @RequestParam("vnp_PayDate") String payDate,
-            @RequestParam("vnp_TxnRef") String txnRef
+            @RequestParam("vnp_TxnRef") String txnRef,
+            @RequestParam("vnp_TransactionNo") String transactionNo
     ) throws ParseException {
         if (responseCode.equals("00") && transactionStatus.equals("00")){
             return paymentService.saveTransaction(
-                    txnRef, amount, transactionType, payDate
+                    txnRef, amount, transactionType, payDate, transactionNo
             );
         }
         return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Failed", Boolean.FALSE);

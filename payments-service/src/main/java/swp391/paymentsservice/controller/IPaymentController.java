@@ -16,5 +16,6 @@ public interface IPaymentController {
                                Long amount,
                                String transactionType,
                                String payDate,
-                               String txnRef) throws ParseException;
+                               String txnRef,
+                               String transactionNo) throws ParseException;
 }

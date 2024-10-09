@@ -42,7 +42,7 @@ public class GenericTicket {
     private String linkEvent;
 
     @Column(name = "is_paper")
-    private boolean isPaper;
+    private Boolean isPaper;
 
     @OneToMany(mappedBy = "genericTicket", fetch = FetchType.EAGER)
     private Collection<Ticket> tickets;

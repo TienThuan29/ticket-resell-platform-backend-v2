@@ -29,7 +29,7 @@ class TicketServiceApplicationTests {
     void testFilter(){
         var events= eventRepository.getEventByFilter("", null, null);
         Assertions.assertNotNull(events);
-        log.info("Events :",events);
+        log.info("Events :"+events.size());
     }
 
 }

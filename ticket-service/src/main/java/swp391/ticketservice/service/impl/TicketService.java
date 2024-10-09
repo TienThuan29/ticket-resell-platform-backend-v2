@@ -24,11 +24,13 @@ import swp391.ticketservice.repository.StaffRepository;
 import swp391.ticketservice.repository.TicketRepository;
 import swp391.ticketservice.repository.UserRepository;
 import swp391.ticketservice.service.def.ITicketService;
+import swp391.ticketservice.utils.DateUtil;
 import swp391.ticketservice.utils.ImageUtil;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -94,9 +96,9 @@ public class TicketService implements ITicketService {
 
     @Override
     public ApiResponse<?> markBought(Long id) {
-        ZoneId zoneId = ZoneId.of("UTC+7");
-        LocalDateTime localDateTime = LocalDateTime.now(zoneId);
-        Date boughtDate = Date.from(localDateTime.atZone(zoneId).toInstant());
+        LocalDateTime localDateTime = LocalDateTime.now();
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+        Date boughtDate = Date.from(zonedDateTime.toInstant());
 
         Ticket ticket= ticketRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(message.INVALID_TICKET+" :"+id));

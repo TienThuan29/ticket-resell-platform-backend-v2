@@ -27,6 +27,9 @@ public class Transaction {
     @Column(name = "is_done", nullable = false,columnDefinition = "bit default 0")
     private Boolean isDone;
 
+    @Column(name = "transaction_no", nullable = false, unique = true)
+    private String transactionNo;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

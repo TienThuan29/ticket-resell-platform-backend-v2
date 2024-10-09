@@ -10,14 +10,8 @@ import swp391.ticketservice.dto.response.TicketResponse;
 import swp391.ticketservice.exception.def.InvalidProcessException;
 import swp391.ticketservice.exception.def.NotFoundException;
 import swp391.ticketservice.repository.GenericTicketRepository;
-import swp391.ticketservice.repository.UserRepository;
 import swp391.ticketservice.utils.DateUtil;
 import swp391.ticketservice.utils.ImageUtil;
-
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Base64;
-import java.util.Date;
 
 /**
  * Author: Nguyen Nhat Truong
@@ -60,7 +54,7 @@ public class TicketMapper {
                 .isValid(ticket.isValid())
                 .note(ticket.getNote())
                 .process(ticket.getProcess())
-                .boughtDate(ticket.getBoughtDate() != null ? DateUtil.fixDateTime(ticket.getBoughtDate()) : null)
+                .boughtDate(ticket.getBoughtDate() != null ? DateUtil.fixDateTimeResponse(ticket.getBoughtDate()) : null)
                 .genericTicketId(ticket.getGenericTicket().getId())
                 .verifyStaffId( ticket.getVerifyStaff() == null ? null : ticket.getVerifyStaff().getId() )
                 .buyerId(ticket.getBuyerId())
