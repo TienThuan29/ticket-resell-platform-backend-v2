@@ -20,4 +20,5 @@ public interface IEventService {
 
     ApiResponse<List<EventResponse>> getAllEvents();
 
+    ApiResponse<List<EventResponse>> getEventsByFilter(EventFilter eventFilter);
 }

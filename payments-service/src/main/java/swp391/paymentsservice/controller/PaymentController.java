@@ -3,14 +3,9 @@ package swp391.paymentsservice.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import swp391.paymentsservice.dto.response.ApiResponse;
-import swp391.paymentsservice.dto.response.PaymentResponse;
 import swp391.paymentsservice.service.IPaymentService;
-import swp391.paymentsservice.service.PaymentService;
 
 import java.text.ParseException;
 
@@ -28,7 +23,7 @@ public class PaymentController implements IPaymentController{
     }
 
     @Override
-    @GetMapping("/vn-pay-callback")
+    @PostMapping("/vn-pay-callback")
     public ApiResponse<?> payCallBack(
             @RequestParam("vnp_ResponseCode") String responseCode,
             @RequestParam("vnp_TransactionStatus") String transactionStatus,

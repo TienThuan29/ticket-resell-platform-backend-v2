@@ -1,6 +1,8 @@
 package swp391.ticketservice.service.impl;
 
 import org.springframework.http.HttpStatus;
+import swp391.entity.Hashtag;
+import swp391.ticketservice.dto.request.EventFilter;
 import swp391.ticketservice.dto.request.EventRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import swp391.ticketservice.dto.response.ApiResponse;
 import swp391.ticketservice.dto.response.EventResponse;
 import swp391.ticketservice.mapper.EventMapper;
 import swp391.ticketservice.repository.EventRepository;
+import swp391.ticketservice.repository.HashtagRepository;
 import swp391.ticketservice.service.def.IEventService;
 import swp391.ticketservice.config.MessageConfiguration;
 
@@ -23,6 +26,8 @@ import java.util.stream.Collectors;
 public class EventService implements IEventService {
 
     private final EventRepository eventRepository;
+
+    private final HashtagRepository hashtagRepository;
 
     private final EventMapper eventMapper;
 
@@ -74,6 +79,21 @@ public class EventService implements IEventService {
                 eventRepository.findAll().stream()
                         .map(eventMapper::toResponse).toList()
         );
+    }
+
+    @Override
+    public ApiResponse<List<EventResponse>> getEventsByFilter(EventFilter eventFilter) {
+//        List<Hashtag> hashtags= eventFilter.getHashtagIds() == null ?
+//                null:hashtagRepository.findAllById(eventFilter.getHashtagIds());
+
+        var searchResult = eventRepository.getEventByFilter(
+                eventFilter.getName(),
+                eventFilter.getStartDate(),
+                eventFilter.getHashtagIds());
+        return new ApiResponse<>(HttpStatus.OK, "",
+                searchResult.stream()
+                        .map(eventMapper::toResponse)
+                        .collect(Collectors.toList()));
     }
 
 }

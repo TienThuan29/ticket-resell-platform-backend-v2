@@ -76,29 +76,20 @@ public class TicketService implements ITicketService {
     @Override
     public ApiResponse<TicketResponse> create(TicketRequest ticketRequest, MultipartFile file) throws IOException {
         //ticketRequest.setProcess(GeneralProcess.WAITING.toString());
-<<<<<<< HEAD
         var staff = staffRepository.getStaffHasMinTicket().orElseThrow(
                 () -> new NotFoundException(message.INVALID_STAFF)
         );
-        ticketRequest.setImage(file.getBytes());
-=======
-//        ticketRequest.setImage(file.getBytes());
-        log.info(file.getName());
 
->>>>>>> 366f6b1a4487c5ec2afb79ec0b6a98e14167a17c
         Ticket ticket= ticketMapper.toEntity(ticketRequest);
         ticket.setImage(ImageUtil.compressImage(file.getBytes()));
         ticket.setBought(Boolean.FALSE);
         ticket.setChecked(Boolean.FALSE);
         ticket.setValid(Boolean.FALSE);
         ticket.setProcess(GeneralProcess.WAITING);
-<<<<<<< HEAD
         ticket.setVerifyStaff(staff);
-=======
 
->>>>>>> 366f6b1a4487c5ec2afb79ec0b6a98e14167a17c
         ticketRepository.save(ticket);
-        return new ApiResponse<>(HttpStatus.OK, message.SUCCESS_OPERATION, null);
+        return new ApiResponse<>(HttpStatus.OK, message.SUCCESS_OPERATION, ticketMapper.toResponse(ticket));
     }
 
     @Override
