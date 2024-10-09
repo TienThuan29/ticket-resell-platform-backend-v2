@@ -29,10 +29,7 @@ public class MessageConfiguration {
     public final String MESSAGE_UPDATE_USER_SUCCESS = "Cập nhật thông tin thành công";
     public final String MESSAGE_UPDATE_AVATAR_SUCCESS = " Cập nhật ảnh đại diện thành công";
     public final String MESSAGE_UPDATE_ISSELLER_SUCCESS = "Bạn đã đồng ý với điều khoản";
-
     public final String MESSAGE_UPDATE_NEW_PASSWORD_SUCCESS = "Đổi mật khẩu thành công";
-
     public final String MESSAGE_RESET_PASSWORD_SUCCSESS = "Cập nhật mật khẩu thành công";
-
 
 }

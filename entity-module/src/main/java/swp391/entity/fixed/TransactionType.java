@@ -2,7 +2,7 @@ package swp391.entity.fixed;
 
 public enum TransactionType {
 
-    DEPOSIT("Nạp tin"),
+    DEPOSIT("Nạp tiền"),
     WITHDRAWAL("Rút tiền"),
     SELLING("Bán vé"),
     BUYING("Mua vé")

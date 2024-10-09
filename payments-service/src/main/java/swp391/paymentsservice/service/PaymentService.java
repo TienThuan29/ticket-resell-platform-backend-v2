@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import swp391.entity.Transaction;
 import swp391.entity.User;
 import swp391.entity.fixed.TransactionType;
+import swp391.paymentsservice.config.MessageConfiguration;
 import swp391.paymentsservice.config.PaymentConfiguration;
 import swp391.paymentsservice.dto.response.ApiResponse;
 import swp391.paymentsservice.repository.TransactionRepository;
@@ -27,6 +28,8 @@ public class PaymentService implements IPaymentService{
     private final UserRepository userRepo;
 
     private final TransactionRepository transactionRepo;
+
+    private final MessageConfiguration messageConfig;
 
     @Override
     public ApiResponse<?> createVnPayPayment(HttpServletRequest request) {
@@ -75,6 +78,6 @@ public class PaymentService implements IPaymentService{
         userRepo.save(user);
         transactionRepo.save(transaction);
 
-        return new ApiResponse<>(HttpStatus.OK, "Success", Boolean.TRUE);
+        return new ApiResponse<>(HttpStatus.OK, messageConfig.SUCCESS_TRANSACTION, Boolean.TRUE);
     }
 }

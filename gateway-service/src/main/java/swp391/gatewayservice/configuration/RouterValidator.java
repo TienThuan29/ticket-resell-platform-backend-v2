@@ -33,6 +33,7 @@ public class RouterValidator {
             "/api/tickets/generic/get-total-ticket",
             "/api/policy/get/selling",
             "/api/events/get-happening-events",
+            "/api/events/get-happening-events/filter",
             "/api/categories/get-using-cate",
             "/api/email/send-otp",
             "/api/email/send-reset-otp",

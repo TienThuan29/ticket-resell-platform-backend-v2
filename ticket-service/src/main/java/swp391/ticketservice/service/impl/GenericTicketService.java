@@ -172,8 +172,14 @@ public class GenericTicketService implements IGenericTicketService {
     public ApiResponse<?> orderTicket(OrderTicketRequest orderTicketRequest) {
         try {
             orderTicketRepository.save(orderTicketMapper.toEntity(orderTicketRequest));
+            var user = userRepository.findById(orderTicketRequest.getBuyerId()).orElseThrow(
+                    () -> new NotFoundException(message.INVALID_BUYER)
+            );
+            user.setBalance(user.getBalance() - orderTicketRequest.getTotalPrice());
+            userRepository.save(user);
         }
         catch (Exception ex) {
+            System.out.println(ex);
             return new ApiResponse<>(HttpStatus.BAD_REQUEST, message.FAIL_ORDER_TICKET, null);
         }
         return new ApiResponse<>(HttpStatus.OK, message.SUCCESS_ORDER_TICKET, null);

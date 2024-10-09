@@ -91,7 +91,7 @@ public class TicketService implements ITicketService {
         ticket.setVerifyStaff(staff);
 
         ticketRepository.save(ticket);
-        return new ApiResponse<>(HttpStatus.OK, message.SUCCESS_OPERATION, null);
+        return new ApiResponse<>(HttpStatus.OK, message.SUCCESS_OPERATION, ticketMapper.toResponse(ticket));
     }
 
     @Override
