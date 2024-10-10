@@ -11,12 +11,16 @@ import swp391.ticketservice.dto.request.GenericTicketRequest;
 import swp391.ticketservice.dto.request.OrderTicketRequest;
 import swp391.ticketservice.dto.response.ApiResponse;
 import swp391.ticketservice.dto.response.GenericTicketResponse;
+import swp391.ticketservice.dto.response.OrderTicketResponse;
 import swp391.ticketservice.dto.response.TicketResponse;
 import swp391.ticketservice.exception.def.NotFoundException;
 import swp391.ticketservice.mapper.GenericTicketMapper;
 import swp391.ticketservice.mapper.OrderTicketMapper;
+import swp391.ticketservice.mapper.TicketMapper;
 import swp391.ticketservice.repository.*;
 import swp391.ticketservice.service.def.IGenericTicketService;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,6 +50,10 @@ public class GenericTicketService implements IGenericTicketService {
     private final OrderTicketMapper orderTicketMapper;
 
     private final OrderTicketRepository orderTicketRepository;
+
+    private final TicketRepository ticketRepository;
+
+    private final TicketMapper ticketMapper;
 
     @Override
     public ApiResponse<GenericTicketResponse> create(GenericTicketRequest genericTicketRequest) {
@@ -185,4 +193,28 @@ public class GenericTicketService implements IGenericTicketService {
         return new ApiResponse<>(HttpStatus.OK, message.SUCCESS_ORDER_TICKET, null);
     }
 
+    @Override
+    public ApiResponse<List<OrderTicketResponse>> getProcessingOrderTicket(Long userId) {
+        return new ApiResponse<>(
+                HttpStatus.OK, "",
+                orderTicketRepository.getProcessingOrderTicket(userId)
+                        .stream().map(orderTicketMapper::toResponse).toList()
+        );
+    }
+
+    @Override
+    public ApiResponse<List<OrderTicketResponse>> getAllOrderTicketRequest(Long sellerId) {
+        List<OrderTicketResponse> orderTicketResponses = orderTicketRepository.getAllRequestOrderTicket(sellerId)
+                .stream().map(orderTicketMapper::toResponse).toList();
+        for (OrderTicketResponse orTicketResp : orderTicketResponses) {
+            orTicketResp.setTicketList(
+                    ticketRepository.getNotBoughtTicketByGenericTicket(orTicketResp.getGenericTicket().getId())
+                            .stream().map(ticketMapper::toResponse).toList()
+            );
+        }
+        return new ApiResponse<>(
+                HttpStatus.OK, "",
+                orderTicketResponses
+        );
+    }
 }

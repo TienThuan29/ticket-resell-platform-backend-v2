@@ -11,6 +11,7 @@ import swp391.ticketservice.dto.request.GenericTicketRequest;
 import swp391.ticketservice.dto.request.OrderTicketRequest;
 import swp391.ticketservice.dto.response.GenericTicketResponse;
 import swp391.ticketservice.dto.response.ApiResponse;
+import swp391.ticketservice.dto.response.OrderTicketResponse;
 import swp391.ticketservice.service.def.IGenericTicketService;
 import java.util.Date;
 import java.util.List;
@@ -97,6 +98,18 @@ public class GenericTicketController implements IGenericTicketController {
     @PostMapping("/order")
     public ApiResponse<?> orderTicket(@RequestBody OrderTicketRequest orderTicketRequest) {
         return genericTicketService.orderTicket(orderTicketRequest);
+    }
+
+    @Override
+    @GetMapping("/get-processing-order-ticket/{id}")
+    public ApiResponse<List<OrderTicketResponse>> getProcessingOrderTicket(@PathVariable("id") Long userId) {
+        return genericTicketService.getProcessingOrderTicket(userId);
+    }
+
+    @Override
+    @GetMapping("/get-all-request-order-ticket/{id}")
+    public ApiResponse<List<OrderTicketResponse>> getAllOrderTicketRequest(@PathVariable("id") Long sellerId) {
+        return genericTicketService.getAllOrderTicketRequest(sellerId);
     }
 
 }
