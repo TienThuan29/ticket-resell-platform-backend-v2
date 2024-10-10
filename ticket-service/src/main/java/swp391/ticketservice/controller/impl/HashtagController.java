@@ -9,6 +9,8 @@ import swp391.ticketservice.dto.response.ApiResponse;
 import swp391.ticketservice.dto.response.HashtagResponse;
 import swp391.ticketservice.service.def.IHashtagService;
 
+import java.util.List;
+
 /**
 * Author: Le Hoang Cong Huy
 */
@@ -18,6 +20,12 @@ import swp391.ticketservice.service.def.IHashtagService;
 public class HashtagController implements IHashtagController {
 
     private final IHashtagService hashtagService;
+
+    @Override
+    @GetMapping("/get-all")
+    public  ApiResponse<List<HashtagResponse>>  getAll(){
+        return hashtagService.getAll();
+    }
 
     @Override
     @PostMapping("/create")

@@ -31,7 +31,7 @@ public class GenericTicketMapper {
                 .expiredDateTime(DateUtil.fixDateTime(genericTicket.getExpiredDateTime()))
                 .linkEvent(genericTicket.getLinkEvent())
                 .description(genericTicket.getDescription())
-                .isPaper(genericTicket.isPaper())
+                .isPaper(genericTicket.getIsPaper())
                 .category(categoryMapper.toResponse(genericTicket.getCategory()))
                 .event(eventMapper.toResponse(genericTicket.getEvent()))
                 .seller(userMapper.toSellerResponse(genericTicket.getSeller()))

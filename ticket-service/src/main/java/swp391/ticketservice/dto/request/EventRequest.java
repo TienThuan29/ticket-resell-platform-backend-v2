@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,6 +27,9 @@ public class EventRequest {
     @JsonProperty("detail")
     @NotBlank(message = "Mô tả sự kiện không được để trống")
     private String detail;
+
+
+//    private List<Integer> hastagIdList;
 
     @JsonProperty("image")
     private byte[] image;
