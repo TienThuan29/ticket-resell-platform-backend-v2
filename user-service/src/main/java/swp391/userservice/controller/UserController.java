@@ -22,7 +22,7 @@ import swp391.userservice.service.IUserService;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:3000")
+//@CrossOrigin("http://localhost:3000")
 public class UserController implements IUserController {
 
     private final IUserService userService;

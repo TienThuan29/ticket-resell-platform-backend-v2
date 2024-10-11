@@ -6,10 +6,13 @@ spring:
     name: api-gateway
   cloud:
     gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
       globalcors:
         cors-configurations:
-          [/**]:
-            allowedOrigins: "http://localhost:3000"
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:3000,http://localhost:3001"
             allowedMethods:
               - GET
               - POST
@@ -17,8 +20,7 @@ spring:
               - DELETE
               - OPTIONS
               - HEAD
-            allowedHeaders:
-              - "*"
+            allowedHeaders: '*'
             allowCredentials: true
       discovery:
         locator:
@@ -93,6 +95,7 @@ spring:
           uri: http://localhost:9008
           predicates:
             - Path=/api/payments/**
+
 
 
 

@@ -9,12 +9,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import swp391.gatewayservice.service.JwtService;
 
 @Slf4j
 @Component
+@CrossOrigin({
+        "http://localhost:3000",
+        "http://localhost:3001"
+})
 public class GlobalGatewayFilter implements GlobalFilter, Ordered {
 
     @Autowired
@@ -56,4 +61,5 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
         response.setStatusCode(httpStatus);
         return response.setComplete();
     }
+
 }
