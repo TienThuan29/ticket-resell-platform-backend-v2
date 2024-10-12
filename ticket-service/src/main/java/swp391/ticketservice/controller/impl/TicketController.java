@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import swp391.entity.Ticket;
 import swp391.entity.fixed.GeneralProcess;
 import swp391.ticketservice.controller.def.ITicketController;
+import swp391.ticketservice.dto.request.AcceptOrDenySellingRequest;
 import swp391.ticketservice.dto.request.TicketRequest;
 import swp391.ticketservice.dto.response.ApiResponse;
 import swp391.ticketservice.dto.response.TicketResponse;
@@ -68,6 +69,20 @@ public class TicketController implements ITicketController {
     @Override
     public ApiResponse<List<TicketResponse>> getTicketByProcess(@PathVariable GeneralProcess process) {
         return ticketService.getTicketsByProcess(process);
+    }
+
+    @Override
+    @PostMapping("/accept/selling-request")
+    public ApiResponse<?> acceptToSellTicket(
+            @RequestBody AcceptOrDenySellingRequest acceptOrDenySellingRequest
+    ) {
+        return ticketService.acceptToSellTicket(acceptOrDenySellingRequest);
+    }
+
+    @Override
+    @GetMapping("/get-all-bought-tickets/{id}")
+    public ApiResponse<List<TicketResponse>> getAllBoughtTicketsBySeller(@PathVariable("id") Long sellerId) {
+        return ticketService.getAllBoughtTicketsBySeller(sellerId);
     }
 
     @GetMapping("/get-tickets-of-seller/{sellerId}")

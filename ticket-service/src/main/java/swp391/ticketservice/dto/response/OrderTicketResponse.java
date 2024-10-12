@@ -2,7 +2,6 @@ package swp391.ticketservice.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-
 import java.util.List;
 
 @Getter
@@ -29,6 +28,9 @@ public class OrderTicketResponse {
 
     @JsonProperty("note")
     private String note;
+
+    @JsonProperty("buyer")
+    private BuyerResponse buyer;
 
     @JsonProperty("ticketList")
     private List<TicketResponse> ticketList;

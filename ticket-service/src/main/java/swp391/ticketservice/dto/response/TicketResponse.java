@@ -37,6 +37,10 @@ public class TicketResponse {
 
     @JsonProperty("buyerId") private Long buyerId;
 
+    @JsonProperty("buyer") private BuyerResponse buyer;
+
+    @JsonProperty("seller") private SellerResponse seller;
+
     @JsonProperty("verifyStaffId") private Long verifyStaffId;
 
     @JsonProperty("genericTicketObject") private GenericTicketResponse genericTicketObject;

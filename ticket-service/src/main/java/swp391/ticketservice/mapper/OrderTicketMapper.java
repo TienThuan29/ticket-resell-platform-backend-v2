@@ -30,7 +30,7 @@ public class OrderTicketMapper {
 
     private final PaymentMethodMapper paymentMethodMapper;
 
-    private final TicketMapper ticketMapper;
+    private final UserMapper userMapper;
 
     public OrderTicket toEntity(OrderTicketRequest orderTicketRequest) {
         var buyer = userRepo.findById(orderTicketRequest.getBuyerId()).orElseThrow(
@@ -69,6 +69,18 @@ public class OrderTicketMapper {
         return OrderTicketResponse.builder()
                 .genericTicket(genericTicketMapper.toResponse(orderTicket.getGenericTicket()))
                 .paymentMethod(paymentMethodMapper.toResponse(orderTicket.getPaymentMethod()))
+                .quantity(orderTicket.getQuantity())
+                .totalPrice(orderTicket.getTotalPrice())
+                .isAccepted(orderTicket.isAccepted())
+                .note(orderTicket.getNote())
+                .build();
+    }
+
+    public OrderTicketResponse toResponseWithBuyer(OrderTicket orderTicket) {
+        return OrderTicketResponse.builder()
+                .genericTicket(genericTicketMapper.toResponse(orderTicket.getGenericTicket()))
+                .paymentMethod(paymentMethodMapper.toResponse(orderTicket.getPaymentMethod()))
+                .buyer(userMapper.toBuyerResponse(orderTicket.getBuyer()))
                 .quantity(orderTicket.getQuantity())
                 .totalPrice(orderTicket.getTotalPrice())
                 .isAccepted(orderTicket.isAccepted())

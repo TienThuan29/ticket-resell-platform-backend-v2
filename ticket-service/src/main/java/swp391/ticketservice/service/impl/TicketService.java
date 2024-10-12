@@ -6,11 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import swp391.entity.GenericTicket;
-import swp391.entity.Ticket;
-import swp391.entity.User;
+import swp391.entity.*;
+import swp391.entity.embedable.OrderTicketID;
 import swp391.entity.fixed.GeneralProcess;
+import swp391.entity.fixed.TransactionType;
 import swp391.ticketservice.config.MessageConfiguration;
+import swp391.ticketservice.dto.request.AcceptOrDenySellingRequest;
 import swp391.ticketservice.dto.request.TicketRequest;
 import swp391.ticketservice.dto.response.ApiResponse;
 import swp391.ticketservice.dto.response.GenericTicketResponse;
@@ -19,10 +20,8 @@ import swp391.ticketservice.exception.def.InvalidProcessException;
 import swp391.ticketservice.exception.def.NotFoundException;
 import swp391.ticketservice.mapper.GenericTicketMapper;
 import swp391.ticketservice.mapper.TicketMapper;
-import swp391.ticketservice.repository.GenericTicketRepository;
-import swp391.ticketservice.repository.StaffRepository;
-import swp391.ticketservice.repository.TicketRepository;
-import swp391.ticketservice.repository.UserRepository;
+import swp391.ticketservice.mapper.UserMapper;
+import swp391.ticketservice.repository.*;
 import swp391.ticketservice.service.def.ITicketService;
 import swp391.ticketservice.utils.DateUtil;
 import swp391.ticketservice.utils.ImageUtil;
@@ -58,6 +57,12 @@ public class TicketService implements ITicketService {
     private final GenericTicketRepository genericTicketRepository;
 
     private final GenericTicketMapper genericTicketMapper;
+
+    private final TransactionRepository transactionRepository;
+
+    private final OrderTicketRepository orderTicketRepository;
+
+    private final UserMapper userMapper;
 
     @Override
     public ApiResponse<List<TicketResponse>> getAll() {
@@ -170,4 +175,71 @@ public class TicketService implements ITicketService {
         return new ApiResponse<>(HttpStatus.OK, "", ticketResponses);
     }
 
+    @Override
+    public ApiResponse<?> acceptToSellTicket(AcceptOrDenySellingRequest request) {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+        Date boughtDate = Date.from(zonedDateTime.toInstant());
+        try {
+            // Update order ticket
+            OrderTicket orderTicket = getOrderTicketById(request.getGenericTicketId(), request.getBuyerId());
+            orderTicket.setAccepted(request.getIsAccepted());
+            orderTicketRepository.save(orderTicket);
+
+            // Automatic transact tickets to buyer
+            List<Ticket> notBoughtTickets = ticketRepository.getNotBoughtTicketByGenericTicket(
+                    request.getGenericTicketId()
+            );
+            if (request.getQuantity() <= notBoughtTickets.size()) {
+                for (int i = 1; i <= request.getQuantity(); i++) {
+                    notBoughtTickets.get(i-1).setBought(Boolean.TRUE);
+                    notBoughtTickets.get(i-1).setBuyerId(request.getBuyerId());
+                    notBoughtTickets.get(i-1).setBoughtDate(boughtDate);
+                    notBoughtTickets.get(i-1).setProcess(GeneralProcess.SUCCESS);
+                }
+            }
+            ticketRepository.saveAll(notBoughtTickets);
+            // Update Transaction table
+            Transaction transaction = Transaction.builder()
+                    .amount(request.getTotalPrice())
+                    .transDate(boughtDate)
+                    .isDone(Boolean.TRUE)
+                    .type(TransactionType.BUYING)
+                    .user(getUserById(request.getBuyerId()))
+                    .build();
+            transactionRepository.save(transaction);
+        }
+        catch (Exception exception) {
+            return new ApiResponse<>(HttpStatus.BAD_REQUEST, message.ERROR_ACCEPT_TO_SELL_TICKET, null);
+        }
+        return new ApiResponse<>(HttpStatus.OK, message.SUCCESS_ACCEPT_TO_SELL_TICKET, null);
+    }
+
+    @Override
+    public ApiResponse<List<TicketResponse>> getAllBoughtTicketsBySeller(Long sellerId) {
+        List<TicketResponse> boughtTickets = ticketRepository.getAllBoughtTicketsBySeller(sellerId)
+                .stream().map(ticketMapper::toResponse).toList();
+
+        boughtTickets.forEach((item) -> {
+            item.setBuyer(
+                    userMapper.toBuyerResponse(this.getUserById(item.getBuyerId()))
+            );
+        });
+
+        return new ApiResponse<>(
+                HttpStatus.OK, "", boughtTickets
+        );
+    }
+
+    private User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException(message.INVALID_BUYER)
+        );
+    }
+
+    private OrderTicket getOrderTicketById(Long genericTicketId, Long buyerId) {
+        return orderTicketRepository.findById(
+                new OrderTicketID(genericTicketId, buyerId)
+        ).orElseThrow(() -> new NotFoundException(message.ERROR_ORDER_TICKET_NOT_FOUND));
+    }
 }

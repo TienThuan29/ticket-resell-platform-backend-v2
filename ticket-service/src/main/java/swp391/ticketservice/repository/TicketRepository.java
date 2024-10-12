@@ -22,6 +22,14 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     )
     List<Ticket> getNotBoughtTicketByGenericTicket(Long genericTicketId);
 
+    @Query(
+            "SELECT t FROM GenericTicket gt " +
+            "INNER JOIN Ticket t on t.genericTicket.id = gt.id " +
+            "WHERE t.isBought = true AND gt.seller.id =:sellerId"
+    )
+    List<Ticket> getAllBoughtTicketsBySeller(Long sellerId);
+
+
 //    @Query(
 //            "SELECT t FROM Ticket t " +
 //            "INNER JOIN GenericTicket gt ON t.genericTicket.id = gt.id " +

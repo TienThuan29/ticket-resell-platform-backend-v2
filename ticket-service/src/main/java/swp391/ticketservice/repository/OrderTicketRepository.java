@@ -19,7 +19,9 @@ public interface OrderTicketRepository extends JpaRepository<OrderTicket, OrderT
     @Query(
             "SELECT ot FROM OrderTicket ot " +
             "WHERE ot.genericTicket.id IN " +
-            "( SELECT gt.id FROM GenericTicket gt WHERE gt.seller.id =:sellerId)"
+            "( SELECT gt.id FROM GenericTicket gt WHERE gt.seller.id =:sellerId) " +
+            "AND ot.isAccepted = false "
     )
     List<OrderTicket> getAllRequestOrderTicket(Long sellerId);
+
 }

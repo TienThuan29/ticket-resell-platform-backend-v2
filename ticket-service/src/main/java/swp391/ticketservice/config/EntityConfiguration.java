@@ -13,7 +13,8 @@ import swp391.entity.*;
         User.class,
         Staff.class,
         OrderTicket.class,
-        PaymentMethod.class
+        PaymentMethod.class,
+        Transaction.class
 })
 @Configuration("ticketServiceEntityConfiguration")
 public class EntityConfiguration {

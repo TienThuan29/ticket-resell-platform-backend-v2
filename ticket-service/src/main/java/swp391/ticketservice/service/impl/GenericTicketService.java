@@ -205,7 +205,7 @@ public class GenericTicketService implements IGenericTicketService {
     @Override
     public ApiResponse<List<OrderTicketResponse>> getAllOrderTicketRequest(Long sellerId) {
         List<OrderTicketResponse> orderTicketResponses = orderTicketRepository.getAllRequestOrderTicket(sellerId)
-                .stream().map(orderTicketMapper::toResponse).toList();
+                .stream().map(orderTicketMapper::toResponseWithBuyer).toList();
         for (OrderTicketResponse orTicketResp : orderTicketResponses) {
             orTicketResp.setTicketList(
                     ticketRepository.getNotBoughtTicketByGenericTicket(orTicketResp.getGenericTicket().getId())
