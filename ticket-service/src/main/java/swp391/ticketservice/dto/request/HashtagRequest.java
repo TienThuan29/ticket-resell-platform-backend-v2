@@ -10,7 +10,12 @@ import lombok.*;
 @AllArgsConstructor
 public class HashtagRequest {
 
+    @JsonProperty("id")
+    private Integer id;
+
     @JsonProperty("name")
     private String name;
 
+    @JsonProperty("isDeleted")
+    private boolean isDeleted;
 }
