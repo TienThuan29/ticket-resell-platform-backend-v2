@@ -96,6 +96,11 @@ spring:
           predicates:
             - Path=/api/payments/**
 
+        - id: payments-service
+          uri: http://localhost:9008
+          predicates:
+            - Path=/api/transactions/**
+
 
 
 

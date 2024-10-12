@@ -1,17 +1,17 @@
-package swp391.paymentsservice.service;
+package swp391.paymentsservice.service.impl;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import swp391.entity.Transaction;
-import swp391.entity.User;
 import swp391.entity.fixed.TransactionType;
 import swp391.paymentsservice.config.MessageConfiguration;
 import swp391.paymentsservice.config.PaymentConfiguration;
 import swp391.paymentsservice.dto.response.ApiResponse;
 import swp391.paymentsservice.repository.TransactionRepository;
 import swp391.paymentsservice.repository.UserRepository;
+import swp391.paymentsservice.service.def.IPaymentService;
 import swp391.paymentsservice.utils.VnPayUtils;
 
 import java.text.ParseException;
@@ -21,7 +21,7 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class PaymentService implements IPaymentService{
+public class PaymentService implements IPaymentService {
 
     private final PaymentConfiguration vnPayConfig;
 
