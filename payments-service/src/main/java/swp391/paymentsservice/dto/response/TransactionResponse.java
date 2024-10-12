@@ -13,21 +13,21 @@ import java.util.Date;
 @AllArgsConstructor
 public class TransactionResponse {
 
-    @JsonProperty("")
+    @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("")
+    @JsonProperty("transDate")
     private Date transDate;
 
-    @JsonProperty("")
+    @JsonProperty("amount")
     private Long amount;
 
-    @JsonProperty("")
+    @JsonProperty("isDone")
     private Boolean isDone;
 
-    @JsonProperty("")
+    @JsonProperty("transactionNo")
     private String transactionNo;
 
-    @JsonProperty("")
+    @JsonProperty("type")
     private String type;
 }
