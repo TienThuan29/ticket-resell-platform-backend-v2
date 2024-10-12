@@ -62,7 +62,8 @@ public class GatewayConfiguration {
                 .route(
                         "payments-service",
                         r -> r.path(
-                                        "/api/payments/**"
+                                        "/api/payments/**",
+                                        "/api/transactions/**"
                                 )
                                 .uri("http://localhost:9008")
                 )
