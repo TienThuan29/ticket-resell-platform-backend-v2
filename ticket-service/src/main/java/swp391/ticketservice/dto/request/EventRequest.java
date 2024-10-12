@@ -28,10 +28,9 @@ public class EventRequest {
     @NotBlank(message = "Mô tả sự kiện không được để trống")
     private String detail;
 
-
-//    private List<Integer> hastagIdList;
+    @JsonProperty("hashtagsRequest")
+    private List<HashtagRequest> hashtagsRequest;
 
     @JsonProperty("image")
     private byte[] image;
-
 }
