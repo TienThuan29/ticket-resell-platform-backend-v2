@@ -22,7 +22,6 @@ public class TransactionController implements ITransactionController {
     @Override
     @GetMapping("/get-trans-deposit/{id}")
     public ApiResponse<List<TransactionResponse>> getTransDepositByUserId(@PathVariable Long id) {
-
         return transactionService.getTransDepositByUserId(id);
     }
 }
