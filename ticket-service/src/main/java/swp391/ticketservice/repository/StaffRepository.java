@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import swp391.entity.Staff;
+import swp391.entity.fixed.Role;
 
 import java.util.Optional;
 
@@ -27,5 +28,5 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
     @Query("UPDATE Staff s SET s.balance = s.balance + ?1 WHERE s.roleCode = 'ADMIN'")
     void updateBalanceOfAdmin(Long amount);
 
-
+    Optional<Staff> findByRoleCode(Role roleCode);
 }

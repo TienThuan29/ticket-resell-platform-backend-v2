@@ -16,10 +16,6 @@ import swp391.gatewayservice.service.JwtService;
 
 @Slf4j
 @Component
-@CrossOrigin({
-        "http://localhost:3000",
-        "http://localhost:3001"
-})
 public class GlobalGatewayFilter implements GlobalFilter, Ordered {
 
     @Autowired
@@ -30,17 +26,17 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        log.info("Global filter.....");
+//        log.info("Global filter.....");
         ServerHttpRequest request = exchange.getRequest();
         if(routerValidator.isSecured.test(request)) {
             if(authMissing(request)) {
-                log.info("Auth missing");
+//                log.info("Auth missing");
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
             }
             final String token =  request.getHeaders().getOrEmpty("Authorization")
                     .get(0).substring(7); // "Bearer ".length()
             if (token.isEmpty() || jwtService.isTokenExpired(token)) {
-                log.info("Invalid token");
+//                log.info("Invalid token");
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
             }
         }

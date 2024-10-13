@@ -210,7 +210,7 @@ public class TicketService implements ITicketService {
             transactionRepository.save(buyerTrans);
 
             // Add amount for admin
-            //........
+            staffRepository.updateBalanceOfAdmin(request.getTotalPrice());
 
             Transaction sellerTrans = Transaction.builder()
                     .amount(request.getTotalPrice())
@@ -235,6 +235,11 @@ public class TicketService implements ITicketService {
         boughtTickets.forEach((item) -> {
             item.setBuyer(
                     userMapper.toBuyerResponse(this.getUserById(item.getBuyerId()))
+            );
+            item.setGenericTicketObject(
+                    genericTicketMapper.toResponse(
+                            genericTicketRepository.findById(item.getGenericTicketId()).get()
+                    )
             );
         });
 
