@@ -97,4 +97,28 @@ public class EventService implements IEventService {
                         .collect(Collectors.toList()));
     }
 
+    @Override
+    public ApiResponse<List<EventResponse>> getHotEvents() {
+        var hotHashtag = hashtagRepository.getHashtagByNameAndDeleted("Hot", Boolean.FALSE).orElseThrow();
+        List<EventResponse> events = eventRepository.getHappeningEvents()
+                .stream().filter(
+                        event -> event.getHashtags().contains(hotHashtag)
+                ).map(
+                        eventMapper::toResponse
+                ).toList();
+        return new ApiResponse<>(HttpStatus.OK, "", events);
+    }
+
+    @Override
+    public ApiResponse<List<EventResponse>> getSpecialEvent() {
+        var hotHashtag = hashtagRepository.getHashtagByNameAndDeleted("DacBiet", Boolean.FALSE).orElseThrow();
+        List<EventResponse> events = eventRepository.getHappeningEvents()
+                .stream().filter(
+                        event -> event.getHashtags().contains(hotHashtag)
+                ).map(
+                        eventMapper::toResponse
+                ).toList();
+        return new ApiResponse<>(HttpStatus.OK, "", events);
+    }
+
 }

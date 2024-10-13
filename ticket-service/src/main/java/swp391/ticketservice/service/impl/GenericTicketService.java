@@ -208,7 +208,7 @@ public class GenericTicketService implements IGenericTicketService {
                 .stream().map(orderTicketMapper::toResponseWithBuyer).toList();
         for (OrderTicketResponse orTicketResp : orderTicketResponses) {
             orTicketResp.setTicketList(
-                    ticketRepository.getNotBoughtTicketByGenericTicket(orTicketResp.getGenericTicket().getId())
+                    ticketRepository.getNotBoughtTicketByGenericTicketNotBought(orTicketResp.getGenericTicket().getId())
                             .stream().map(ticketMapper::toResponse).toList()
             );
         }

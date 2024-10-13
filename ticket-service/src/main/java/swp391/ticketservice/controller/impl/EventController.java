@@ -58,6 +58,16 @@ public class EventController implements IEventController {
         return eventService.getEventsByFilter(eventFilter);
     }
 
-//    public ApiResponse<>
+    @Override
+    @GetMapping("/get-happening-events/hot-event")
+    public ApiResponse<List<EventResponse>> getHotEvents() {
+        return eventService.getHotEvents();
+    }
+
+    @Override
+    @GetMapping("/get-happening-events/special-event")
+    public ApiResponse<List<EventResponse>> getSpecialEvent() {
+        return eventService.getSpecialEvent();
+    }
 
 }

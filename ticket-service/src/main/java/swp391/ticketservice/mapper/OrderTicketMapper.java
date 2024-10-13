@@ -14,6 +14,8 @@ import swp391.ticketservice.repository.GenericTicketRepository;
 import swp391.ticketservice.repository.PaymentMethodRepository;
 import swp391.ticketservice.repository.UserRepository;
 
+import java.util.UUID;
+
 @Component("ticketServiceOrderTicketMapper")
 @RequiredArgsConstructor
 public class OrderTicketMapper {
@@ -53,6 +55,7 @@ public class OrderTicketMapper {
                         OrderTicketID.builder()
                                 .buyerId(orderTicketRequest.getBuyerId())
                                 .genericTicketId(orderTicketRequest.getGenericTicketId())
+                                .orderNo(this.randomOrderNo())
                                 .build()
                 )
                 .buyer(buyer)
@@ -67,6 +70,7 @@ public class OrderTicketMapper {
 
     public OrderTicketResponse toResponse(OrderTicket orderTicket) {
         return OrderTicketResponse.builder()
+                .orderNo(orderTicket.getOrderTicketID().getOrderNo())
                 .genericTicket(genericTicketMapper.toResponse(orderTicket.getGenericTicket()))
                 .paymentMethod(paymentMethodMapper.toResponse(orderTicket.getPaymentMethod()))
                 .quantity(orderTicket.getQuantity())
@@ -78,6 +82,7 @@ public class OrderTicketMapper {
 
     public OrderTicketResponse toResponseWithBuyer(OrderTicket orderTicket) {
         return OrderTicketResponse.builder()
+                .orderNo(orderTicket.getOrderTicketID().getOrderNo())
                 .genericTicket(genericTicketMapper.toResponse(orderTicket.getGenericTicket()))
                 .paymentMethod(paymentMethodMapper.toResponse(orderTicket.getPaymentMethod()))
                 .buyer(userMapper.toBuyerResponse(orderTicket.getBuyer()))
@@ -88,4 +93,7 @@ public class OrderTicketMapper {
                 .build();
     }
 
+    private String randomOrderNo() {
+        return UUID.randomUUID().toString().substring(1,8) + UUID.randomUUID().toString().substring(1,3);
+    }
 }

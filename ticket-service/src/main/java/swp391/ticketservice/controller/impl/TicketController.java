@@ -1,6 +1,7 @@
 package swp391.ticketservice.controller.impl;
 
 import jakarta.validation.Valid;
+import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -80,6 +81,12 @@ public class TicketController implements ITicketController {
     }
 
     @Override
+    @PostMapping("/deny/selling-request")
+    public ApiResponse<?> denyToSellTicket(@RequestBody AcceptOrDenySellingRequest request) {
+        return ticketService.denyToSellTicket(request);
+    }
+
+    @Override
     @GetMapping("/get-all-bought-tickets/{id}")
     public ApiResponse<List<TicketResponse>> getAllBoughtTicketsBySeller(@PathVariable("id") Long sellerId) {
         return ticketService.getAllBoughtTicketsBySeller(sellerId);
@@ -90,4 +97,8 @@ public class TicketController implements ITicketController {
         return ticketService.getGenericTicketWithTicketsOfSeller(sellerId);
     }
 
+    @GetMapping("/get-all-bought-tickets-of-buyer/{id}")
+    public ApiResponse<List<TicketResponse>> getAllBoughtTicketByBuyer(@PathVariable("id") Long buyerId) {
+        return ticketService.getAllBoughtTicketsByBuyer(buyerId);
+    }
 }

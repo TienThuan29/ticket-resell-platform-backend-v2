@@ -36,4 +36,10 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
             "(:hashtags IS NULL OR h.id IN :hashtags) AND " +
             "e.isDeleted = false")
     List<Event> getEventByFilter(String name, Date startDate, List<Integer> hashtags);
+
+//    @Query(
+//            "SELECT e FROM Event e " +
+//            "INNER JOIN "
+//    )
+//    List<Event> getEventByHashtagName(String hastagName);
 }

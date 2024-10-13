@@ -24,4 +24,5 @@ public interface OrderTicketRepository extends JpaRepository<OrderTicket, OrderT
     )
     List<OrderTicket> getAllRequestOrderTicket(Long sellerId);
 
+
 }

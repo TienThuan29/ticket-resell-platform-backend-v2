@@ -30,10 +30,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -182,7 +179,9 @@ public class TicketService implements ITicketService {
         Date boughtDate = Date.from(zonedDateTime.toInstant());
         try {
             // Update order ticket
-            OrderTicket orderTicket = getOrderTicketById(request.getGenericTicketId(), request.getBuyerId());
+            OrderTicket orderTicket = getOrderTicketById(
+                    request.getGenericTicketId(), request.getBuyerId(), request.getOrderNo()
+            );
             orderTicket.setAccepted(request.getIsAccepted());
             orderTicketRepository.save(orderTicket);
 
@@ -206,6 +205,7 @@ public class TicketService implements ITicketService {
                     .isDone(Boolean.TRUE)
                     .type(TransactionType.BUYING)
                     .user(getUserById(request.getBuyerId()))
+                    .transactionNo(randoTransactionNo())
                     .build();
             transactionRepository.save(buyerTrans);
 
@@ -218,13 +218,54 @@ public class TicketService implements ITicketService {
                     .isDone(Boolean.FALSE)
                     .type(TransactionType.SELLING)
                     .user(getUserById(request.getSellerId()))
+                    .transactionNo(randoTransactionNo())
                     .build();
             transactionRepository.save(sellerTrans);
         }
         catch (Exception exception) {
+            log.info(exception.toString());
             return new ApiResponse<>(HttpStatus.BAD_REQUEST, message.ERROR_ACCEPT_TO_SELL_TICKET, null);
         }
         return new ApiResponse<>(HttpStatus.OK, message.SUCCESS_ACCEPT_TO_SELL_TICKET, null);
+    }
+
+    @Override
+    public ApiResponse<?> denyToSellTicket(AcceptOrDenySellingRequest request) {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+        Date denyingDate = Date.from(zonedDateTime.toInstant());
+        try {
+            // Update order ticket
+            OrderTicket orderTicket = getOrderTicketById(
+                    request.getGenericTicketId(), request.getBuyerId(), request.getOrderNo()
+            );
+            orderTicket.setAccepted(request.getIsAccepted());
+            orderTicket.setNote(request.getNote());
+            orderTicketRepository.save(orderTicket);
+
+            // Refund amount for buyer
+            var buyer = getUserById(request.getBuyerId());
+            buyer.setBalance(buyer.getBalance() + request.getTotalPrice());
+            userRepository.save(buyer);
+
+            // Minus balance of admin
+            staffRepository.updateBalanceOfAdmin(-1 * request.getTotalPrice());
+            // Update transaction
+//            Transaction buyerTransaction = Transaction.builder()
+//                    .amount(request.getTotalPrice())
+//                    .transDate(denyingDate)
+//                    .isDone(Boolean.TRUE)
+//                    .type(TransactionType.DENIED_TO_SELL)
+//                    .user(buyer)
+//                    .transactionNo(randoTransactionNo())
+//                    .build();
+//            transactionRepository.save(buyerTransaction);
+        }
+        catch (Exception ex) {
+            log.info(ex.toString());
+            return new ApiResponse<>(HttpStatus.BAD_REQUEST, message.ERROR_DENY_TO_SELL_TICKET, null);
+        }
+        return new ApiResponse<>(HttpStatus.OK, message.SUCCESS_DENY_TO_SELL_TICKET, null);
     }
 
     @Override
@@ -248,15 +289,33 @@ public class TicketService implements ITicketService {
         );
     }
 
+    @Override
+    public ApiResponse<List<TicketResponse>> getAllBoughtTicketsByBuyer(Long buyerId) {
+        List<TicketResponse> tickets = ticketRepository.getAllBoughtTicketsByBuyer(buyerId)
+                .stream().map(ticketMapper::toResponse).toList();
+        tickets.forEach((item) -> {
+            item.setGenericTicketObject(
+                    genericTicketMapper.toResponse(
+                            genericTicketRepository.findById(item.getGenericTicketId()).get()
+                    )
+            );
+        });
+        return new ApiResponse<>(HttpStatus.OK, "", tickets);
+    }
+
     private User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException(message.INVALID_BUYER)
         );
     }
 
-    private OrderTicket getOrderTicketById(Long genericTicketId, Long buyerId) {
+    private OrderTicket getOrderTicketById(Long genericTicketId, Long buyerId, String orderNo) {
         return orderTicketRepository.findById(
-                new OrderTicketID(genericTicketId, buyerId)
+                new OrderTicketID(genericTicketId, buyerId, orderNo.trim())
         ).orElseThrow(() -> new NotFoundException(message.ERROR_ORDER_TICKET_NOT_FOUND));
+    }
+
+    private String randoTransactionNo() {
+        return UUID.randomUUID().toString().substring(1,8) + UUID.randomUUID().toString().substring(1,3);
     }
 }

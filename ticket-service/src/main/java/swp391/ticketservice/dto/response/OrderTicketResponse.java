@@ -11,6 +11,9 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderTicketResponse {
 
+    @JsonProperty("orderNo")
+    private String orderNo;
+
     @JsonProperty("genericTicket")
     private GenericTicketResponse genericTicket;
 

@@ -10,6 +10,9 @@ import lombok.*;
 @AllArgsConstructor
 public class AcceptOrDenySellingRequest {
 
+    @JsonProperty("orderNo")
+    private String orderNo;
+
     @JsonProperty("buyerId")
     private Long buyerId;
 

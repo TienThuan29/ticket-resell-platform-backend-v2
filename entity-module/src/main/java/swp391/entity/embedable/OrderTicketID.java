@@ -2,6 +2,7 @@ package swp391.entity.embedable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Id;
 import lombok.*;
 
 import java.io.Serializable;
@@ -14,10 +15,15 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class OrderTicketID implements Serializable {
 
+
+
     @Column(name = "generic_ticket_id", nullable = false)
     private Long genericTicketId;
 
     @Column(name = "buyer_id", nullable = false)
     private Long buyerId;
+
+    @Column(name = "order_no")
+    private String orderNo;
 
 }

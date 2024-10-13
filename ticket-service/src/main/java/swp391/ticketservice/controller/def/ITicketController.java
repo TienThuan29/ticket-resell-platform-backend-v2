@@ -32,5 +32,7 @@ public interface ITicketController {
 
     ApiResponse<?> acceptToSellTicket(AcceptOrDenySellingRequest request);
 
+    ApiResponse<?> denyToSellTicket(AcceptOrDenySellingRequest request);
+
     ApiResponse<List<TicketResponse>> getAllBoughtTicketsBySeller(Long sellerId);
 }
