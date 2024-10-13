@@ -29,3 +29,7 @@ payment:
     version: 2.1.0
     command: pay
     orderType: other
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

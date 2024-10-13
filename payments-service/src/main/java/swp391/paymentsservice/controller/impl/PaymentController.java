@@ -1,18 +1,19 @@
-package swp391.paymentsservice.controller;
+package swp391.paymentsservice.controller.impl;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import swp391.paymentsservice.controller.def.IPaymentController;
 import swp391.paymentsservice.dto.response.ApiResponse;
-import swp391.paymentsservice.service.IPaymentService;
+import swp391.paymentsservice.service.def.IPaymentService;
 
 import java.text.ParseException;
 
 @RestController
 @RequestMapping("/api/payments")
 @RequiredArgsConstructor
-public class PaymentController implements IPaymentController{
+public class PaymentController implements IPaymentController {
 
     private final IPaymentService paymentService;
 
