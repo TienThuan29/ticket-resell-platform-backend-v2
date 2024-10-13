@@ -200,14 +200,26 @@ public class TicketService implements ITicketService {
             }
             ticketRepository.saveAll(notBoughtTickets);
             // Update Transaction table
-            Transaction transaction = Transaction.builder()
+            Transaction buyerTrans = Transaction.builder()
                     .amount(request.getTotalPrice())
                     .transDate(boughtDate)
                     .isDone(Boolean.TRUE)
                     .type(TransactionType.BUYING)
                     .user(getUserById(request.getBuyerId()))
                     .build();
-            transactionRepository.save(transaction);
+            transactionRepository.save(buyerTrans);
+
+            // Add amount for admin
+            //........
+
+            Transaction sellerTrans = Transaction.builder()
+                    .amount(request.getTotalPrice())
+                    .transDate(boughtDate)
+                    .isDone(Boolean.FALSE)
+                    .type(TransactionType.SELLING)
+                    .user(getUserById(request.getSellerId()))
+                    .build();
+            transactionRepository.save(sellerTrans);
         }
         catch (Exception exception) {
             return new ApiResponse<>(HttpStatus.BAD_REQUEST, message.ERROR_ACCEPT_TO_SELL_TICKET, null);

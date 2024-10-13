@@ -13,6 +13,9 @@ public class AcceptOrDenySellingRequest {
     @JsonProperty("buyerId")
     private Long buyerId;
 
+    @JsonProperty("sellerId")
+    private Long sellerId;
+
     @JsonProperty("genericTicketId")
     private Long genericTicketId;
 

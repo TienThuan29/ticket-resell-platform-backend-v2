@@ -58,4 +58,6 @@ public class EventController implements IEventController {
         return eventService.getEventsByFilter(eventFilter);
     }
 
+//    public ApiResponse<>
+
 }

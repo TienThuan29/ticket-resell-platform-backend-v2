@@ -1,8 +1,10 @@
 package swp391.ticketservice.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import swp391.entity.Staff;
 
 import java.util.Optional;
@@ -19,5 +21,11 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
             ")"
     )
     Optional<Staff> getStaffHasMinTicket();
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Staff s SET s.balance = s.balance + ?1 WHERE s.roleCode = 'ADMIN'")
+    void updateBalanceOfAdmin(Long amount);
+
 
 }

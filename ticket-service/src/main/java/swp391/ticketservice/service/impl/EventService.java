@@ -89,7 +89,8 @@ public class EventService implements IEventService {
         var searchResult = eventRepository.getEventByFilter(
                 eventFilter.getName(),
                 eventFilter.getStartDate(),
-                eventFilter.getHashtagIds());
+                eventFilter.getHashtagIds()
+        );
         return new ApiResponse<>(HttpStatus.OK, "",
                 searchResult.stream()
                         .map(eventMapper::toResponse)
