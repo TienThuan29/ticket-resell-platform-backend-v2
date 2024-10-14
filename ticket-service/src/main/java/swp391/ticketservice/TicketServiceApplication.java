@@ -17,7 +17,9 @@ import java.util.TimeZone;
         User.class,
         Staff.class,
         OrderTicket.class,
-        PaymentMethod.class
+        PaymentMethod.class,
+        Rating.class
+
 })
 public class TicketServiceApplication {
     public static void main(String[] args) {
