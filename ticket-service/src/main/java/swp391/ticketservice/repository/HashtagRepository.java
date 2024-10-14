@@ -7,12 +7,20 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import swp391.entity.Hashtag;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface HashtagRepository extends JpaRepository<Hashtag, Integer> {
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM Hashtag h WHERE h.id =: hashtagId")
+    @Query("UPDATE Hashtag h SET h.isDeleted = true WHERE h.id =:hashtagId")
     void deleteHashtagLogic(Integer hashtagId);
 
+    @Query("SELECT H FROM Hashtag AS H WHERE H.isDeleted = FALSE ")
+    List<Hashtag> getALl();
+
+    @Query("SELECT h FROM Hashtag h WHERE h.name =:name AND h.isDeleted =:isDeleted ")
+    Optional<Hashtag> getHashtagByNameAndDeleted(String name, Boolean isDeleted);
 }

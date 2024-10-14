@@ -10,14 +10,8 @@ import swp391.ticketservice.dto.response.TicketResponse;
 import swp391.ticketservice.exception.def.InvalidProcessException;
 import swp391.ticketservice.exception.def.NotFoundException;
 import swp391.ticketservice.repository.GenericTicketRepository;
-import swp391.ticketservice.repository.UserRepository;
 import swp391.ticketservice.utils.DateUtil;
 import swp391.ticketservice.utils.ImageUtil;
-
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Base64;
-import java.util.Date;
 
 /**
  * Author: Nguyen Nhat Truong
@@ -26,8 +20,6 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class TicketMapper {
 
-    private final GenericTicketMapper genericTicketMapper;
-    private final UserRepository userRepository;
     private final GenericTicketRepository genericTicketRepository;
     private final MessageConfiguration messageConfig;
 
@@ -35,7 +27,7 @@ public class TicketMapper {
         return  Ticket
                 .builder()
                 .ticketSerial(ticketRequest.getTicketSerial())
-                .image(ImageUtil.compressImage(ticketRequest.getImage()))
+//                .image(ImageUtil.compressImage(ticketRequest.getImage()))
                 .isChecked(Boolean.FALSE)
                 .isBought(Boolean.FALSE)
                 .isValid(Boolean.FALSE)
@@ -54,13 +46,15 @@ public class TicketMapper {
                 .builder()
                 .ticketId(ticket.getId())
                 .ticketSerial(ticket.getTicketSerial())
-                .image(Base64.getEncoder().encodeToString(ImageUtil.decompressImage(ticket.getImage())))
+                .image(
+                        ImageUtil.decompressImage(ticket.getImage())
+                )
                 .isChecked(ticket.isChecked())
                 .isBought(ticket.isBought())
                 .isValid(ticket.isValid())
                 .note(ticket.getNote())
                 .process(ticket.getProcess())
-                .boughtDate(DateUtil.fixDateTime(ticket.getBoughtDate()))
+                .boughtDate(ticket.getBoughtDate() != null ? DateUtil.fixDateTimeResponse(ticket.getBoughtDate()) : null)
                 .genericTicketId(ticket.getGenericTicket().getId())
                 .verifyStaffId( ticket.getVerifyStaff() == null ? null : ticket.getVerifyStaff().getId() )
                 .buyerId(ticket.getBuyerId())

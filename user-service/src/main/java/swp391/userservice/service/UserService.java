@@ -191,6 +191,24 @@ public class UserService implements IUserService {
         return new ApiResponse<>(HttpStatus.FORBIDDEN, messageConfig.ERROR_INVALID_TOKEN, null);
     }
 
+    @Override
+    public ApiResponse<?> changePassword(Long id, String oldPassword, String newPassword) {
+        var user = userRepository.findById(id).orElseThrow(
+                () -> new NotFoundException(messageConfig.ERROR_USERNAME_NOTFOUND)
+        );
+
+        boolean isTheSamePassword = BCrypt.checkpw(oldPassword, user.getPassword());
+
+        if (isTheSamePassword) {
+            user.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+            userRepository.save(user);
+            return new ApiResponse<>(HttpStatus.OK, messageConfig.MESSAGE_UPDATE_NEW_PASSWORD_SUCCESS, null);
+        }
+        else {
+            return new ApiResponse<>(HttpStatus.CONFLICT, messageConfig.ERROR_OLD_PASSWORD_NOT_CORRECT, null);
+        }
+    }
+
     private void saveToken(User user, String jwtToken) {
         Token token = Token.builder()
                 .token(jwtToken)

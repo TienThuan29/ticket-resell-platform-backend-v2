@@ -2,8 +2,6 @@ server:
   port: 9003
 
 spring:
-  jackson:
-    time-zone: UTC
   application:
     name: ticket-service
 

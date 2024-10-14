@@ -7,13 +7,9 @@ import swp391.entity.*;
 
 @SpringBootApplication
 @EntityScan(basePackageClasses = {
-        Category.class,
-        Event.class,
         GenericTicket.class,
         Ticket.class,
-        Policy.class,
         User.class,
-        Staff.class,
         VerificationUser.class
 })
 public class EmailServiceApplication {

@@ -1,4 +1,4 @@
-package swp391.paymentsservice.controller;
+package swp391.paymentsservice.controller.def;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,5 +16,6 @@ public interface IPaymentController {
                                Long amount,
                                String transactionType,
                                String payDate,
-                               String txnRef) throws ParseException;
+                               String txnRef,
+                               String transactionNo) throws ParseException;
 }

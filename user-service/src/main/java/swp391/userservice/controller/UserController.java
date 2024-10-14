@@ -1,10 +1,13 @@
 package swp391.userservice.controller;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import swp391.userservice.dto.reponse.ApiResponse;
@@ -22,7 +25,7 @@ import swp391.userservice.service.IUserService;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:3000")
+//@CrossOrigin("http://localhost:3000")
 public class UserController implements IUserController {
 
     private final IUserService userService;
@@ -41,9 +44,10 @@ public class UserController implements IUserController {
     }
 
     @Override
-    @PostMapping("/profile/update/avatar/{id}")
+    @PostMapping(value = "/profile/update/avatar/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<?> updateAvatar(
             @PathVariable("id") Long id,
+            @Parameter(description = "Avatar image file", content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE))
             @RequestParam("image") MultipartFile file
     ) {
         return userService.updateAvatar(id, file);
@@ -62,6 +66,11 @@ public class UserController implements IUserController {
     }
 
     @Override
+    public ApiResponse<?> changePassword(Long id, String oldPassword, String newPassword) {
+        return userService.changePassword(id, oldPassword, newPassword);
+    }
+
+
     @PostMapping("/reset-password")
     public ApiResponse<?> resetPassword(@RequestParam String email) {
         return userService.resetPassword(email);

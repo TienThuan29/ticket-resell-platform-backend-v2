@@ -1,16 +1,17 @@
-package swp391.paymentsservice.service;
+package swp391.paymentsservice.service.impl;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import swp391.entity.Transaction;
-import swp391.entity.User;
 import swp391.entity.fixed.TransactionType;
+import swp391.paymentsservice.config.MessageConfiguration;
 import swp391.paymentsservice.config.PaymentConfiguration;
 import swp391.paymentsservice.dto.response.ApiResponse;
 import swp391.paymentsservice.repository.TransactionRepository;
 import swp391.paymentsservice.repository.UserRepository;
+import swp391.paymentsservice.service.def.IPaymentService;
 import swp391.paymentsservice.utils.VnPayUtils;
 
 import java.text.ParseException;
@@ -20,13 +21,15 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class PaymentService implements IPaymentService{
+public class PaymentService implements IPaymentService {
 
     private final PaymentConfiguration vnPayConfig;
 
     private final UserRepository userRepo;
 
     private final TransactionRepository transactionRepo;
+
+    private final MessageConfiguration messageConfig;
 
     @Override
     public ApiResponse<?> createVnPayPayment(HttpServletRequest request) {
@@ -54,7 +57,8 @@ public class PaymentService implements IPaymentService{
             String vnp_TxnRef,
             Long amount,
             String transactionType,
-            String payDate
+            String payDate,
+            String transactionNo
     ) throws ParseException {
         String customerCode= vnp_TxnRef.substring(8);
         var user= userRepo.findByCustomerCode(customerCode).get();
@@ -69,12 +73,14 @@ public class PaymentService implements IPaymentService{
                 .user(user)
                 .isDone(true)
                 .transDate(date)
+                .transactionNo(transactionNo)
                 .build();
         Long balance= user.getBalance()+amount;
         user.setBalance(balance);
-        userRepo.save(user);
-        transactionRepo.save(transaction);
-
-        return new ApiResponse<>(HttpStatus.OK, "Success", Boolean.TRUE);
+        if(transactionRepo.findByTransactionNo(transactionNo).isEmpty()){
+            userRepo.save(user);
+            transactionRepo.save(transaction);
+        }
+        return new ApiResponse<>(HttpStatus.OK, messageConfig.SUCCESS_TRANSACTION, Boolean.TRUE);
     }
 }

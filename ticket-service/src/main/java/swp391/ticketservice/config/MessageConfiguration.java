@@ -28,6 +28,11 @@ public class MessageConfiguration {
     public final String INVALID_PAYMENT_METHOD_ID;
     public final String FAIL_ORDER_TICKET;
     public final String SUCCESS_ORDER_TICKET;
+    public final String ERROR_ACCEPT_TO_SELL_TICKET;
+    public final String SUCCESS_ACCEPT_TO_SELL_TICKET;
+    public final String ERROR_ORDER_TICKET_NOT_FOUND;
+    public final String SUCCESS_DENY_TO_SELL_TICKET;
+    public final String ERROR_DENY_TO_SELL_TICKET;
 
     public MessageConfiguration() {
         this.INVALID_GENERICTICKET = "Vé tổng quan không hợp lệ";
@@ -51,5 +56,10 @@ public class MessageConfiguration {
         this.INVALID_PAYMENT_METHOD_ID = "Phương thức thanh toán không hợp lệ!";
         this.FAIL_ORDER_TICKET = "Đặt mua vé không thành công!";
         this.SUCCESS_ORDER_TICKET = "Đặt mua vé thành công. Vui lòng chờ xác nhận từ người bán!";
+        this.ERROR_ACCEPT_TO_SELL_TICKET = "Có sự cố khi xác nhận bán! Vui lòng thử lại!";
+        this.SUCCESS_ACCEPT_TO_SELL_TICKET = "Xác nhận bán thành công!";
+        this.ERROR_ORDER_TICKET_NOT_FOUND = "Không thể tìm thấy orderTicket";
+        this.SUCCESS_DENY_TO_SELL_TICKET = "Từ chối bán vé thành công";
+        this.ERROR_DENY_TO_SELL_TICKET = "Có sự cố khi từ chối bán vé! Vui lòng thử lại!";
     }
 }

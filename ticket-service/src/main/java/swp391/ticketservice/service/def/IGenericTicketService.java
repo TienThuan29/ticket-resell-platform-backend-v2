@@ -7,6 +7,7 @@ import swp391.ticketservice.dto.request.OrderTicketRequest;
 import swp391.ticketservice.dto.response.ApiResponse;
 import swp391.ticketservice.dto.response.GenericTicketResponse;
 import swp391.ticketservice.dto.response.ApiResponse;
+import swp391.ticketservice.dto.response.OrderTicketResponse;
 
 import java.util.Date;
 import java.util.List;
@@ -38,4 +39,8 @@ public interface IGenericTicketService {
     ApiResponse<List<GenericTicketResponse>> getByFilter(GenericTicketFilter genericTicketFilter);
 
     ApiResponse<?> orderTicket(OrderTicketRequest orderTicketRequest);
+
+    ApiResponse<List<OrderTicketResponse>> getProcessingOrderTicket(Long userId);
+
+    ApiResponse<List<OrderTicketResponse>> getAllOrderTicketRequest(Long sellerId);
 }

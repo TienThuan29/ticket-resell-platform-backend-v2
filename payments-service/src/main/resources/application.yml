@@ -25,7 +25,11 @@ payment:
     url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
     tmnCode: KPGNIHCM
     secretKey: 7695BHRJUET0S400W5GHRN04TCZVKYBI
-    returnUrl: http://localhost:8090/api/payments/vn-pay-callback
+    returnUrl: http://localhost:3000/payments/loading
     version: 2.1.0
     command: pay
     orderType: other
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

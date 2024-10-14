@@ -21,7 +21,7 @@ public class PolicyService implements IPolicyService {
     public ApiResponse<PolicyResponse> getSellingPolicy() {
         return new ApiResponse<>(
                 HttpStatus.OK, "",
-                policyMapper.toPolicyResponse(policyRepository.findById(1).get())
+                policyMapper.toPolicyResponse(policyRepository.findById(3).get())
         );
     }
 

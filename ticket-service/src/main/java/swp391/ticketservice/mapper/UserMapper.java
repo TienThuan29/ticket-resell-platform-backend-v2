@@ -34,4 +34,8 @@ public class UserMapper {
                 .email(user.getEmail())
                 .build();
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> e020ee652e212f6555e91cafe6f5417ec437c4de
 }

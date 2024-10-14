@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -20,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private final List<String> ORIGIN_SOURCES = List.of("http://localhost:3000");
+    private final List<String> ORIGIN_SOURCES = List.of("http://localhost:3000", "http://localhost:3001");
     private final List<String> ALLOWED_METHODS = List.of("GET", "POST", "PUT", "DELETE");
     private final List<String> ALLOWED_HEADERS = List.of("*");
     private final Long MAX_AGE = 7200L;
@@ -43,6 +44,12 @@ public class SecurityConfiguration {
         return http.build();
     }
 
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return webSecurity ->
+                webSecurity.ignoring()
+                        .requestMatchers("/actuator/**", "/v3/**", "/webjars/**", "/swagger-ui*/*swagger-initializer.js", "/swagger-ui*/**");
+    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

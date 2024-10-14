@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import swp391.ticketservice.controller.def.IEventController;
+import swp391.ticketservice.dto.request.EventFilter;
 import swp391.ticketservice.dto.request.EventRequest;
 import swp391.ticketservice.dto.response.ApiResponse;
 import swp391.ticketservice.dto.response.EventResponse;
@@ -51,6 +52,22 @@ public class EventController implements IEventController {
         return eventService.getEventsNotInAnyCategory();
     }
 
+    @Override
+    @GetMapping("/get-happening-events/filter")
+    public ApiResponse<List<EventResponse>> getEventsByFilter(@RequestBody EventFilter eventFilter) {
+        return eventService.getEventsByFilter(eventFilter);
+    }
 
+    @Override
+    @GetMapping("/get-happening-events/hot-event")
+    public ApiResponse<List<EventResponse>> getHotEvents() {
+        return eventService.getHotEvents();
+    }
+
+    @Override
+    @GetMapping("/get-happening-events/special-event")
+    public ApiResponse<List<EventResponse>> getSpecialEvent() {
+        return eventService.getSpecialEvent();
+    }
 
 }

@@ -19,7 +19,7 @@ public class TicketResponse {
 
     @JsonProperty("ticketSerial") private String ticketSerial;
 
-    @JsonProperty("image") private String image;
+    @JsonProperty("image") private byte[] image;
 
     @JsonProperty("isChecked") private boolean isChecked;
 
@@ -36,6 +36,10 @@ public class TicketResponse {
     @JsonProperty("genericTicketId") private Long genericTicketId;
 
     @JsonProperty("buyerId") private Long buyerId;
+
+    @JsonProperty("buyer") private BuyerResponse buyer;
+
+    @JsonProperty("seller") private SellerResponse seller;
 
     @JsonProperty("verifyStaffId") private Long verifyStaffId;
 

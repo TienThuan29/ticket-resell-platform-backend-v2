@@ -1,14 +1,17 @@
 package swp391.ticketservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import swp391.entity.GenericTicket;
-import swp391.entity.Ticket;
-import swp391.entity.User;
+import swp391.entity.*;
+import swp391.entity.embedable.OrderTicketID;
 import swp391.entity.fixed.GeneralProcess;
+import swp391.entity.fixed.TransactionType;
 import swp391.ticketservice.config.MessageConfiguration;
+import swp391.ticketservice.dto.request.AcceptOrDenySellingRequest;
 import swp391.ticketservice.dto.request.TicketRequest;
 import swp391.ticketservice.dto.response.ApiResponse;
 import swp391.ticketservice.dto.response.GenericTicketResponse;
@@ -17,24 +20,24 @@ import swp391.ticketservice.exception.def.InvalidProcessException;
 import swp391.ticketservice.exception.def.NotFoundException;
 import swp391.ticketservice.mapper.GenericTicketMapper;
 import swp391.ticketservice.mapper.TicketMapper;
-import swp391.ticketservice.repository.GenericTicketRepository;
-import swp391.ticketservice.repository.StaffRepository;
-import swp391.ticketservice.repository.TicketRepository;
-import swp391.ticketservice.repository.UserRepository;
+import swp391.ticketservice.mapper.UserMapper;
+import swp391.ticketservice.repository.*;
 import swp391.ticketservice.service.def.ITicketService;
+import swp391.ticketservice.utils.DateUtil;
+import swp391.ticketservice.utils.ImageUtil;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.time.ZonedDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * Author: Nguyen Nhat Truong
  */
-@Service
+@Slf4j
+@Component
 @RequiredArgsConstructor
 public class TicketService implements ITicketService {
 
@@ -51,6 +54,12 @@ public class TicketService implements ITicketService {
     private final GenericTicketRepository genericTicketRepository;
 
     private final GenericTicketMapper genericTicketMapper;
+
+    private final TransactionRepository transactionRepository;
+
+    private final OrderTicketRepository orderTicketRepository;
+
+    private final UserMapper userMapper;
 
     @Override
     public ApiResponse<List<TicketResponse>> getAll() {
@@ -71,22 +80,29 @@ public class TicketService implements ITicketService {
     @Override
     public ApiResponse<TicketResponse> create(TicketRequest ticketRequest, MultipartFile file) throws IOException {
         //ticketRequest.setProcess(GeneralProcess.WAITING.toString());
-        ticketRequest.setImage(file.getBytes());
-
+        var staff = staffRepository.getStaffHasMinTicket().orElseThrow(
+                () -> new NotFoundException(message.INVALID_STAFF)
+        );
+        //ticketRequest.setImage(file.getBytes());
+//        ticketRequest.setImage(file.getBytes());
+        log.info(file.getName());
         Ticket ticket= ticketMapper.toEntity(ticketRequest);
-        ticket.setBought(Boolean.FALSE);
-        ticket.setChecked(Boolean.FALSE);
-        ticket.setValid(Boolean.FALSE);
-        ticket.setProcess(GeneralProcess.WAITING);
+        ticket.setImage(ImageUtil.compressImage(file.getBytes()));
+//        ticket.setBought(Boolean.FALSE);
+//        ticket.setChecked(Boolean.FALSE);
+//        ticket.setValid(Boolean.FALSE);
+//        ticket.setProcess(GeneralProcess.WAITING);
+        ticket.setVerifyStaff(staff);
+
         ticketRepository.save(ticket);
         return new ApiResponse<>(HttpStatus.OK, message.SUCCESS_OPERATION, ticketMapper.toResponse(ticket));
     }
 
     @Override
     public ApiResponse<?> markBought(Long id) {
-        ZoneId zoneId = ZoneId.of("UTC+7");
-        LocalDateTime localDateTime = LocalDateTime.now(zoneId);
-        Date boughtDate = Date.from(localDateTime.atZone(zoneId).toInstant());
+        LocalDateTime localDateTime = LocalDateTime.now();
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+        Date boughtDate = Date.from(zonedDateTime.toInstant());
 
         Ticket ticket= ticketRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(message.INVALID_TICKET+" :"+id));
@@ -156,4 +172,150 @@ public class TicketService implements ITicketService {
         return new ApiResponse<>(HttpStatus.OK, "", ticketResponses);
     }
 
+    @Override
+    public ApiResponse<?> acceptToSellTicket(AcceptOrDenySellingRequest request) {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+        Date boughtDate = Date.from(zonedDateTime.toInstant());
+        try {
+            // Update order ticket
+            OrderTicket orderTicket = getOrderTicketById(
+                    request.getGenericTicketId(), request.getBuyerId(), request.getOrderNo()
+            );
+            orderTicket.setAccepted(request.getIsAccepted());
+            orderTicketRepository.save(orderTicket);
+
+            // Automatic transact tickets to buyer
+            List<Ticket> notBoughtTickets = ticketRepository.getNotBoughtTicketByGenericTicket(
+                    request.getGenericTicketId()
+            );
+            if (request.getQuantity() <= notBoughtTickets.size()) {
+                for (int i = 1; i <= request.getQuantity(); i++) {
+                    notBoughtTickets.get(i-1).setBought(Boolean.TRUE);
+                    notBoughtTickets.get(i-1).setBuyerId(request.getBuyerId());
+                    notBoughtTickets.get(i-1).setBoughtDate(boughtDate);
+                    notBoughtTickets.get(i-1).setProcess(GeneralProcess.SUCCESS);
+                }
+            }
+            ticketRepository.saveAll(notBoughtTickets);
+            // Update Transaction table
+            Transaction buyerTrans = Transaction.builder()
+                    .amount(request.getTotalPrice())
+                    .transDate(boughtDate)
+                    .isDone(Boolean.TRUE)
+                    .type(TransactionType.BUYING)
+                    .user(getUserById(request.getBuyerId()))
+                    .transactionNo(randoTransactionNo())
+                    .build();
+            transactionRepository.save(buyerTrans);
+
+            // Add amount for admin
+            staffRepository.updateBalanceOfAdmin(request.getTotalPrice());
+
+            Transaction sellerTrans = Transaction.builder()
+                    .amount(request.getTotalPrice())
+                    .transDate(boughtDate)
+                    .isDone(Boolean.FALSE)
+                    .type(TransactionType.SELLING)
+                    .user(getUserById(request.getSellerId()))
+                    .transactionNo(randoTransactionNo())
+                    .build();
+            transactionRepository.save(sellerTrans);
+        }
+        catch (Exception exception) {
+            log.info(exception.toString());
+            return new ApiResponse<>(HttpStatus.BAD_REQUEST, message.ERROR_ACCEPT_TO_SELL_TICKET, null);
+        }
+        return new ApiResponse<>(HttpStatus.OK, message.SUCCESS_ACCEPT_TO_SELL_TICKET, null);
+    }
+
+    @Override
+    public ApiResponse<?> denyToSellTicket(AcceptOrDenySellingRequest request) {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+        Date denyingDate = Date.from(zonedDateTime.toInstant());
+        try {
+            // Update order ticket
+            OrderTicket orderTicket = getOrderTicketById(
+                    request.getGenericTicketId(), request.getBuyerId(), request.getOrderNo()
+            );
+            orderTicket.setAccepted(request.getIsAccepted());
+            orderTicket.setNote(request.getNote());
+            orderTicketRepository.save(orderTicket);
+
+            // Refund amount for buyer
+            var buyer = getUserById(request.getBuyerId());
+            buyer.setBalance(buyer.getBalance() + request.getTotalPrice());
+            userRepository.save(buyer);
+
+            // Minus balance of admin
+            staffRepository.updateBalanceOfAdmin(-1 * request.getTotalPrice());
+            // Update transaction
+//            Transaction buyerTransaction = Transaction.builder()
+//                    .amount(request.getTotalPrice())
+//                    .transDate(denyingDate)
+//                    .isDone(Boolean.TRUE)
+//                    .type(TransactionType.DENIED_TO_SELL)
+//                    .user(buyer)
+//                    .transactionNo(randoTransactionNo())
+//                    .build();
+//            transactionRepository.save(buyerTransaction);
+        }
+        catch (Exception ex) {
+            log.info(ex.toString());
+            return new ApiResponse<>(HttpStatus.BAD_REQUEST, message.ERROR_DENY_TO_SELL_TICKET, null);
+        }
+        return new ApiResponse<>(HttpStatus.OK, message.SUCCESS_DENY_TO_SELL_TICKET, null);
+    }
+
+    @Override
+    public ApiResponse<List<TicketResponse>> getAllBoughtTicketsBySeller(Long sellerId) {
+        List<TicketResponse> boughtTickets = ticketRepository.getAllBoughtTicketsBySeller(sellerId)
+                .stream().map(ticketMapper::toResponse).toList();
+
+        boughtTickets.forEach((item) -> {
+            item.setBuyer(
+                    userMapper.toBuyerResponse(this.getUserById(item.getBuyerId()))
+            );
+            item.setGenericTicketObject(
+                    genericTicketMapper.toResponse(
+                            genericTicketRepository.findById(item.getGenericTicketId()).get()
+                    )
+            );
+        });
+
+        return new ApiResponse<>(
+                HttpStatus.OK, "", boughtTickets
+        );
+    }
+
+    @Override
+    public ApiResponse<List<TicketResponse>> getAllBoughtTicketsByBuyer(Long buyerId) {
+        List<TicketResponse> tickets = ticketRepository.getAllBoughtTicketsByBuyer(buyerId)
+                .stream().map(ticketMapper::toResponse).toList();
+        tickets.forEach((item) -> {
+            item.setGenericTicketObject(
+                    genericTicketMapper.toResponse(
+                            genericTicketRepository.findById(item.getGenericTicketId()).get()
+                    )
+            );
+        });
+        return new ApiResponse<>(HttpStatus.OK, "", tickets);
+    }
+
+    private User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException(message.INVALID_BUYER)
+        );
+    }
+
+    private OrderTicket getOrderTicketById(Long genericTicketId, Long buyerId, String orderNo) {
+        return orderTicketRepository.findById(
+                new OrderTicketID(genericTicketId, buyerId, orderNo.trim())
+        ).orElseThrow(() -> new NotFoundException(message.ERROR_ORDER_TICKET_NOT_FOUND));
+    }
+
+    private String randoTransactionNo() {
+        return UUID.randomUUID().toString().substring(1,8) + UUID.randomUUID().toString().substring(1,3);
+    }
 }

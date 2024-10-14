@@ -20,7 +20,6 @@ public class SystemAuthController implements ISystemAuthController {
 
     private final ISystemAuthService systemAuthService;
 
-
     @Override
     @GetMapping("/get/info")
     public ApiResponse<StaffDTO> getInfoByToken(@RequestHeader("Authorization") String token) {

@@ -14,6 +14,7 @@ import swp391.ticketservice.repository.HashtagRepository;
 import swp391.ticketservice.service.def.IHashtagService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -60,6 +61,7 @@ public class HashtagService implements IHashtagService {
 
     @Override
     public ApiResponse<List<HashtagResponse>> getAll() {
-        return null;
+        return new ApiResponse<>(HttpStatus.OK, "",
+                hashtagRepository.getALl().stream().map(hashtagMapper::toResponse).collect(Collectors.toList()));
     }
 }

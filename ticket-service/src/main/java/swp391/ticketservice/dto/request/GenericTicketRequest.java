@@ -41,7 +41,7 @@ public class GenericTicketRequest {
     private String linkEvent;
 
     @JsonProperty("isPaper")
-    private boolean isPaper;
+    private Boolean isPaper;
 
     @JsonProperty("policyId")
     @NotNull(message = "Chính sách không được phép để trống")

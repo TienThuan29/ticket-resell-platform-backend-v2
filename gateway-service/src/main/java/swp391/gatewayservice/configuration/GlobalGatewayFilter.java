@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import swp391.gatewayservice.service.JwtService;
@@ -25,17 +26,17 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        log.info("Global filter.....");
+//        log.info("Global filter.....");
         ServerHttpRequest request = exchange.getRequest();
         if(routerValidator.isSecured.test(request)) {
             if(authMissing(request)) {
-                log.info("Auth missing");
+//                log.info("Auth missing");
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
             }
             final String token =  request.getHeaders().getOrEmpty("Authorization")
                     .get(0).substring(7); // "Bearer ".length()
             if (token.isEmpty() || jwtService.isTokenExpired(token)) {
-                log.info("Invalid token");
+//                log.info("Invalid token");
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
             }
         }
@@ -56,4 +57,5 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
         response.setStatusCode(httpStatus);
         return response.setComplete();
     }
+
 }

@@ -1,4 +1,4 @@
-package swp391.paymentsservice.service;
+package swp391.paymentsservice.service.def;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
@@ -15,6 +15,7 @@ public interface IPaymentService {
             String vnp_TxnRef,
             Long amount,
             String transactionType,
-            String payDate
+            String payDate,
+            String transactionNo
     ) throws ParseException;
 }

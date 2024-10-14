@@ -33,7 +33,7 @@ public class RouterValidator {
             "/api/tickets/generic/get-total-ticket",
             "/api/policy/get/selling",
             "/api/events/get-happening-events",
-            "/api/events/get-happening-events",
+            "/api/events/get-happening-events/filter",
             "/api/categories/get-using-cate",
             "/api/email/send-otp",
             "/api/email/send-reset-otp",
@@ -43,7 +43,8 @@ public class RouterValidator {
             "/api/tickets/generic/get-by-filter",
             "/api/users/reset-password",
             "/api/users/reset-password/verify-reset-otp",
-            "/api/users/reset-password/new-pass"
+            "/api/users/reset-password/new-pass",
+            "/api/tickets/get/not-deleted-payment-method"
     );
 
     public Predicate<ServerHttpRequest> isSecured =

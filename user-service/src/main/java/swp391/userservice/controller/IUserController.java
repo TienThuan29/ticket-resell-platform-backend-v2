@@ -31,9 +31,13 @@ public interface IUserController {
 
     ApiResponse<?> registerVerificationEmail(String verificationCode);
 
+
+    ApiResponse<?> changePassword(Long id, String oldPassword, String newPassword);
+
     ApiResponse<?> resetPassword(String email);
 
     ApiResponse<?> verifyResetOTP(String verificationCode);
 
     ApiResponse<?> changePass(String newPass, String email);
+
 }
