@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import swp391.entity.fixed.GeneralProcess;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "report_fraud")
 @NoArgsConstructor
@@ -40,6 +42,9 @@ public class ReportFraud {
 
     @Column(name = "reported_user_id", nullable = false)
     private Long reportedUserId;
+
+//    @Column(name = "report_date", nullable = false)
+//    private Date reportDate;
 
     @OneToOne
     @JoinColumn(name = "ticket_id")

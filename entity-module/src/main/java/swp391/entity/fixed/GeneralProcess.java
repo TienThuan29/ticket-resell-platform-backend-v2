@@ -7,7 +7,8 @@ public enum GeneralProcess {
     SUCCESS("Thành công"),
     REJECTED("Bị hủy"),
     CANCEL("Đã hủy"),
-    FAIL("Thất bại")
+    FAIL("Thất bại"),
+    REPORT_PROCESSING("Dang thực thi báo cáo")
 
     ;
 

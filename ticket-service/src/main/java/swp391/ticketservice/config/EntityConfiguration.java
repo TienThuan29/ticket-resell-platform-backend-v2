@@ -14,11 +14,8 @@ import swp391.entity.*;
         Staff.class,
         OrderTicket.class,
         PaymentMethod.class,
-<<<<<<< HEAD
-        Rating.class
-=======
+        Rating.class,
         Transaction.class
->>>>>>> e020ee652e212f6555e91cafe6f5417ec437c4de
 })
 @Configuration("ticketServiceEntityConfiguration")
 public class EntityConfiguration {

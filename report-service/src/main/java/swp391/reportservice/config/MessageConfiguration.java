@@ -10,6 +10,6 @@ public class MessageConfiguration {
     public final String SUCCESS_CREATE_REPORT="Báo cáo được tạo thành công";
 
     //Error
-    public final String ERROR_ACCUSER= "Người báo hợp không hợp lệ";
+    public final String ERROR_ACCUSER= "Người báo cáo hợp không hợp lệ";
     public final String ERROR_STAFF= "Nhân viên không hợp lệ";
 }

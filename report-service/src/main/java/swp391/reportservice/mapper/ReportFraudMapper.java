@@ -9,7 +9,11 @@ import swp391.reportservice.dto.response.ReportFraudResponse;
 import swp391.reportservice.repository.*;
 import swp391.reportservice.utils.ImageUtil;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Base64;
+import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
@@ -28,6 +32,7 @@ public class ReportFraudMapper {
         var ticket= ticketRepo.findById(reportFraudRequest.getTicketId()).get();
         Long staffId= ticket.getVerifyStaff().getId();
         Long reportedUserId= genericRepo.findById(ticket.getGenericTicket().getId()).get().getSeller().getId();
+
         return ReportFraud.builder()
                 .proof(ImageUtil.compressImage(reportFraudRequest.getProof()))
                 .content(reportFraudRequest.getContent())

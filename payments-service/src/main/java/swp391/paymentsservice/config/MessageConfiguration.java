@@ -13,4 +13,5 @@ public class MessageConfiguration {
 
     //Failed
     public final String ERROR_USER = "Người dùng không tồn tại";
+    public final String ERROR_REPORTED_USER= "Người bị báo cáo hợp không hợp lệ";
 }

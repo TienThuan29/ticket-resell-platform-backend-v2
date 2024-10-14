@@ -1,8 +1,11 @@
 package swp391.reportservice.controller.impl;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import swp391.entity.fixed.GeneralProcess;
@@ -31,12 +34,14 @@ public class ReportFraudController implements IReportFraudController {
 
     //User
     @Override
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<?> createReport(
             @RequestPart("reportFraudRequest") @Valid ReportFraudRequest reportFraudRequest,
+            @Parameter(description = "Proof image file", content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE))
             @RequestPart("proofFile") MultipartFile proofFile) throws IOException {
         reportFraudRequest.setProof(proofFile.getBytes());
-        return new ApiResponse<>(HttpStatus.CREATED, messageConfig.SUCCESS_CREATE_REPORT, fraudService.create(reportFraudRequest));
+        fraudService.create(reportFraudRequest);
+        return new ApiResponse<>(HttpStatus.CREATED, messageConfig.SUCCESS_CREATE_REPORT);
     }
 
     @Override

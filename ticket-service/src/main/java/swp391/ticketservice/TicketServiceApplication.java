@@ -18,12 +18,8 @@ import java.util.TimeZone;
         Staff.class,
         OrderTicket.class,
         PaymentMethod.class,
-<<<<<<< HEAD
-        Rating.class
-
-=======
+        Rating.class,
         Transaction.class
->>>>>>> e020ee652e212f6555e91cafe6f5417ec437c4de
 })
 public class TicketServiceApplication {
     public static void main(String[] args) {
