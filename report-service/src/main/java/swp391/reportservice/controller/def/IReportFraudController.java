@@ -15,5 +15,7 @@ public interface IReportFraudController {
 
     ApiResponse<?> getByStaff(Long staffId);
 
-    ApiResponse<?> staffCheckReport(Long reportId, GeneralProcess process, String note);
+    ApiResponse<?> staffCheckReportReject(Long reportId, String note);
+
+    ApiResponse<?> staffCheckReportSuccess(Long reportId, String note);
 }

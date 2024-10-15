@@ -58,13 +58,20 @@ public class ReportFraudController implements IReportFraudController {
     }
 
     @Override
-    @PutMapping("/staff-check")
-    public ApiResponse<?> staffCheckReport(
+    @PutMapping("/staff-check-reject-report")
+    public ApiResponse<?> staffCheckReportReject(
             @RequestParam Long reportId,
-            @RequestParam GeneralProcess process,
             @RequestParam String note) {
-        fraudService.staffCheckReport(reportId, process, note);
+        fraudService.staffCheckReportReject(reportId, note);
         return new ApiResponse<>(HttpStatus.OK, messageConfig.SUCCESS_OPERATION);
     }
 
+    @Override
+    @PutMapping("/staff-check-success-report")
+    public ApiResponse<?> staffCheckReportSuccess(
+            @RequestParam Long reportId,
+            @RequestParam String note) {
+        fraudService.staffCheckReportSuccess(reportId, note);
+        return new ApiResponse<>(HttpStatus.OK, messageConfig.SUCCESS_OPERATION);
+    }
 }

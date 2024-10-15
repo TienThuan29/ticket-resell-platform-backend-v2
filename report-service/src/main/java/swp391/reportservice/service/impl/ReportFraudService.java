@@ -53,11 +53,20 @@ public class ReportFraudService implements IReportFraudService {
     }
 
     @Override
-    public void staffCheckReport(Long id, GeneralProcess process, String note) {
+    public void staffCheckReportReject(Long id, String note) {
         ReportFraud report= reportFraudRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_STAFF+" :"+id));
-        report.setProcess(process);
         report.setNote(note);
+        report.setProcess(GeneralProcess.REJECTED);
+        reportFraudRepo.save(report);
+    }
+
+    @Override
+    public void staffCheckReportSuccess(Long id, String note) {
+        ReportFraud report= reportFraudRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_STAFF+" :"+id));
+        report.setNote(note);
+        report.setProcess(GeneralProcess.SUCCESS);
         reportFraudRepo.save(report);
     }
 }
