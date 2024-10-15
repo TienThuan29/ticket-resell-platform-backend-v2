@@ -8,7 +8,6 @@ import swp391.ticketservice.dto.request.RatingRequest;
 import swp391.ticketservice.dto.response.RatingResponse;
 import swp391.ticketservice.exception.def.NotFoundException;
 import swp391.ticketservice.repository.GenericTicketRepository;
-import swp391.ticketservice.repository.RatingRepository;
 import swp391.ticketservice.repository.UserRepository;
 
 @Component
