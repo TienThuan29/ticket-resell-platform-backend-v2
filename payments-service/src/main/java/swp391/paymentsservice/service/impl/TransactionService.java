@@ -53,6 +53,48 @@ public class TransactionService implements ITransactionService {
         return new ApiResponse<>(HttpStatus.OK, "", transDepositResponse);
     }
 
+    @Override
+    public ApiResponse<List<TransactionResponse>> getTransWithdrawalByUserId(Long id) {
+        var user= userRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_USER+" :"+id));
+
+        var transDeposit= transactionRepo.findByUserAndType(user, TransactionType.WITHDRAWAL);
+
+        var transDepositResponse= transDeposit.stream()
+                .map(transactionMapper::toResponse)
+                .sorted(Comparator.comparing(TransactionResponse::getTransDate))
+                .toList();
+        return new ApiResponse<>(HttpStatus.OK, "", transDepositResponse);
+    }
+
+    @Override
+    public ApiResponse<List<TransactionResponse>> getTransSellingByUserId(Long id) {
+        var user= userRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_USER+" :"+id));
+
+        var transDeposit= transactionRepo.findByUserAndType(user, TransactionType.SELLING);
+
+        var transDepositResponse= transDeposit.stream()
+                .map(transactionMapper::toResponse)
+                .sorted(Comparator.comparing(TransactionResponse::getTransDate))
+                .toList();
+        return new ApiResponse<>(HttpStatus.OK, "", transDepositResponse);
+    }
+
+    @Override
+    public ApiResponse<List<TransactionResponse>> getTransBuyingByUserId(Long id) {
+        var user= userRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_USER+" :"+id));
+
+        var transDeposit= transactionRepo.findByUserAndType(user, TransactionType.BUYING);
+
+        var transDepositResponse= transDeposit.stream()
+                .map(transactionMapper::toResponse)
+                .sorted(Comparator.comparing(TransactionResponse::getTransDate))
+                .toList();
+        return new ApiResponse<>(HttpStatus.OK, "", transDepositResponse);
+    }
+
     //Automation refund and transfer money to seller
     @Scheduled(fixedDelay = 7200000) // 7200000 milliseconds = 2 hours
     public void checkTransaction(){
