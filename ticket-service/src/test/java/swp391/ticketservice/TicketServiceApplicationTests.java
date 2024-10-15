@@ -20,7 +20,6 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @DataJpaTest
 @Transactional
-
 class TicketServiceApplicationTests {
     @Autowired
     private EventRepository eventRepository;

@@ -317,6 +317,7 @@ public class UserService implements IUserService {
                 .startTime(System.currentTimeMillis())
                 .verificationCode(randomUtil.generateRandomCode(6))
                 .verificationType(VerificationType.RESET_PASSWORD).build();
+
         verificationRepository.save(verificationUser);
         emailService.sendResetOTP(verificationUser, email);
         return new ApiResponse<>(HttpStatus.OK, "", Boolean.TRUE);
@@ -358,16 +359,15 @@ public class UserService implements IUserService {
 
         var expiredOtps = verificationRepository.findAll()
                 .stream()
-                .filter(verificationUser -> verificationUser.getVerificationType() == VerificationType.VERIFY_EMAIL)
+//                .filter(verificationUser -> verificationUser.getVerificationType() == VerificationType.VERIFY_EMAIL)
                 .filter(verificationUser -> currentTime > verificationUser.getStartTime() + otpValidityPeriod)
                 .toList();
 
         for (VerificationUser expiredOtp : expiredOtps) {
-            var userOpt = userRepository.findById(expiredOtp.getUserId());
+            var userOtp = userRepository.findById(expiredOtp.getUserId());
 
-            if (userOpt.isPresent()) {
-                User user = userOpt.get();
-
+            if (userOtp.isPresent()) {
+                User user = userOtp.get();
                 if (!user.getIsEnable()) {
                     userRepository.delete(user);
                 }

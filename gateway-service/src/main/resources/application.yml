@@ -86,6 +86,11 @@ spring:
           predicates:
             - Path=/api/reports/**
 
+        - id: report-service
+          uri: http://localhost:9006
+          predicates:
+            - Path=/api/report-type**
+
         - id: email-service
           uri: http://localhost:9007
           predicates:

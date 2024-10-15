@@ -1,10 +1,8 @@
 package swp391.entity.embedable;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
 import java.io.Serializable;
 
 @Embeddable
@@ -12,6 +10,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class RatingID implements Serializable {
 
     @Column(name = "generic_ticket_id",nullable = false)
