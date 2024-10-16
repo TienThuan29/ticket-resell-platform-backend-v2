@@ -20,7 +20,7 @@ public class TicketMapper {
                 .builder()
                 .ticketId(ticket.getId())
                 .ticketSerial(ticket.getTicketSerial())
-                .image(Base64.getEncoder().encodeToString(ImageUtil.decompressImage(ticket.getImage())))
+                .image(ImageUtil.decompressImage(ticket.getImage()))
                 .isChecked(ticket.isChecked())
                 .isBought(ticket.isBought())
                 .isValid(ticket.isValid())

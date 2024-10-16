@@ -49,7 +49,7 @@ public class ReportFraudMapper {
         return ReportFraudResponse.builder()
                 .id(reportFraud.getId())
                 .content(reportFraud.getContent())
-                .proof(Base64.getEncoder().encodeToString(ImageUtil.decompressImage(reportFraud.getProof())))
+                .proof(ImageUtil.decompressImage(reportFraud.getProof()))
                 .process(reportFraud.getProcess().content)
                 .note(reportFraud.getNote())
                 .reportType(reportTypeMapper.toResponse(reportFraud.getReportType()))

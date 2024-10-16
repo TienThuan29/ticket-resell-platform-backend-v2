@@ -12,4 +12,6 @@ public class MessageConfiguration {
     //Error
     public final String ERROR_ACCUSER= "Người báo cáo hợp không hợp lệ";
     public final String ERROR_STAFF= "Nhân viên không hợp lệ";
+    public final String ERROR_INVALID_TICKET= "Vé không hợp lệ";
+    public final String ERROR_INVALID_TICKET_EXIST= "Vé đã tồn tại trong báo cáo";
 }
