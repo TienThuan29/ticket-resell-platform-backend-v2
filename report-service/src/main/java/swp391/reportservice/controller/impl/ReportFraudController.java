@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import swp391.entity.fixed.GeneralProcess;
 import swp391.reportservice.config.MessageConfiguration;
 import swp391.reportservice.controller.def.IReportFraudController;
 import swp391.reportservice.dto.request.ReportFraudRequest;
@@ -37,11 +36,12 @@ public class ReportFraudController implements IReportFraudController {
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<?> createReport(
             @RequestPart("reportFraudRequest") @Valid ReportFraudRequest reportFraudRequest,
-            @Parameter(description = "Proof image file", content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE))
+            @Parameter(description = "Proof image file",
+                    content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE))
             @RequestPart("proofFile") MultipartFile proofFile) throws IOException {
+
         reportFraudRequest.setProof(proofFile.getBytes());
-        fraudService.create(reportFraudRequest);
-        return new ApiResponse<>(HttpStatus.CREATED, messageConfig.SUCCESS_CREATE_REPORT);
+        return fraudService.create(reportFraudRequest);
     }
 
     @Override

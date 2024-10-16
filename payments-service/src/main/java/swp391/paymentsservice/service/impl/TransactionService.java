@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -45,6 +44,48 @@ public class TransactionService implements ITransactionService {
                 .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_USER+" :"+id));
 
         var transDeposit= transactionRepo.findByUserAndType(user, TransactionType.DEPOSIT);
+
+        var transDepositResponse= transDeposit.stream()
+                .map(transactionMapper::toResponse)
+                .sorted(Comparator.comparing(TransactionResponse::getTransDate))
+                .toList();
+        return new ApiResponse<>(HttpStatus.OK, "", transDepositResponse);
+    }
+
+    @Override
+    public ApiResponse<List<TransactionResponse>> getTransWithdrawalByUserId(Long id) {
+        var user= userRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_USER+" :"+id));
+
+        var transDeposit= transactionRepo.findByUserAndType(user, TransactionType.WITHDRAWAL);
+
+        var transDepositResponse= transDeposit.stream()
+                .map(transactionMapper::toResponse)
+                .sorted(Comparator.comparing(TransactionResponse::getTransDate))
+                .toList();
+        return new ApiResponse<>(HttpStatus.OK, "", transDepositResponse);
+    }
+
+    @Override
+    public ApiResponse<List<TransactionResponse>> getTransSellingByUserId(Long id) {
+        var user= userRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_USER+" :"+id));
+
+        var transDeposit= transactionRepo.findByUserAndType(user, TransactionType.SELLING);
+
+        var transDepositResponse= transDeposit.stream()
+                .map(transactionMapper::toResponse)
+                .sorted(Comparator.comparing(TransactionResponse::getTransDate))
+                .toList();
+        return new ApiResponse<>(HttpStatus.OK, "", transDepositResponse);
+    }
+
+    @Override
+    public ApiResponse<List<TransactionResponse>> getTransBuyingByUserId(Long id) {
+        var user= userRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_USER+" :"+id));
+
+        var transDeposit= transactionRepo.findByUserAndType(user, TransactionType.BUYING);
 
         var transDepositResponse= transDeposit.stream()
                 .map(transactionMapper::toResponse)

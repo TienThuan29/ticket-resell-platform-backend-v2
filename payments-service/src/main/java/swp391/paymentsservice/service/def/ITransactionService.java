@@ -10,4 +10,8 @@ import java.util.List;
 public interface ITransactionService {
 
     ApiResponse<List<TransactionResponse>> getTransDepositByUserId(Long id);
+
+    ApiResponse<List<TransactionResponse>> getTransWithdrawalByUserId(Long id);
+    ApiResponse<List<TransactionResponse>> getTransSellingByUserId(Long id);
+    ApiResponse<List<TransactionResponse>> getTransBuyingByUserId(Long id);
 }

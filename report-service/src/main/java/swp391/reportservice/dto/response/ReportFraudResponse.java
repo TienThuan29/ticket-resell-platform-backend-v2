@@ -18,7 +18,7 @@ public class ReportFraudResponse {
     private String content;
 
     @JsonProperty("proof")
-    private String proof;
+    private byte[] proof;
 
     @JsonProperty("process")
     private String process;

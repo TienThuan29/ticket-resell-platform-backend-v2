@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.Collection;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -15,12 +15,12 @@ public enum Role {
     USER(Collections.emptySet()),
 
     STAFF (
-        Set.of(
-                Permission.STAFF_CREATE,
-                Permission.STAFF_UPDATE,
-                Permission.STAFF_READ,
-                Permission.STAFF_DELETE
-        )
+            Set.of(
+                    Permission.STAFF_CREATE,
+                    Permission.STAFF_UPDATE,
+                    Permission.STAFF_READ,
+                    Permission.STAFF_DELETE
+            )
     ),
 
     ADMIN(

@@ -18,7 +18,7 @@ public class TicketResponse {
 
     @JsonProperty("ticketSerial") private String ticketSerial;
 
-    @JsonProperty("image") private String image;
+    @JsonProperty("image") private byte[] image;
 
     @JsonProperty("isChecked") private boolean isChecked;
 

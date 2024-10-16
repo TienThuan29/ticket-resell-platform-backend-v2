@@ -3,11 +3,11 @@ package swp391.ticketservice.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import swp391.entity.Rating;
+import swp391.entity.embedable.RatingID;
 import swp391.ticketservice.dto.request.RatingRequest;
 import swp391.ticketservice.dto.response.RatingResponse;
 import swp391.ticketservice.exception.def.NotFoundException;
 import swp391.ticketservice.repository.GenericTicketRepository;
-import swp391.ticketservice.repository.RatingRepository;
 import swp391.ticketservice.repository.UserRepository;
 
 @Component
@@ -20,9 +20,16 @@ public class RatingMapper {
     private final GenericTicketMapper genericTicketMapper;
 
     public Rating toEntity(RatingRequest ratingRequest){
-        var user = userRepository.findById(ratingRequest.getBuyerId()).orElseThrow(() -> new NotFoundException("Không tìm thấy người mua"));
-        var genericTicket = genericTicketRepository.findById(ratingRequest.getGenericTicketId()).orElseThrow(() -> new NotFoundException("Không tìm thấy vé"));
+        var user = userRepository.findById(ratingRequest.getBuyerId())
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy người mua"));
+        var genericTicket = genericTicketRepository.findById(ratingRequest.getGenericTicketId())
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy vé"));
+
         return Rating.builder()
+                .ratingID(RatingID.builder()
+                        .genericTicketId(ratingRequest.getGenericTicketId())
+                        .buyerId(ratingRequest.getBuyerId())
+                        .build())
                 .buyer(user)
                 .genericTicket(genericTicket)
                 .comment(ratingRequest.getComment())

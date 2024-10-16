@@ -22,9 +22,8 @@ import java.util.List;
 public class RatingService implements IRatingService {
 
     private final RatingRepository ratingRepository;
-    private final UserRepository userRepository;
-    private final GenericTicketRepository genericTicketRepository;
     private final RatingMapper ratingMapper;
+
     @Override
     public ApiResponse<?> createRating(RatingRequest ratingRequest) {
         ratingRepository.save(ratingMapper.toEntity(ratingRequest));
@@ -41,6 +40,6 @@ public class RatingService implements IRatingService {
                         .toList())
                 .avgStars(avgStars)
                 .build();
-        return new ApiResponse<>(HttpStatus.OK,"okeokeoe", listRatingReponse);
+        return new ApiResponse<>(HttpStatus.OK,"Success", listRatingReponse);
     }
 }
