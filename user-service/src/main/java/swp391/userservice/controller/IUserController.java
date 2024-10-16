@@ -5,6 +5,7 @@ import swp391.userservice.dto.reponse.ApiResponse;
 import swp391.userservice.dto.reponse.AuthenticationResponse;
 import swp391.userservice.dto.reponse.UserDTO;
 import swp391.userservice.dto.request.AuthenticationRequest;
+import swp391.userservice.dto.request.OAuth2AuthRequest;
 import swp391.userservice.dto.request.RegisterRequest;
 import swp391.userservice.dto.request.UpdateInfoRequest;
 
@@ -24,6 +25,8 @@ public interface IUserController {
     ApiResponse<?> updateInfo(Long id, UpdateInfoRequest updateInfoRequest);
 
     ApiResponse<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest);
+
+    ApiResponse<AuthenticationResponse> oauth2Authenticate(OAuth2AuthRequest oAuth2AuthRequest);
 
     ApiResponse<AuthenticationResponse> refreshToken(String refreshToken);
 

@@ -24,6 +24,8 @@ public interface IUserService {
 
     ApiResponse<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest);
 
+    ApiResponse<AuthenticationResponse> oauth2Authenticate(String email);
+
     ApiResponse<AuthenticationResponse> refreshToken(String refreshToken);
 
     ApiResponse<?> changePassword(Long id, String oldPassword, String newPassword);

@@ -8,6 +8,7 @@
   <url>http://maven.apache.org</url>
   <packaging>pom</packaging>
   <modules>
+    <module>oauth2-service</module>
     <module>entity-module</module>
     <module>user-service</module>
     <module>ticket-service</module>

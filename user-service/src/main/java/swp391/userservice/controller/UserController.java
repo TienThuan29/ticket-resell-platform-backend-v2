@@ -14,6 +14,7 @@ import swp391.userservice.dto.reponse.ApiResponse;
 import swp391.userservice.dto.reponse.AuthenticationResponse;
 import swp391.userservice.dto.reponse.UserDTO;
 import swp391.userservice.dto.request.AuthenticationRequest;
+import swp391.userservice.dto.request.OAuth2AuthRequest;
 import swp391.userservice.dto.request.RegisterRequest;
 import swp391.userservice.dto.request.UpdateInfoRequest;
 import swp391.userservice.service.IUserService;
@@ -95,6 +96,14 @@ public class UserController implements IUserController {
     }
 
     @Override
+    @PostMapping("/oauth2/authenticate")
+    public ApiResponse<AuthenticationResponse> oauth2Authenticate(
+            @RequestBody OAuth2AuthRequest oAuth2AuthRequest
+    ) {
+        return userService.oauth2Authenticate(oAuth2AuthRequest.getEmail());
+    }
+
+    @Override
     @PostMapping("/refresh-token")
     public ApiResponse<AuthenticationResponse> refreshToken(@RequestParam("refreshToken") String refreshToken) {
         return userService.refreshToken(refreshToken);
@@ -114,5 +123,7 @@ public class UserController implements IUserController {
     ) {
         return userService.update(id, updateInfoRequest);
     }
+
+
 
 }

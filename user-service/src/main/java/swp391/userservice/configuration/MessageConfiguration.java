@@ -24,6 +24,7 @@ public class MessageConfiguration {
     public final String ERROR_LOGIN_SESSION_EXPIRED = "Phiên đăng nhập đã hết hạn! Vui lòng đăng nhập lại!";
     public final String ERROR_INVALID_TOKEN = "Token không hợp lệ!";
     public final String ERROR_OLD_PASSWORD_NOT_CORRECT = "Mật khẩu cũ không đúng!";
+    public final String ERROR_EMAIL_NOT_REGISTER = "Email này chưa dđực đăng ký!";
 
     // Success message
     public final String MESSAGE_UPDATE_USER_SUCCESS = "Cập nhật thông tin thành công";

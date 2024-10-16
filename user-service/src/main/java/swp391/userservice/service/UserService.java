@@ -119,25 +119,6 @@ public class UserService implements IUserService {
     }
 
 
-//    @Override
-//    public ApiResponse<UserDTO> authenticate(AuthenticationRequest authRequest) {
-//        var user = userRepository.findEnableAccount(authRequest.getUsername());
-//
-//        ApiResponse<UserDTO> apiResponse = new ApiResponse<>(
-//                HttpStatus.FORBIDDEN,
-//                messageConfig.ERROR_INVALID_USERNAME_PASSWORD, null
-//        );
-//
-//        if (user.isPresent()) {
-//            var matchedPassword = BCrypt.checkpw(authRequest.getPassword(), user.get().getPassword());
-//            if (matchedPassword){
-//                apiResponse = new ApiResponse<>(HttpStatus.OK, "", userMapper.toUserDTO(user.get()));
-//            }
-//
-//        }
-//        return apiResponse;
-//    }
-
     @Override
     public ApiResponse<AuthenticationResponse> authenticate(AuthenticationRequest authRequest) {
         var user = userRepository.findEnableAccount(authRequest.getUsername());
@@ -165,6 +146,35 @@ public class UserService implements IUserService {
             }
         }
         return apiResponse;
+    }
+
+    @Override
+    public ApiResponse<AuthenticationResponse> oauth2Authenticate(String email) {
+        ApiResponse<AuthenticationResponse> forbinddenResponse = new ApiResponse<>(
+                HttpStatus.FORBIDDEN, messageConfig.ERROR_EMAIL_NOT_REGISTER, null
+        );
+        try {
+            var user = userRepository.findByEmail(email).orElseThrow(null);
+            if (user != null) {
+                String jwtToken = jwtService.generateToken(user); // Access token
+                String refreshToken = jwtService.generateRefreshToken(user);  // Refresh token
+
+                revokeAllOldUserToken(user);
+                saveToken(user, jwtToken);
+                return new ApiResponse<>(
+                        HttpStatus.OK, "",
+                        AuthenticationResponse.builder()
+                                .accessToken(jwtToken)
+                                .refreshToken(refreshToken)
+                                .build()
+                );
+            }
+        }
+        catch (NullPointerException exception) {
+            log.info(exception.toString());
+            return forbinddenResponse;
+        }
+        return forbinddenResponse;
     }
 
     @Override
