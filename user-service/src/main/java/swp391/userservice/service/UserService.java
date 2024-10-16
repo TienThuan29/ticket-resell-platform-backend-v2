@@ -153,16 +153,16 @@ public class UserService implements IUserService {
         ApiResponse<AuthenticationResponse> forbinddenResponse = new ApiResponse<>(
                 HttpStatus.FORBIDDEN, messageConfig.ERROR_EMAIL_NOT_REGISTER, null
         );
+        String jwtToken = null , refreshToken = null;
         try {
             var user = userRepository.findByEmail(email).orElseThrow(null);
             if (user != null) {
-                String jwtToken = jwtService.generateToken(user); // Access token
-                String refreshToken = jwtService.generateRefreshToken(user);  // Refresh token
+                jwtToken = jwtService.generateToken(user); // Access token
+                refreshToken = jwtService.generateRefreshToken(user);  // Refresh token
 
                 revokeAllOldUserToken(user);
                 saveToken(user, jwtToken);
-                return new ApiResponse<>(
-                        HttpStatus.OK, "",
+                return new ApiResponse<>(HttpStatus.OK, "",
                         AuthenticationResponse.builder()
                                 .accessToken(jwtToken)
                                 .refreshToken(refreshToken)
@@ -173,6 +173,15 @@ public class UserService implements IUserService {
         catch (NullPointerException exception) {
             log.info(exception.toString());
             return forbinddenResponse;
+        }
+        catch (Exception exception) {
+            log.info(exception.toString());
+            return new ApiResponse<>(HttpStatus.OK, "",
+                    AuthenticationResponse.builder()
+                            .accessToken(jwtToken)
+                            .refreshToken(refreshToken)
+                            .build()
+            );
         }
         return forbinddenResponse;
     }

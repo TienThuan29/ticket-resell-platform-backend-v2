@@ -26,14 +26,6 @@ public class RatingMapper {
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy vé"));
 
         return Rating.builder()
-<<<<<<< HEAD
-                .ratingID(RatingID.builder()
-                        .genericTicketId(ratingRequest.getGenericTicketId())
-                        .buyerId(ratingRequest.getBuyerId())
-                        .build())
-=======
-//                .ratingID(RatingID.builder().build())
->>>>>>> e670f7d (fix report type)
                 .buyer(user)
                 .genericTicket(genericTicket)
                 .comment(ratingRequest.getComment())

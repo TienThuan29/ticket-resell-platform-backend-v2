@@ -89,11 +89,7 @@ spring:
         - id: report-service
           uri: http://localhost:9006
           predicates:
-<<<<<<< HEAD
             - Path=/api/report-type/**
-=======
-            - Path=/api/report-type**
->>>>>>> e670f7d (fix report type)
 
         - id: email-service
           uri: http://localhost:9007
