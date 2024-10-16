@@ -3,10 +3,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-<<<<<<< HEAD
-oauth2-service/.env
-=======
->>>>>>> d495a49 (oauth2 login google)
+
 
 ### STS ###
 .apt_generated
