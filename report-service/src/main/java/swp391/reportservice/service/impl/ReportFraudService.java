@@ -77,7 +77,7 @@ public class ReportFraudService implements IReportFraudService {
         ReportFraud report= reportFraudRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_STAFF+" :"+id));
         report.setNote(note);
-        report.setProcess(GeneralProcess.SUCCESS);
+        report.setProcess(GeneralProcess.REPORT_PROCESSING);
         reportFraudRepo.save(report);
     }
 }

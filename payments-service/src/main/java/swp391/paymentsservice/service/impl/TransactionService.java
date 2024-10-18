@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import swp391.entity.*;
 import swp391.entity.fixed.GeneralProcess;
+import swp391.entity.fixed.Role;
 import swp391.entity.fixed.TransactionType;
 import swp391.paymentsservice.config.MessageConfiguration;
 import swp391.paymentsservice.dto.response.ApiResponse;
@@ -37,6 +38,13 @@ public class TransactionService implements ITransactionService {
     private final MessageConfiguration messageConfig;
 
     private final TransactionMapper transactionMapper;
+
+    private final PolicyRepository policyRepo;
+
+    private final TypePolicyRepository typePolicyRepo;
+
+    private final StaffRepository staffRepo;
+
 
     @Override
     public ApiResponse<List<TransactionResponse>> getTransDepositByUserId(Long id) {
@@ -105,18 +113,30 @@ public class TransactionService implements ITransactionService {
                                 isExpiredMoreThanThreeDays(genericTicket.getExpiredDateTime()))
                         .toList();
 
-        // Get transaction is
+        // Get transaction is selling and not done
         var transactions = transactionRepo.getByGenericTickets(genericTickets);
+
+        // Get admin account
+        var admin = staffRepo.findByRoleCode(Role.ADMIN).get(0);
+
+        long revenue = admin.getRevenue();
+
         for (Transaction transaction :transactions){
             transaction.setIsDone(true);
-            saveBalance(transaction.getUser(), transaction.getAmount(), true);
+            long priceAfterFee = priceAfterFee(transaction.getAmount());
+            long profit = transaction.getAmount() - priceAfterFee;
+
+            saveBalance(transaction.getUser(), priceAfterFee, true);
+            revenue += profit;
         }
         transactionRepo.saveAll(transactions);
+        admin.setRevenue(revenue);
+        staffRepo.save(admin);
 
         var reports = reportFraudRepo.getReportByGenericTickets(genericTickets, GeneralProcess.REPORT_PROCESSING);
         for (ReportFraud report : reports) {
             // Create transaction add money for accuser
-            long ticketPrice = getPriceByTicket(report.getTicket());
+            long ticketPrice = priceAfterFee(getPriceByTicket(report.getTicket()));
 
             Transaction transactionRefund = Transaction.builder()
                     .transactionNo(randoTransactionNo())
@@ -146,6 +166,16 @@ public class TransactionService implements ITransactionService {
             report.setProcess(GeneralProcess.SUCCESS);
         }
         reportFraudRepo.saveAll(reports);
+    }
+
+    private long priceAfterFee(Long price){
+        var typePolicy = typePolicyRepo.findById(1L)
+                .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_TYPE_POLICY));
+
+        var policy = policyRepo.findByTypePolicy(typePolicy)
+                .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_POLICY));
+
+        return price - price*policy.getFee()/100;
     }
 
     private boolean isExpiredMoreThanThreeDays(Date expiredDate){

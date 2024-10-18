@@ -11,7 +11,10 @@ import swp391.entity.fixed.TransactionType;
         GenericTicket.class,
         Ticket.class,
         ReportFraud.class,
-        OrderTicket.class
+        OrderTicket.class,
+        Policy.class,
+        Staff.class,
+        TypePolicy.class
 })
 @Configuration("paymentsServiceEntityConfiguration")
 public class EntityConfiguration {
