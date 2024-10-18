@@ -106,6 +106,11 @@ spring:
           predicates:
             - Path=/api/transactions/**
 
+        - id: chat-service
+          uri: http://localhost:9008
+          predicates:
+            - Path=/api/chat/**
+
 
 
 

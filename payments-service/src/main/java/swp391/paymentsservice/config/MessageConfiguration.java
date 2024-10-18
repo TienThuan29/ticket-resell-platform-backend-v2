@@ -15,6 +15,5 @@ public class MessageConfiguration {
     public final String ERROR_USER = "Người dùng không tồn tại";
     public final String ERROR_REPORTED_USER= "Người bị báo cáo hợp không hợp lệ";
     public final String ERROR_TYPE_POLICY = "Thể loại chính sách không hợp lệ";
-
     public final String ERROR_POLICY = "Không tìm thấy chính sách";
 }
