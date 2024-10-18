@@ -1,11 +1,13 @@
 package swp391.staffservice.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import swp391.entity.Ticket;
 import swp391.entity.fixed.GeneralProcess;
 import swp391.staffservice.configuration.MessageConfiguration;
+import swp391.staffservice.dto.request.NotificationRequest;
 import swp391.staffservice.dto.response.ApiResponse;
 import swp391.staffservice.dto.response.GenericTicketResponse;
 import swp391.staffservice.exception.def.NotFoundException;
@@ -15,6 +17,7 @@ import swp391.staffservice.repository.TicketRepository;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StaffService implements IStaffService {
@@ -26,6 +29,8 @@ public class StaffService implements IStaffService {
     private final TicketRepository ticketRepository;
 
     private final MessageConfiguration messageConfig;
+
+    private final NotificationServiceFeign notificationServiceFeign;
 
     @Override
     public ApiResponse<?> verifyTicket(Long id) {
@@ -49,8 +54,19 @@ public class StaffService implements IStaffService {
             ticket.setChecked(Boolean.TRUE);
             ticket.setProcess(GeneralProcess.SELLING);
             ticketRepository.save(ticket);
+            // Send notification
+            notificationServiceFeign.sendVerificationNotification(
+                    NotificationRequest.builder()
+                            .senderId(ticket.getVerifyStaff().getId())
+                            .receiverId(ticket.getGenericTicket().getSeller().getId())
+                            .header("Xác thực vé")
+                            .subHeader("Mã số vé: " + ticket.getTicketSerial())
+                            .content("Vé của bạn đã được xác thực. Vui lòng kiểm tra trong cửa hàng của bạn!")
+                            .build()
+            );
         }
         catch (Exception ex) {
+            log.info(ex.toString());
             return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, messageConfig.ERROR_WHILE_VERIFY_TICKET, null);
         }
         return new ApiResponse<>(HttpStatus.OK, messageConfig.MESSAGE_VERIFY_TICKET_SUCCESS, null);

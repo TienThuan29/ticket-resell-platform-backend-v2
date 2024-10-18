@@ -111,6 +111,10 @@ spring:
           predicates:
             - Path=/api/chat/**
 
+        - id: notification-service
+          uri: http://localhost:9011
+          predicates:
+            - Path=/api/notifications/**
 
 
 

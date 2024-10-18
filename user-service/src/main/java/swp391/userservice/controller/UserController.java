@@ -67,7 +67,12 @@ public class UserController implements IUserController {
     }
 
     @Override
-    public ApiResponse<?> changePassword(Long id, String oldPassword, String newPassword) {
+    @PostMapping("/change-pass")
+    public ApiResponse<?> changePassword(
+            @RequestParam("id") Long id,
+            @RequestParam("oldPassword") String oldPassword,
+            @RequestParam("newPassword") String newPassword
+    ) {
         return userService.changePassword(id, oldPassword, newPassword);
     }
 
