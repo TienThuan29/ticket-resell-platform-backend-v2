@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import swp391.entity.Ticket;
 import swp391.entity.fixed.GeneralProcess;
+import swp391.staffservice.configuration.ConstantConfiguration;
 import swp391.staffservice.configuration.MessageConfiguration;
 import swp391.staffservice.dto.request.NotificationRequest;
 import swp391.staffservice.dto.response.ApiResponse;
@@ -31,6 +32,8 @@ public class StaffService implements IStaffService {
     private final MessageConfiguration messageConfig;
 
     private final NotificationServiceFeign notificationServiceFeign;
+
+    private final ConstantConfiguration constant;
 
     @Override
     public ApiResponse<?> verifyTicket(Long id) {
@@ -59,9 +62,9 @@ public class StaffService implements IStaffService {
                     NotificationRequest.builder()
                             .senderId(ticket.getVerifyStaff().getId())
                             .receiverId(ticket.getGenericTicket().getSeller().getId())
-                            .header("Xác thực vé")
-                            .subHeader("Mã số vé: " + ticket.getTicketSerial())
-                            .content("Vé của bạn đã được xác thực. Vui lòng kiểm tra trong cửa hàng của bạn!")
+                            .header(constant.NOTIFICATION_TEMPLATE.VERIFICATION_TICKET_HEADER)
+                            .subHeader(constant.NOTIFICATION_TEMPLATE.VERIFICATION_TICKET_SUBHEADER + ticket.getTicketSerial())
+                            .content(constant.NOTIFICATION_TEMPLATE.VERIFICATION_TICKET_CONTENT)
                             .build()
             );
         }

@@ -1,9 +1,7 @@
-package swp391.notificationservice.dto.response;
+package swp391.userservice.dto.reponse;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.bson.types.ObjectId;
-import swp391.notificationservice.entity.NotificationType;
 
 import java.util.Date;
 
@@ -12,10 +10,10 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class NotificationResponse {
+public class NotificationFeign {
 
     @JsonProperty("id")
-    private ObjectId id;
+    private String id;
 
     @JsonProperty("sentDate")
     private Date sentDate;
@@ -42,6 +40,6 @@ public class NotificationResponse {
     private Boolean isDeleted;
 
     @JsonProperty("type")
-    private NotificationType type;
+    private String type;
 
 }

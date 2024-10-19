@@ -12,12 +12,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import swp391.userservice.dto.reponse.ApiResponse;
 import swp391.userservice.dto.reponse.AuthenticationResponse;
+import swp391.userservice.dto.reponse.NotificationResponse;
 import swp391.userservice.dto.reponse.UserDTO;
 import swp391.userservice.dto.request.AuthenticationRequest;
 import swp391.userservice.dto.request.OAuth2AuthRequest;
 import swp391.userservice.dto.request.RegisterRequest;
 import swp391.userservice.dto.request.UpdateInfoRequest;
 import swp391.userservice.service.IUserService;
+
+import java.util.List;
 
 /**
  * Author: Nguyen Tien Thuan
@@ -129,6 +132,9 @@ public class UserController implements IUserController {
         return userService.update(id, updateInfoRequest);
     }
 
-
+    @GetMapping("/get/notifications/all/{receiverId}")
+    public ApiResponse<List<NotificationResponse>> getAllNotificationOfReceiver(@PathVariable("receiverId") Long receiverId){
+        return userService.getAllNotificationOfReceiver(receiverId);
+    }
 
 }

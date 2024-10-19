@@ -17,6 +17,14 @@ public class ConstantConfiguration {
     public final Boolean JWT_EXPIRED_DISABLE;
     public final Boolean JWT_EXPIRED_ENABLE;
 
+    public final NotificationTemplate NOTIFICATION_TEMPLATE = new NotificationTemplate();
+
+    public class NotificationTemplate {
+        public final String VERIFICATION_TICKET_HEADER = "Xác thực vé";
+        public final String VERIFICATION_TICKET_SUBHEADER = "Mã số vé: ";
+        public final String VERIFICATION_TICKET_CONTENT = "Vé của bạn đã được xác thực. Vui lòng kiểm tra trong cửa hàng của bạn!";
+    }
+
     public ConstantConfiguration(
             @Value("${auth.header}") String authHeader,
             @Value("${auth.header.bearer}") String authHeaderBearer,

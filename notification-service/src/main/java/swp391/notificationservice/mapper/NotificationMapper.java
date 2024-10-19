@@ -3,7 +3,7 @@ package swp391.notificationservice.mapper;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 import swp391.notificationservice.dto.request.NotificationRequest;
-import swp391.notificationservice.dto.response.NotificationResponse;
+import swp391.notificationservice.dto.response.NotificationFeign;
 import swp391.notificationservice.entity.Notification;
 import swp391.notificationservice.entity.NotificationType;
 
@@ -15,9 +15,9 @@ import java.util.Date;
 @Component
 public class NotificationMapper {
 
-    public NotificationResponse toResponse(Notification notification){
-        return NotificationResponse.builder()
-                .id(notification.getId())
+    public NotificationFeign toResponse(Notification notification){
+        return NotificationFeign.builder()
+                .id(notification.getId().toString())
                 .sentDate(notification.getSentDate())
                 .senderId(notification.getSenderId())
                 .receiverId(notification.getReceiverId())
@@ -26,7 +26,7 @@ public class NotificationMapper {
                 .content(notification.getContent())
                 .isRead(notification.getIsRead())
                 .isDeleted(notification.getIsDeleted())
-                .type(notification.getType())
+                .type(notification.getType().name())
                 .build();
     }
 

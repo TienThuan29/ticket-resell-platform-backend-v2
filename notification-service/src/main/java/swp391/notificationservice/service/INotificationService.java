@@ -2,13 +2,19 @@ package swp391.notificationservice.service;
 
 import swp391.notificationservice.dto.request.NotificationRequest;
 import swp391.notificationservice.dto.response.ApiResponse;
-import swp391.notificationservice.dto.response.NotificationResponse;
+import swp391.notificationservice.dto.response.NotificationFeign;
 import java.util.List;
 
 public interface INotificationService {
 
     Boolean sendVerificationNotification(NotificationRequest notiRequest);
 
-    ApiResponse<List<NotificationResponse>> getAllNotificationOfReceiver(Long receiverId);
+    List<NotificationFeign> getAllNotificationOfReceiver(Long receiverId);
+
+    ApiResponse<?> markReadNotification(String ojectIdString);
+
+    ApiResponse<?> markDeletedNotification(String ojectIdString);
+
+    ApiResponse<?> deleteForever(String ojectIdString);
 
 }
