@@ -127,4 +127,10 @@ public class GenericTicketController implements IGenericTicketController {
         return genericTicketService.getAllOrderTicketRequest(sellerId);
     }
 
+    @Override
+    @GetMapping("/get-rated-generic-ticket-of-buyer/{buyerId}")
+    public ApiResponse<List<GenericTicketResponse>> getRatedGenericTicket(@PathVariable("buyerId") Long buyerId) {
+        return genericTicketService.getRatedGenericTicket(buyerId);
+    }
+
 }

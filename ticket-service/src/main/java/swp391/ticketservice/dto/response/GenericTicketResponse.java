@@ -39,5 +39,9 @@ public class GenericTicketResponse {
 
     @JsonProperty("seller") private SellerResponse seller;
 
-    //@JsonProperty("tickets") private List<TicketResponse> tickets;
+    @JsonProperty("tickets") private List<TicketResponse> tickets;
+
+    @JsonProperty("stars") private Short star;
+
+    @JsonProperty("comment") private String comment;
 }

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import swp391.entity.*;
 import swp391.entity.embedable.OrderTicketID;
@@ -23,9 +22,7 @@ import swp391.ticketservice.mapper.TicketMapper;
 import swp391.ticketservice.mapper.UserMapper;
 import swp391.ticketservice.repository.*;
 import swp391.ticketservice.service.def.ITicketService;
-import swp391.ticketservice.utils.DateUtil;
 import swp391.ticketservice.utils.ImageUtil;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -60,6 +57,8 @@ public class TicketService implements ITicketService {
     private final OrderTicketRepository orderTicketRepository;
 
     private final UserMapper userMapper;
+
+    private final RatingRepository ratingRepository;
 
     @Override
     public ApiResponse<List<TicketResponse>> getAll() {
@@ -298,6 +297,12 @@ public class TicketService implements ITicketService {
                     genericTicketMapper.toResponse(
                             genericTicketRepository.findById(item.getGenericTicketId()).get()
                     )
+            );
+            // If rating is present, the generic ticket have been rated
+            item.setIsRated(
+                    ratingRepository.findByBuyerIdAndGenericTicketId(
+                            buyerId, item.getGenericTicketId()
+                    ).isPresent()
             );
         });
         return new ApiResponse<>(HttpStatus.OK, "", tickets);

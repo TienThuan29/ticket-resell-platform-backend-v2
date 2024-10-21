@@ -35,6 +35,8 @@ public class MessageConfiguration {
     public final String ERROR_DENY_TO_SELL_TICKET;
     public final String ERROR_CANCEL_TICKET_ORDER;
     public final String SUCCESS_CANCEL_TICKET_ORDER;
+    public final String SUCCESS_RATING;
+    public final String ERROR_RATING;
 
     public MessageConfiguration() {
         this.INVALID_GENERICTICKET = "Vé tổng quan không hợp lệ";
@@ -65,5 +67,7 @@ public class MessageConfiguration {
         this.ERROR_ORDER_TICKET_NOT_FOUND = "Không tìm thấy đơn hàng!";
         this.ERROR_CANCEL_TICKET_ORDER = "Có lỗi xảy ra khi hủy đơn hàng!";
         this.SUCCESS_CANCEL_TICKET_ORDER = "Hủy đơn hàng thành công!";
+        this.SUCCESS_RATING = "Đánh giá thành công!";
+        this.ERROR_RATING = "Có sự cố xảy ra khi đánh giá!";
     }
 }

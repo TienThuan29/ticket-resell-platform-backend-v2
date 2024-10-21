@@ -25,5 +25,17 @@ public class PolicyService implements IPolicyService {
         );
     }
 
+    @Override
+    public ApiResponse<PolicyResponse> getBuyingPolicy() {
+        return new ApiResponse<>(HttpStatus.OK,
+                "", policyMapper.toPolicyResponse(policyRepository.findById(5).get()));
+    }
+
+    @Override
+    public ApiResponse<PolicyResponse> getGeneralPolicy() {
+        return new ApiResponse<>(HttpStatus.OK,
+                "", policyMapper.toPolicyResponse(policyRepository.findById(6).get()));
+    }
+
 
 }

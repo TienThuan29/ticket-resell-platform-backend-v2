@@ -37,30 +37,19 @@ import java.util.stream.Collectors;
 public class GenericTicketService implements IGenericTicketService {
 
     private final GenericTicketMapper genericTicketMapper;
-
     private final MessageConfiguration message;
-
     private final ConstantConfiguration constant;
-
     private final GenericTicketRepository genericTicketRepository;
-
     private final PolicyRepository policyRepository;
-
     private final UserRepository userRepository;
-
     private final EventRepository eventRepository;
-
     private final CategoryRepository categoryRepository;
-
     private final OrderTicketMapper orderTicketMapper;
-
     private final OrderTicketRepository orderTicketRepository;
-
     private final TicketRepository ticketRepository;
-
     private final TicketMapper ticketMapper;
-
     private final NotificationServiceFeign notificationServiceFeign;
+    private final RatingRepository ratingRepository;
 
     @Override
     public ApiResponse<GenericTicketResponse> create(GenericTicketRequest genericTicketRequest) {
@@ -241,6 +230,26 @@ public class GenericTicketService implements IGenericTicketService {
                 orderTicketRepository.getCanceledOrderTicket(userId)
                         .stream().map(orderTicketMapper::toResponse).toList()
         );
+    }
+
+    @Override
+    public ApiResponse<List<GenericTicketResponse>> getRatedGenericTicket(Long buyerId) {
+        List<Rating> ratings = ratingRepository.findByBuyerId(buyerId);
+        List<GenericTicketResponse> genericTicketList = new ArrayList<>();
+        // Set response info of generic ticket
+        ratings.forEach(rating -> {
+            GenericTicketResponse obj = genericTicketMapper.toResponse(
+                    genericTicketRepository.findById(rating.getGenericTicket().getId()).get()
+            );
+            obj.setTickets(
+                    ticketRepository.findByGenericTicket(rating.getGenericTicket()).stream()
+                            .map(ticketMapper::toResponse).toList()
+            );
+            obj.setStar(rating.getStars());
+            obj.setComment(rating.getComment());
+            genericTicketList.add(obj);
+        });
+        return new ApiResponse<>(HttpStatus.OK, "", genericTicketList);
     }
 
     @Override

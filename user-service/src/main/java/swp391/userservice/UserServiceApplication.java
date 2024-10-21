@@ -18,7 +18,7 @@ import swp391.entity.fixed.VerificationType;
 })
 @EnableFeignClients
 @EnableScheduling
-public class UserServiceApplication {
+public class  UserServiceApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(UserServiceApplication.class, args);
