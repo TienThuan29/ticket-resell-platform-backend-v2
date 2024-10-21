@@ -107,10 +107,14 @@ spring:
             - Path=/api/transactions/**
 
         - id: chat-service
-          uri: http://localhost:9008
+          uri: http://localhost:9009
           predicates:
             - Path=/api/chat/**
 
+        - id: notification-service
+          uri: http://localhost:9011
+          predicates:
+            - Path=/api/notifications/**
 
 
 

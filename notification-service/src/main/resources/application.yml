@@ -1,0 +1,10 @@
+server:
+  port: 9011
+
+spring:
+  application:
+    name: notification-service
+  data:
+    mongodb:
+      uri: mongodb+srv://ticketresell:9999@ticketresellplatformdb.zvsc1.mongodb.net/
+      database: TicketResellDB

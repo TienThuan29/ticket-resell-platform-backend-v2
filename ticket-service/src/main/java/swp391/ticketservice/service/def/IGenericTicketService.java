@@ -40,7 +40,11 @@ public interface IGenericTicketService {
 
     ApiResponse<?> orderTicket(OrderTicketRequest orderTicketRequest);
 
+    ApiResponse<?> cancelTicketOrder(String orderNo, Long senderId);
+
     ApiResponse<List<OrderTicketResponse>> getProcessingOrderTicket(Long userId);
+
+    ApiResponse<List<OrderTicketResponse>> getCanceledOrderTicket(Long userId);
 
     ApiResponse<List<OrderTicketResponse>> getAllOrderTicketRequest(Long sellerId);
 }

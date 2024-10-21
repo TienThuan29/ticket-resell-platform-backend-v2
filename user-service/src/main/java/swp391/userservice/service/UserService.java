@@ -1,5 +1,7 @@
 package swp391.userservice.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
@@ -15,13 +17,12 @@ import swp391.entity.fixed.TokenType;
 import swp391.entity.fixed.VerificationType;
 import swp391.userservice.configuration.ConstantConfiguration;
 import swp391.userservice.configuration.MessageConfiguration;
-import swp391.userservice.dto.reponse.ApiResponse;
-import swp391.userservice.dto.reponse.AuthenticationResponse;
-import swp391.userservice.dto.reponse.UserDTO;
+import swp391.userservice.dto.reponse.*;
 import swp391.userservice.dto.request.AuthenticationRequest;
 import swp391.userservice.dto.request.RegisterRequest;
 import swp391.userservice.dto.request.UpdateInfoRequest;
 import swp391.userservice.exception.def.NotFoundException;
+import swp391.userservice.mapper.NotificationMapper;
 import swp391.userservice.mapper.UserMapper;
 import swp391.userservice.repository.TokenRepository;
 import swp391.userservice.repository.UserRepository;
@@ -30,6 +31,7 @@ import swp391.userservice.utils.ImageUtil;
 import swp391.userservice.utils.RandomUtil;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -61,6 +63,10 @@ public class UserService implements IUserService {
     private final ConstantConfiguration constant;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final NotificationServiceFeign notificationServiceFeign;
+
+    private final NotificationMapper notificationMapper;
 
     @Override
     public ApiResponse<UserDTO> getById(Long id) {
@@ -369,6 +375,29 @@ public class UserService implements IUserService {
         user.setPassword(passwordEncoder.encode(newPass));
         userRepository.save(user);
         return new ApiResponse<>(HttpStatus.OK, messageConfig.MESSAGE_RESET_PASSWORD_SUCCSESS);
+    }
+
+    @Override
+    public ApiResponse<List<NotificationResponse>> getAllNotificationOfReceiver(Long receiverId) {
+        List<NotificationFeign> notifications = null;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            var responseValues = notificationServiceFeign.getAllNotificationOfReceiver(receiverId);
+            notifications = mapper.convertValue(
+                    responseValues, new TypeReference<List<NotificationFeign>>() {}
+            );
+            if (notifications == null) throw new Exception();
+        }
+        catch (Exception ex) {
+            log.info(ex.toString());
+            return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "", null);
+        }
+        return new ApiResponse<>(
+                HttpStatus.OK, "",
+                notifications.stream().map(notificationMapper::fromFeignToResponse)
+                        .sorted((o1, o2) -> o2.getSentDate().compareTo(o1.getSentDate()))
+                        .toList()
+        ) ;
     }
 
     @Scheduled(fixedDelay = 300000)// 5 phút reset một lần

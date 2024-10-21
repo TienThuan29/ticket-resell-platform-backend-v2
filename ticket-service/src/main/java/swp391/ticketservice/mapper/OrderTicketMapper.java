@@ -77,6 +77,7 @@ public class OrderTicketMapper {
                 .totalPrice(orderTicket.getTotalPrice())
                 .isAccepted(orderTicket.isAccepted())
                 .note(orderTicket.getNote())
+                .isCanceled(orderTicket.isCanceled())
                 .build();
     }
 
@@ -89,6 +90,7 @@ public class OrderTicketMapper {
                 .quantity(orderTicket.getQuantity())
                 .totalPrice(orderTicket.getTotalPrice())
                 .isAccepted(orderTicket.isAccepted())
+                .isCanceled(orderTicket.isCanceled())
                 .note(orderTicket.getNote())
                 .build();
     }
