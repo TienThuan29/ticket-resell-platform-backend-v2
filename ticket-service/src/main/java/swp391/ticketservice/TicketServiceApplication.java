@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import swp391.entity.*;
 
 import java.util.TimeZone;
-
 @SpringBootApplication
 @EntityScan(basePackageClasses = {
         Category.class,
@@ -22,6 +22,7 @@ import java.util.TimeZone;
         Rating.class,
         Transaction.class
 })
+
 public class TicketServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(TicketServiceApplication.class, args);

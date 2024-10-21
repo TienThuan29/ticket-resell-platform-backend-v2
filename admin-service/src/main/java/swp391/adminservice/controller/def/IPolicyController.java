@@ -7,4 +7,7 @@ public interface IPolicyController {
 
     ApiResponse<PolicyResponse> getSellingPolicy();
 
+    ApiResponse<PolicyResponse> getBuyingPolicy();
+
+    ApiResponse<PolicyResponse> getGeneralPolicy();
 }
