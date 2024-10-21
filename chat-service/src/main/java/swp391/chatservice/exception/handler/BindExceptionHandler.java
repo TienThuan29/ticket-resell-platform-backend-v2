@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import swp391.ticketservice.exception.def.ErrorResponse;
+import swp391.chatservice.exception.def.ErrorResponse;
 
 @RestControllerAdvice(name = "ticketServiceBindExceptionHandler")
 public class BindExceptionHandler {
