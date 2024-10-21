@@ -29,6 +29,9 @@ public class OrderTicketResponse {
     @JsonProperty("isAccepted")
     private Boolean isAccepted;
 
+    @JsonProperty("isCanceled")
+    private Boolean isCanceled;
+
     @JsonProperty("note")
     private String note;
 

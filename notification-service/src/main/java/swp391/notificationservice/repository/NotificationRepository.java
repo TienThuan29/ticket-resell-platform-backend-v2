@@ -12,4 +12,6 @@ public interface NotificationRepository extends MongoRepository<Notification, Ob
 
     List<Notification> getNotificationByReceiverId(Long receiverId);
 
+    List<Notification> findByReceiverIdAndIsReadAndIsDeleted(Long receiverId, Boolean isRead, Boolean isDeleted);
+
 }

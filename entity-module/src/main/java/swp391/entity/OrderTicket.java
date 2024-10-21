@@ -34,6 +34,9 @@ public class OrderTicket {
     @Column(name = "is_accepted", columnDefinition = "bit default 0")
     private boolean isAccepted;
 
+    @Column(name = "is_canceled", columnDefinition = "bit default 0")
+    private boolean isCanceled;
+
     @Column(name = "note", columnDefinition = "nvarchar(1024)")
     private String note;
 

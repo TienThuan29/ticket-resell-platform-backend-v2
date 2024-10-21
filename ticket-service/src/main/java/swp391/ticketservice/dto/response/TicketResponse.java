@@ -44,4 +44,6 @@ public class TicketResponse {
     @JsonProperty("verifyStaffId") private Long verifyStaffId;
 
     @JsonProperty("genericTicketObject") private GenericTicketResponse genericTicketObject;
+
+    @JsonProperty("isRated") private Boolean isRated;
 }

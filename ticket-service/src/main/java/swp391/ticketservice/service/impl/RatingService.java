@@ -31,7 +31,7 @@ public class RatingService implements IRatingService {
     }
 
     @Override
-    public ApiResponse<?> getListRating(Long sellId) {
+    public ApiResponse<ListRatingReponse> getListRating(Long sellId) {
         Float avgStars= ratingRepository.getAvgStars(sellId);
         List<Rating> listRating = ratingRepository.getListRating(sellId);
         ListRatingReponse listRatingReponse= ListRatingReponse.builder()

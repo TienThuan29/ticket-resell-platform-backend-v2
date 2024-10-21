@@ -6,15 +6,24 @@ import org.springframework.stereotype.Repository;
 import swp391.entity.OrderTicket;
 import swp391.entity.embedable.OrderTicketID;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderTicketRepository extends JpaRepository<OrderTicket, OrderTicketID> {
 
     @Query(
             "SELECT ot FROM OrderTicket ot" +
-            " WHERE ot.buyer.id =:userId AND ot.isAccepted = false AND (ot.note IS NULL OR ot.note = '')"
+            " WHERE ot.buyer.id =:userId AND ot.isAccepted = false " +
+                    "AND (ot.note IS NULL OR ot.note = '') AND ot.isCanceled = false "
     )
     List<OrderTicket> getProcessingOrderTicket(Long userId);
+
+
+    @Query(
+            "SELECT ot FROM OrderTicket ot" +
+            " WHERE ot.buyer.id =:userId AND ot.isCanceled = true"
+    )
+    List<OrderTicket> getCanceledOrderTicket(Long userId);
 
     @Query(
             "SELECT ot FROM OrderTicket ot " +
@@ -24,5 +33,6 @@ public interface OrderTicketRepository extends JpaRepository<OrderTicket, OrderT
     )
     List<OrderTicket> getAllRequestOrderTicket(Long sellerId);
 
-
+    @Query("SELECT ot FROM OrderTicket ot WHERE ot.orderTicketID.orderNo =:orderNo")
+    Optional<OrderTicket> findByOrderNo(String orderNo);
 }
