@@ -47,4 +47,6 @@ public interface IGenericTicketService {
     ApiResponse<List<OrderTicketResponse>> getCanceledOrderTicket(Long userId);
 
     ApiResponse<List<OrderTicketResponse>> getAllOrderTicketRequest(Long sellerId);
+
+    ApiResponse<List<GenericTicketResponse>> getRatedGenericTicket(Long buyerId);
 }
