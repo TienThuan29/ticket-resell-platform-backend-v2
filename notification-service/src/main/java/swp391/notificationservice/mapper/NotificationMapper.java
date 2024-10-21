@@ -31,10 +31,7 @@ public class NotificationMapper {
     }
 
     public Notification toVerificationNotification(NotificationRequest request) {
-        LocalDateTime localDateTime = LocalDateTime.now();
-        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
-        Date sentDateNow = Date.from(zonedDateTime.toInstant());
-
+        Date sentDateNow = getNowTime();
         return Notification.builder()
                 .id(new ObjectId())
                 .sentDate(sentDateNow)
@@ -49,4 +46,26 @@ public class NotificationMapper {
                 .build();
     }
 
+    public Notification toCancelOrderNotification(NotificationRequest request) {
+        Date sentDateNow = getNowTime();
+        return Notification.builder()
+                .id(new ObjectId())
+                .sentDate(sentDateNow)
+                .senderId(request.getSenderId())
+                .receiverId(request.getReceiverId())
+                .header(request.getHeader())
+                .subHeader(request.getSubHeader())
+                .content(request.getContent())
+                .isRead(Boolean.FALSE)
+                .isDeleted(Boolean.FALSE)
+                .type(NotificationType.CANCEL_ORDER)
+                .build();
+    }
+
+
+    private Date getNowTime() {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+       return Date.from(zonedDateTime.toInstant());
+    }
 }

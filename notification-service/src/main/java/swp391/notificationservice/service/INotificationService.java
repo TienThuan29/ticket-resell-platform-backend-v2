@@ -9,6 +9,8 @@ public interface INotificationService {
 
     Boolean sendVerificationNotification(NotificationRequest notiRequest);
 
+    Boolean sendCancelOrderNotification(NotificationRequest notiRequest);
+
     List<NotificationFeign> getAllNotificationOfReceiver(Long receiverId);
 
     ApiResponse<?> markReadNotification(String ojectIdString);
@@ -16,5 +18,7 @@ public interface INotificationService {
     ApiResponse<?> markDeletedNotification(String ojectIdString);
 
     ApiResponse<?> deleteForever(String ojectIdString);
+
+    ApiResponse<Boolean> haveNotification(Long receiverId);
 
 }

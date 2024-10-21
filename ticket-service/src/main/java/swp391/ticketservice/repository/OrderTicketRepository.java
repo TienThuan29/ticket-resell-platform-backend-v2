@@ -13,9 +13,17 @@ public interface OrderTicketRepository extends JpaRepository<OrderTicket, OrderT
 
     @Query(
             "SELECT ot FROM OrderTicket ot" +
-            " WHERE ot.buyer.id =:userId AND ot.isAccepted = false AND (ot.note IS NULL OR ot.note = '')"
+            " WHERE ot.buyer.id =:userId AND ot.isAccepted = false " +
+                    "AND (ot.note IS NULL OR ot.note = '') AND ot.isCanceled = false "
     )
     List<OrderTicket> getProcessingOrderTicket(Long userId);
+
+
+    @Query(
+            "SELECT ot FROM OrderTicket ot" +
+            " WHERE ot.buyer.id =:userId AND ot.isCanceled = true"
+    )
+    List<OrderTicket> getCanceledOrderTicket(Long userId);
 
     @Query(
             "SELECT ot FROM OrderTicket ot " +

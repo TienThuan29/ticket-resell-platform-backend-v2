@@ -5,9 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import swp391.entity.*;
+import swp391.ticketservice.config.ConstantConfiguration;
 import swp391.ticketservice.config.MessageConfiguration;
 import swp391.ticketservice.dto.request.GenericTicketFilter;
 import swp391.ticketservice.dto.request.GenericTicketRequest;
+import swp391.ticketservice.dto.request.NotificationRequest;
 import swp391.ticketservice.dto.request.OrderTicketRequest;
 import swp391.ticketservice.dto.response.ApiResponse;
 import swp391.ticketservice.dto.response.GenericTicketResponse;
@@ -19,6 +21,7 @@ import swp391.ticketservice.mapper.OrderTicketMapper;
 import swp391.ticketservice.mapper.TicketMapper;
 import swp391.ticketservice.repository.*;
 import swp391.ticketservice.service.def.IGenericTicketService;
+import swp391.ticketservice.service.def.NotificationServiceFeign;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +40,8 @@ public class GenericTicketService implements IGenericTicketService {
 
     private final MessageConfiguration message;
 
+    private final ConstantConfiguration constant;
+
     private final GenericTicketRepository genericTicketRepository;
 
     private final PolicyRepository policyRepository;
@@ -54,6 +59,8 @@ public class GenericTicketService implements IGenericTicketService {
     private final TicketRepository ticketRepository;
 
     private final TicketMapper ticketMapper;
+
+    private final NotificationServiceFeign notificationServiceFeign;
 
     @Override
     public ApiResponse<GenericTicketResponse> create(GenericTicketRequest genericTicketRequest) {
@@ -194,11 +201,28 @@ public class GenericTicketService implements IGenericTicketService {
     }
 
     @Override
-    public ApiResponse<?> cancelTicketOrder(String orderNo) {
+    public ApiResponse<?> cancelTicketOrder(String orderNo, Long senderId) {
         var orderTicket = orderTicketRepository.findByOrderNo(orderNo).orElseThrow(
                 () -> new NotFoundException(message.ERROR_ORDER_TICKET_NOT_FOUND)
         );
-        orderTicket.set
+        try {
+            orderTicket.setCanceled(Boolean.TRUE);
+            orderTicketRepository.save(orderTicket);
+            // Send cancel order notification to seller
+            notificationServiceFeign.sendCancelOrderNotification(
+                    NotificationRequest.builder()
+                            .senderId(senderId)
+                            .receiverId(orderTicket.getGenericTicket().getSeller().getId())
+                            .header(constant.NOTIFICATION_TEMPLATE.VERIFICATION_TICKET_HEADER)
+                            .subHeader(constant.NOTIFICATION_TEMPLATE.VERIFICATION_TICKET_SUBHEADER)
+                            .content(constant.NOTIFICATION_TEMPLATE.VERIFICATION_TICKET_CONTENT)
+                            .build()
+            );
+        }
+        catch (Exception ex) {
+            return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, message.ERROR_CANCEL_TICKET_ORDER, null);
+        }
+        return new ApiResponse<>(HttpStatus.OK, message.SUCCESS_CANCEL_TICKET_ORDER, null);
     }
 
     @Override
@@ -206,6 +230,15 @@ public class GenericTicketService implements IGenericTicketService {
         return new ApiResponse<>(
                 HttpStatus.OK, "",
                 orderTicketRepository.getProcessingOrderTicket(userId)
+                        .stream().map(orderTicketMapper::toResponse).toList()
+        );
+    }
+
+    @Override
+    public ApiResponse<List<OrderTicketResponse>> getCanceledOrderTicket(Long userId) {
+        return new ApiResponse<>(
+                HttpStatus.OK, "",
+                orderTicketRepository.getCanceledOrderTicket(userId)
                         .stream().map(orderTicketMapper::toResponse).toList()
         );
     }

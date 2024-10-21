@@ -25,6 +25,14 @@ public class NotificationController implements INotificationController {
     }
 
     @Override
+    @PostMapping("/send/cancel-order")
+    public Boolean sendCancelOrderNotification(
+            @RequestBody NotificationRequest notiRequest
+    ) {
+        return notificationService.sendCancelOrderNotification(notiRequest);
+    }
+
+    @Override
     @GetMapping("/get-all/receiver/{receiverId}")
     public List<NotificationFeign> getAllNotificationOfReceiver(
             @PathVariable("receiverId") Long receiverId
@@ -48,6 +56,12 @@ public class NotificationController implements INotificationController {
     @DeleteMapping("/delete-forever/{id}")
     public ApiResponse<?> deleteForever(@PathVariable("id") String ojectIdString) {
         return notificationService.deleteForever(ojectIdString);
+    }
+
+    @Override
+    @GetMapping("/have-notifications/{receiverId}")
+    public ApiResponse<Boolean> haveNotification(@PathVariable("receiverId") Long receiverId) {
+        return notificationService.haveNotification(receiverId);
     }
 
 }

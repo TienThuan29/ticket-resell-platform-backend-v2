@@ -9,6 +9,7 @@ import swp391.notificationservice.configuration.MessageConfiguration;
 import swp391.notificationservice.dto.request.NotificationRequest;
 import swp391.notificationservice.dto.response.ApiResponse;
 import swp391.notificationservice.dto.response.NotificationFeign;
+import swp391.notificationservice.entity.Notification;
 import swp391.notificationservice.mapper.NotificationMapper;
 import swp391.notificationservice.repository.NotificationRepository;
 import java.util.List;
@@ -31,6 +32,21 @@ public class NotificationService implements INotificationService {
         try {
             notificationRepository.save(
                     notificationMapper.toVerificationNotification(request)
+            );
+        }
+        catch (Exception ex) {
+            log.info(ex.toString());
+            flag = false;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sendCancelOrderNotification(NotificationRequest notiRequest) {
+        boolean flag = true;
+        try {
+            notificationRepository.save(
+                    notificationMapper.toCancelOrderNotification(notiRequest)
             );
         }
         catch (Exception ex) {
@@ -91,6 +107,12 @@ public class NotificationService implements INotificationService {
             return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, messageConfig.ERROR_DELETE_FOREVER_NOTIFICATION, null);
         }
         return new ApiResponse<>(HttpStatus.OK, messageConfig.SUCCESS_DELETE_FOREVER_NOTIFICATION, null);
+    }
+
+    @Override
+    public ApiResponse<Boolean> haveNotification(Long receiverId) {
+        List<Notification> notifications = notificationRepository.findByReceiverIdAndIsReadAndIsDeleted(receiverId,false, false);
+        return new ApiResponse<>(HttpStatus.OK, "", !notifications.isEmpty());
     }
 
 }
