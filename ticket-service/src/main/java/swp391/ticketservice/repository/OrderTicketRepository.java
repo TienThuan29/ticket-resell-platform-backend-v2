@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import swp391.entity.OrderTicket;
 import swp391.entity.embedable.OrderTicketID;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderTicketRepository extends JpaRepository<OrderTicket, OrderTicketID> {
@@ -24,5 +25,6 @@ public interface OrderTicketRepository extends JpaRepository<OrderTicket, OrderT
     )
     List<OrderTicket> getAllRequestOrderTicket(Long sellerId);
 
-
+    @Query("SELECT ot FROM OrderTicket ot WHERE ot.orderTicketID.orderNo =:orderNo")
+    Optional<OrderTicket> findByOrderNo(String orderNo);
 }

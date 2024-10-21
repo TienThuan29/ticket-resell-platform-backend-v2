@@ -101,6 +101,11 @@ public class GenericTicketController implements IGenericTicketController {
     }
 
     @Override
+    public ApiResponse<?> cancelTicketOrder(String orderNo) {
+
+    }
+
+    @Override
     @GetMapping("/get-processing-order-ticket/{id}")
     public ApiResponse<List<OrderTicketResponse>> getProcessingOrderTicket(@PathVariable("id") Long userId) {
         return genericTicketService.getProcessingOrderTicket(userId);

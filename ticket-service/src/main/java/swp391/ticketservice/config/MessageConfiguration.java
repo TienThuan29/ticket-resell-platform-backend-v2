@@ -58,8 +58,8 @@ public class MessageConfiguration {
         this.SUCCESS_ORDER_TICKET = "Đặt mua vé thành công. Vui lòng chờ xác nhận từ người bán!";
         this.ERROR_ACCEPT_TO_SELL_TICKET = "Có sự cố khi xác nhận bán! Vui lòng thử lại!";
         this.SUCCESS_ACCEPT_TO_SELL_TICKET = "Xác nhận bán thành công!";
-        this.ERROR_ORDER_TICKET_NOT_FOUND = "Không thể tìm thấy orderTicket";
         this.SUCCESS_DENY_TO_SELL_TICKET = "Từ chối bán vé thành công";
         this.ERROR_DENY_TO_SELL_TICKET = "Có sự cố khi từ chối bán vé! Vui lòng thử lại!";
+        this.ERROR_ORDER_TICKET_NOT_FOUND = "Không tìm thấy đơn hàng!";
     }
 }

@@ -194,6 +194,14 @@ public class GenericTicketService implements IGenericTicketService {
     }
 
     @Override
+    public ApiResponse<?> cancelTicketOrder(String orderNo) {
+        var orderTicket = orderTicketRepository.findByOrderNo(orderNo).orElseThrow(
+                () -> new NotFoundException(message.ERROR_ORDER_TICKET_NOT_FOUND)
+        );
+        orderTicket.set
+    }
+
+    @Override
     public ApiResponse<List<OrderTicketResponse>> getProcessingOrderTicket(Long userId) {
         return new ApiResponse<>(
                 HttpStatus.OK, "",
