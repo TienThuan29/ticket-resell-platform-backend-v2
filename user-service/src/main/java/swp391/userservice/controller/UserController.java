@@ -98,6 +98,12 @@ public class UserController implements IUserController {
     }
 
     @Override
+    @GetMapping("/get-by-name")
+    public ApiResponse<List<UserDTO>> getUsersByName(@RequestParam String name) {
+        return userService.getUsersByName(name);
+    }
+
+    @Override
     @PostMapping("/authenticate")
     public ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
         return userService.authenticate(authenticationRequest);

@@ -7,6 +7,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import swp391.entity.User;
+
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,5 +30,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     @Query("UPDATE User u SET u.isSeller = true WHERE u.id = :id")
     void updateIsSellerById(@Param("id") Long id);
+
+    @Query("SELECT u FROM User u WHERE CONCAT(u.firstname, ' ', u.lastname) LIKE %:name%")
+    List<User> findByName(String name);
 
 }

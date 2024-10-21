@@ -9,6 +9,8 @@ import swp391.userservice.dto.request.OAuth2AuthRequest;
 import swp391.userservice.dto.request.RegisterRequest;
 import swp391.userservice.dto.request.UpdateInfoRequest;
 
+import java.util.List;
+
 /**
  * Author: Nguyen Tien Thuan
  */
@@ -43,4 +45,5 @@ public interface IUserController {
 
     ApiResponse<?> changePass(String newPass, String email);
 
+    ApiResponse<List<UserDTO>> getUsersByName(String name);
 }

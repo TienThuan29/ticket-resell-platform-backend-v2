@@ -1,9 +1,9 @@
 package swp391.chatservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import swp391.chatservice.dto.reponse.ApiResponse;
 import swp391.chatservice.entity.Message;
 import swp391.chatservice.entity.RoomChat;
@@ -26,18 +26,22 @@ public class ChatService implements IChatService {
     private final RoomChatRepository roomChatRepo;
 
     @Override
-    public ApiResponse<?> getOrCreateRoomChat(Long member1, Long member2) {
+    public ApiResponse<?> getOrCreateRoomChat(Long firstMemberId, Long secondMemberId) {
         return new ApiResponse<>(HttpStatus.OK, "",
-                roomChatRepo.findByTwoMembers(member1, member2).orElseGet(() -> createRoomChat(member1, member2)));
+                roomChatRepo.findByTwoMembers(firstMemberId, secondMemberId)
+                        .orElseGet(() -> createRoomChat(firstMemberId, secondMemberId)));
     }
 
-    private RoomChat createRoomChat(Long member1, Long member2){
-        return RoomChat.builder()
-                .conversationId(generateConversationId(6))
-                .members(List.of(member1, member2))
+    private RoomChat createRoomChat(Long firstMemberId, Long secondMemberId){
+        Long conversationId = generateConversationId(6);
+        var roomChat = RoomChat.builder()
+                .id(new ObjectId())
+                .conversationId(conversationId)
+                .members(List.of(firstMemberId, secondMemberId))
                 .time(getPresentDate())
                 .messages(new ArrayList<>())
                 .build();
+        return roomChatRepo.save(roomChat);
     }
 
     private Date getPresentDate(){
@@ -48,7 +52,7 @@ public class ChatService implements IChatService {
     }
 
     public Long generateConversationId(int length) {
-        String characters = "0123456789"; //ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+        String characters = "123456789"; //ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
         Random random = new Random();
         StringBuilder sb = new StringBuilder(length);
 

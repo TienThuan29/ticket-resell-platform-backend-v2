@@ -7,7 +7,7 @@ import swp391.chatservice.entity.Message;
 @Service
 public interface IChatService {
 
-    ApiResponse<?> getOrCreateRoomChat(Long member1, Long member2);
+    ApiResponse<?> getOrCreateRoomChat(Long firstMemberId, Long secondMemberId);
 
     Message saveMessage(Long conversationId, Message message);
 
