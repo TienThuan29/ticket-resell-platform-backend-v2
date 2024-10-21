@@ -32,6 +32,8 @@ public class RouterValidator {
             "/api/tickets/generic/get-by-event",
             "/api/tickets/generic/get-total-ticket",
             "/api/policy/get/selling",
+            "/api/policy/get/buying",
+            "/api/policy/get/general",
             "/api/events/get-happening-events",
             "/api/events/get-happening-events/filter",
             "/api/categories/get-using-cate",

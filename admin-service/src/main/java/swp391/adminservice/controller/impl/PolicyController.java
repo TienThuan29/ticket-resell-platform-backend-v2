@@ -24,4 +24,16 @@ public class PolicyController implements IPolicyController {
         return policyService.getSellingPolicy();
     }
 
+    @Override
+    @GetMapping("/get/buying")
+    public ApiResponse<PolicyResponse> getBuyingPolicy() {
+        return policyService.getBuyingPolicy();
+    }
+
+    @Override
+    @GetMapping("/get/general")
+    public ApiResponse<PolicyResponse> getGeneralPolicy() {
+        return policyService.getGeneralPolicy();
+    }
+
 }

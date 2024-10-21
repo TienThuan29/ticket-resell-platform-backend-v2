@@ -4,3 +4,7 @@ server:
 spring:
   application:
     name: chat-service
+  data:
+    mongodb:
+      database: TicketResellDB
+      uri: mongodb+srv://ticketresell:9999@ticketresellplatformdb.zvsc1.mongodb.net/
