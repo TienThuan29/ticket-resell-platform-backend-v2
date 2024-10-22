@@ -1,5 +1,8 @@
 package swp391.staffservice;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.Step;
+import io.qameta.allure.Story;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,20 +38,19 @@ public class StaffServiceApplicationTests {
 
     private GenericTicket genericTicket;
     private Ticket ticket;
+    private Staff staff;
 
-    private  Staff staff;
     @BeforeEach
     void setUp() {
-        // Set up a generic ticket and a ticket for testing
         genericTicket = genericTicketRepository.findAll().get(0);
-
         staff = staffRepository.findAll().get(1);
-
-
         ticket = ticketRepository.findAll().get(0);
     }
 
     @Test
+    @Description("Test to get all generic tickets that need verification")
+    @Step("Executing testGetAllGenericTicketNeedVerify")
+    @Story("Staff should be able to retrieve all generic tickets that need verification")
     void testGetAllGenericTicketNeedVerify() {
         ApiResponse<List<GenericTicketResponse>> response = staffService.getAllGenericTicketNeedVerify(7L);
         Assertions.assertNotNull(response);
@@ -57,6 +59,9 @@ public class StaffServiceApplicationTests {
     }
 
     @Test
+    @Description("Test to mark a ticket as valid")
+    @Step("Executing testMarkValidTicket")
+    @Story("Staff should be able to mark a ticket as valid")
     void testMarkValidTicket() {
         ApiResponse<?> response = staffService.markValidTicket(ticket.getId());
         Assertions.assertNotNull(response);
@@ -70,6 +75,9 @@ public class StaffServiceApplicationTests {
     }
 
     @Test
+    @Description("Test to mark a ticket as invalid")
+    @Step("Executing testMarkInvalidTicket")
+    @Story("Staff should be able to mark a ticket as invalid")
     void testMarkInvalidTicket() {
         String note = "Invalid ticket due to incorrect details";
         ApiResponse<?> response = staffService.markInvalidTicket(ticket.getId(), note);
