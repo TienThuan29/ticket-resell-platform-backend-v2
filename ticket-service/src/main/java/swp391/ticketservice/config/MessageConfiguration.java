@@ -52,7 +52,7 @@ public class MessageConfiguration {
         this.SUCCESS_ADD_EVENT = "Thêm sự kiện thành công";
         this.INVALID_GENERIC_TICKET_ID = "Có sự cố khi cập nhật thông tin vé! Vui lòng tạo lại vé!";
         this.UPDATE_GENERIC_SUCCESS = "Cập nhật vé thành công!";
-        this.SUCCESS_ADD_HASHTAG = "Thêm #hashtag thành công!";
+        this.SUCCESS_ADD_HASHTAG = "Thêm hashtag thành công!";
         this.FAIL_TO_DELETE_HASHTAG = "Xóa #hashtag không thành công! Vui lòng thử lại!";
         this.SUCCESS_DELETE_HASHTAG = "Xóa #hashtag thành công!";
         this.INVALID_HASHTAG_ID = "HashtagId không hợp lệ!";

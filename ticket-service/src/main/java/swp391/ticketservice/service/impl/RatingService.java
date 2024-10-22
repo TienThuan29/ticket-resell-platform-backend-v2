@@ -47,6 +47,6 @@ public class RatingService implements IRatingService {
                         .toList())
                 .avgStars(avgStars)
                 .build();
-        return new ApiResponse<>(HttpStatus.OK,"Success", listRatingReponse);
+        return new ApiResponse<>(HttpStatus.OK,"", listRatingReponse);
     }
 }

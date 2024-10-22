@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import swp391.ticketservice.controller.def.IRatingController;
 import swp391.ticketservice.dto.request.RatingRequest;
 import swp391.ticketservice.dto.response.ApiResponse;
+import swp391.ticketservice.dto.response.ListRatingReponse;
 import swp391.ticketservice.service.def.IRatingService;
 
 @RestController
@@ -23,7 +24,7 @@ public class RatingController implements IRatingController {
 
     @Override
     @GetMapping("/getRates")
-    public ApiResponse<?> getListRating(Long sellId) {
+    public ApiResponse<ListRatingReponse> getListRating(Long sellId) {
         return ratingService.getListRating(sellId);
     }
 }

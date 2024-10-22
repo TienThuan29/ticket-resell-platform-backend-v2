@@ -35,4 +35,6 @@ public class GenericTicketResponse {
     @JsonProperty("seller") private SellerResponse seller;
 
     @JsonProperty("tickets") private List<TicketResponse> tickets;
+
+    @JsonProperty("isValidatedAll") private Boolean isValidatedAll;
 }

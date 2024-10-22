@@ -11,6 +11,7 @@ import swp391.staffservice.configuration.MessageConfiguration;
 import swp391.staffservice.dto.request.NotificationRequest;
 import swp391.staffservice.dto.response.ApiResponse;
 import swp391.staffservice.dto.response.GenericTicketResponse;
+import swp391.staffservice.dto.response.TicketResponse;
 import swp391.staffservice.exception.def.NotFoundException;
 import swp391.staffservice.mapper.GenericTicketMapper;
 import swp391.staffservice.repository.GenericTicketRepository;
@@ -43,10 +44,14 @@ public class StaffService implements IStaffService {
 
     @Override
     public ApiResponse<List<GenericTicketResponse>> getAllGenericTicketNeedVerify(Long staffId) {
-        return new ApiResponse<>(HttpStatus.OK, "",
-                genericTicketRepository.getAllGenericTicketOfStaff(staffId)
-                        .stream().map(genericTicketMapper::toResponse).toList()
-        );
+        List<GenericTicketResponse> genericTicketResponses = genericTicketRepository.getAllGenericTicketOfStaff(staffId)
+                .stream().map(genericTicketMapper::toResponse).toList();
+        genericTicketResponses.forEach(genericTicket -> {
+            genericTicket.setIsValidatedAll(
+                    genericTicket.getTickets().stream().allMatch(TicketResponse::isChecked)
+            );
+        });
+        return new ApiResponse<>(HttpStatus.OK, "", genericTicketResponses);
     }
 
     @Override

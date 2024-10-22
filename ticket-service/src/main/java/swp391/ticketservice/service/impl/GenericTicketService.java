@@ -242,7 +242,7 @@ public class GenericTicketService implements IGenericTicketService {
                     genericTicketRepository.findById(rating.getGenericTicket().getId()).get()
             );
             obj.setTickets(
-                    ticketRepository.findByGenericTicket(rating.getGenericTicket()).stream()
+                    ticketRepository.findByGenericTicketAndBuyerId(rating.getGenericTicket(), buyerId).stream()
                             .map(ticketMapper::toResponse).toList()
             );
             obj.setStar(rating.getStars());
