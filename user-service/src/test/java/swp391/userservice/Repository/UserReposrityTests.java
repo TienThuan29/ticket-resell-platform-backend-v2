@@ -3,13 +3,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import swp391.entity.User;
-import swp391.userservice.dto.reponse.ApiResponse;
-import swp391.userservice.dto.reponse.UserDTO;
 import swp391.userservice.repository.UserRepository;
-import swp391.userservice.service.UserService;
 
 import java.util.List;
 import java.util.Optional;

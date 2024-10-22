@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Import;
 import swp391.entity.Token;
 import swp391.entity.User;
 import swp391.entity.VerificationUser;
-import swp391.entity.fixed.VerificationType;
 
 @Import({
         User.class,
