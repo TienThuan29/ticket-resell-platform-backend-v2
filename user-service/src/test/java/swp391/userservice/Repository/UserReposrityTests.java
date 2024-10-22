@@ -21,12 +21,10 @@ public class UserReposrityTests {
     @Autowired
     private UserRepository userRepository;
 
-    private List<User> testUser;
-
     private User user;
     @BeforeEach
     void setUp() {
-        testUser = userRepository.findAll();
+        List<User> testUser = userRepository.findAll();
         user = testUser.get(3);
     }
 

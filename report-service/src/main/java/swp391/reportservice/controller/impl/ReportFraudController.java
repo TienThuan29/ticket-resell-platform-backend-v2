@@ -62,8 +62,7 @@ public class ReportFraudController implements IReportFraudController {
     public ApiResponse<?> staffCheckReportReject(
             @RequestParam Long reportId,
             @RequestParam String note) {
-        fraudService.staffCheckReportReject(reportId, note);
-        return new ApiResponse<>(HttpStatus.OK, messageConfig.SUCCESS_OPERATION);
+        return fraudService.staffCheckReportReject(reportId, note);
     }
 
     @Override
@@ -71,7 +70,6 @@ public class ReportFraudController implements IReportFraudController {
     public ApiResponse<?> staffCheckReportSuccess(
             @RequestParam Long reportId,
             @RequestParam String note) {
-        fraudService.staffCheckReportSuccess(reportId, note);
-        return new ApiResponse<>(HttpStatus.OK, messageConfig.SUCCESS_OPERATION);
+        return fraudService.staffCheckReportSuccess(reportId, note);
     }
 }

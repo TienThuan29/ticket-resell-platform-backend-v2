@@ -18,7 +18,7 @@ public interface IReportFraudService {
     //Staff
     List<ReportFraudResponse> getByStaff(Long id);
 
-    void staffCheckReportReject(Long id, String note);
+    ApiResponse<?> staffCheckReportReject(Long id, String note);
 
-    void staffCheckReportSuccess(Long id, String note);
+    ApiResponse<?> staffCheckReportSuccess(Long id, String note);
 }
