@@ -54,6 +54,11 @@ spring:
         - id: ticket-service
           uri: http://localhost:9003
           predicates:
+            - Path=/api/rating/**
+
+        - id: ticket-service
+          uri: http://localhost:9003
+          predicates:
             - Path=/api/categories/**
 
         - id: ticket-service

@@ -34,21 +34,21 @@ public class ReportFraudService implements IReportFraudService {
     @Override
     public ApiResponse<?> create(ReportFraudRequest request) {
         Ticket ticket = ticketRepo.findById(request.getTicketId())
-                .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_INVALID_TICKET+" :"+request.getTicketId()));
+                .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_INVALID_TICKET + " :" + request.getTicketId()));
 
-        if(reportFraudRepo.findByTicket(ticket).isPresent())
+        if (reportFraudRepo.findByTicket(ticket).isPresent())
             return new ApiResponse<>(HttpStatus.CONFLICT, messageConfig.ERROR_INVALID_TICKET_EXIST);
 
-        ReportFraud reportFraud= reportFraudRepo.save(fraudMapper.toEntity(request));
+        ReportFraud reportFraud = reportFraudRepo.save(fraudMapper.toEntity(request));
         return new ApiResponse<>(HttpStatus.CREATED, messageConfig.SUCCESS_CREATE_REPORT);
     }
 
     @Override
     public List<ReportFraudResponse> getByAccuser(Long userId) {
-        User accuser= userRepo.findById(userId).orElseThrow(
-                () -> new NotFoundException(messageConfig.ERROR_ACCUSER+" :"+userId)
+        User accuser = userRepo.findById(userId).orElseThrow(
+                () -> new NotFoundException(messageConfig.ERROR_ACCUSER + " :" + userId)
         );
-        var reportFrauds= reportFraudRepo.findByAccuser(accuser);
+        var reportFrauds = reportFraudRepo.findByAccuser(accuser);
 
         return reportFrauds.stream()
                 .map(fraudMapper::toResponse)
@@ -58,26 +58,30 @@ public class ReportFraudService implements IReportFraudService {
     //Staff
     @Override
     public List<ReportFraudResponse> getByStaff(Long id) {
+        ReportFraud report = reportFraudRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_STAFF + " :" + id));
         return reportFraudRepo.findByStaffId(id).stream()
                 .map(fraudMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void staffCheckReportReject(Long id, String note) {
-        ReportFraud report= reportFraudRepo.findById(id)
-                .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_STAFF+" :"+id));
+    public ApiResponse<?> staffCheckReportReject(Long id, String note) {
+        ReportFraud report = reportFraudRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_STAFF + " :" + id));
         report.setNote(note);
         report.setProcess(GeneralProcess.REJECTED);
         reportFraudRepo.save(report);
+        return new ApiResponse<>(HttpStatus.OK, messageConfig.SUCCESS_OPERATION);
     }
 
     @Override
-    public void staffCheckReportSuccess(Long id, String note) {
-        ReportFraud report= reportFraudRepo.findById(id)
-                .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_STAFF+" :"+id));
+    public ApiResponse<?> staffCheckReportSuccess(Long id, String note) {
+        ReportFraud report = reportFraudRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_STAFF + " :" + id));
         report.setNote(note);
         report.setProcess(GeneralProcess.REPORT_PROCESSING);
         reportFraudRepo.save(report);
+        return new ApiResponse<>(HttpStatus.OK, messageConfig.SUCCESS_OPERATION);
     }
 }

@@ -120,6 +120,7 @@ public class TransactionService implements ITransactionService {
         var admin = staffRepo.findByRoleCode(Role.ADMIN).get(0);
 
         long revenue = admin.getRevenue();
+        long balance = admin.getBalance();
 
         for (Transaction transaction :transactions){
             transaction.setIsDone(true);
@@ -127,10 +128,13 @@ public class TransactionService implements ITransactionService {
             long profit = transaction.getAmount() - priceAfterFee;
 
             saveBalance(transaction.getUser(), priceAfterFee, true);
+            saveRevenue(transaction.getUser(), priceAfterFee, true);
             revenue += profit;
+            balance += profit;
         }
         transactionRepo.saveAll(transactions);
         admin.setRevenue(revenue);
+        admin.setBalance(balance);
         staffRepo.save(admin);
 
         var reports = reportFraudRepo.getReportByGenericTickets(genericTickets, GeneralProcess.REPORT_PROCESSING);
@@ -161,6 +165,7 @@ public class TransactionService implements ITransactionService {
                     .user(reportedUser)
                     .build();
             saveBalance(reportedUser, ticketPrice, false);
+            saveRevenue(reportedUser, ticketPrice, false);
             transactionRepo.save(transactionReported);
 
             report.setProcess(GeneralProcess.SUCCESS);
@@ -209,6 +214,18 @@ public class TransactionService implements ITransactionService {
             newBalance= saveUser.getBalance() - amount;
         }
         saveUser.setBalance(newBalance);
+        userRepo.save(saveUser);
+    }
+
+    private void saveRevenue(User user, long amount, boolean isAdd){
+        User saveUser = userRepo.findById(user.getId()).get();
+        long newRevenue = 0;
+        if (isAdd){
+            newRevenue= saveUser.getRevenue() + amount;
+        }else {
+            newRevenue= saveUser.getRevenue() - amount;
+        }
+        saveUser.setBalance(newRevenue);
         userRepo.save(saveUser);
     }
 

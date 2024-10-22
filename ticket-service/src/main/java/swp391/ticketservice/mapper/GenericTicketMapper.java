@@ -73,11 +73,6 @@ public class GenericTicketMapper {
                 .category(categoryMapper.toResponse(genericTicket.getCategory()))
                 .event(eventMapper.toResponse(genericTicket.getEvent()))
                 .seller(userMapper.toSellerResponse(genericTicket.getSeller()))
-//                .tickets(
-//                        genericTicket.getTickets().stream().map(
-//                                ticketMapper::toResponse
-//                        ).toList()
-//                )
                 .build();
     }
 

@@ -7,6 +7,7 @@ import swp391.entity.Rating;
 import swp391.ticketservice.dto.response.RatingResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RatingRepository extends JpaRepository<Rating,Long> {
@@ -19,4 +20,8 @@ public interface RatingRepository extends JpaRepository<Rating,Long> {
             "ON rt.genericTicket.id = g.id "+
             "WHERE g.seller.id = :sellerId")
     List<Rating> getListRating(Long sellerId);
+
+    Optional<Rating> findByBuyerIdAndGenericTicketId(Long buyer_id, Long genericTicket_id);
+
+    List<Rating> findByBuyerId(Long buyer_id);
 }

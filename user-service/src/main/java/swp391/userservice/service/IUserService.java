@@ -47,4 +47,6 @@ public interface IUserService {
     ApiResponse<?> changePass(String newPass, String email);
 
     ApiResponse<List<NotificationResponse>> getAllNotificationOfReceiver(Long receiverId);
+
+    ApiResponse<List<UserDTO>> getUsersByName(String name);
 }

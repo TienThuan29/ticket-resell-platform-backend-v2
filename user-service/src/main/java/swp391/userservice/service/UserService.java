@@ -400,6 +400,14 @@ public class UserService implements IUserService {
         ) ;
     }
 
+    @Override
+    public ApiResponse<List<UserDTO>> getUsersByName(String name) {
+        return new ApiResponse<>(HttpStatus.OK
+        ,"", userRepository.findByName(name).stream()
+                .map(userMapper::toUserDTO)
+                .toList());
+    }
+
     @Scheduled(fixedDelay = 300000)// 5 phút reset một lần
     public void resetVerifyCode() {
         long currentTime = System.currentTimeMillis();
