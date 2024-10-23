@@ -17,6 +17,7 @@ import swp391.ticketservice.service.def.IEventService;
 import swp391.ticketservice.config.MessageConfiguration;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -115,6 +116,7 @@ public class EventService implements IEventService {
         List<EventResponse> events = eventRepository.getHappeningEvents()
                 .stream().filter(
                         event -> event.getHashtags().contains(hotHashtag)
+                                && event.getEndDate().before(new Date())
                 ).map(
                         eventMapper::toResponse
                 ).toList();

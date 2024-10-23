@@ -25,4 +25,6 @@ public class OrderTicketRequest {
     @JsonProperty("totalPrice")
     private Long totalPrice;
 
+    @JsonProperty("isPaper")
+    private Boolean isPaper;
 }

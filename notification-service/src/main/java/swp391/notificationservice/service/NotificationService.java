@@ -56,6 +56,21 @@ public class NotificationService implements INotificationService {
         return flag;
     }
 
+    @Override
+    public Boolean sendOrderTicketNotification(NotificationRequest notiRequest) {
+        boolean flag = true;
+        try {
+            notificationRepository.save(
+                    notificationMapper.toOrderTicketNotification(notiRequest)
+            );
+        }
+        catch (Exception ex) {
+            log.info(ex.toString());
+            flag = false;
+        }
+        return flag;
+    }
+
 
     @Override
     public List<NotificationFeign> getAllNotificationOfReceiver(Long receiverId) {

@@ -11,6 +11,8 @@ public interface INotificationService {
 
     Boolean sendCancelOrderNotification(NotificationRequest notiRequest);
 
+    Boolean sendOrderTicketNotification(NotificationRequest notiRequest);
+
     List<NotificationFeign> getAllNotificationOfReceiver(Long receiverId);
 
     ApiResponse<?> markReadNotification(String ojectIdString);

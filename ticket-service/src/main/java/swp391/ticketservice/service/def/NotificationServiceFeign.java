@@ -11,4 +11,6 @@ public interface NotificationServiceFeign {
     @PostMapping("/send/cancel-order")
     Boolean sendCancelOrderNotification(@RequestBody NotificationRequest notiRequest);
 
+    @PostMapping("/send/order-ticket")
+    Boolean sendOrderTicketNotification(@RequestBody NotificationRequest notiRequest);
 }

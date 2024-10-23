@@ -103,12 +103,18 @@ public class TicketService implements ITicketService {
         ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
         Date boughtDate = Date.from(zonedDateTime.toInstant());
 
-        Ticket ticket= ticketRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(message.INVALID_TICKET+" :"+id));
-        ticket.setBought(Boolean.TRUE);
-        ticket.setBoughtDate(boughtDate);
-        ticketRepository.save(ticket);
-        return new ApiResponse<>(HttpStatus.OK, message.SUCCESS_OPERATION);
+        try {
+            Ticket ticket= ticketRepository.findById(id)
+                    .orElseThrow(() -> new NotFoundException(message.INVALID_TICKET+" :"+id));
+            ticket.setBought(Boolean.TRUE);
+            ticket.setBoughtDate(boughtDate);
+            ticket.setProcess(GeneralProcess.SUCCESS);
+            ticketRepository.save(ticket);
+        }
+        catch (Exception ex) {
+            return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, message.ERROR_MARK_IS_BOUGHT_TICKET);
+        }
+        return new ApiResponse<>(HttpStatus.OK, message.SUCCESS_MARK_IS_BOUGHT_TICKET);
     }
 
     @Override
@@ -189,37 +195,42 @@ public class TicketService implements ITicketService {
                     request.getGenericTicketId()
             );
             if (request.getQuantity() <= notBoughtTickets.size()) {
-                for (int i = 1; i <= request.getQuantity(); i++) {
-                    notBoughtTickets.get(i-1).setBought(Boolean.TRUE);
-                    notBoughtTickets.get(i-1).setBuyerId(request.getBuyerId());
-                    notBoughtTickets.get(i-1).setBoughtDate(boughtDate);
-                    notBoughtTickets.get(i-1).setProcess(GeneralProcess.SUCCESS);
-                }
+                    for (int i = 1; i <= request.getQuantity(); i++) {
+                        notBoughtTickets.get(i-1).setBought(Boolean.TRUE);
+                        notBoughtTickets.get(i-1).setBuyerId(request.getBuyerId());
+                        notBoughtTickets.get(i-1).setBoughtDate(boughtDate);
+                        notBoughtTickets.get(i-1).setProcess(
+                                request.getIsPaper() ? GeneralProcess.DELIVERING : GeneralProcess.SUCCESS
+                        );
+                    }
             }
             ticketRepository.saveAll(notBoughtTickets);
-            // Update Transaction table
-            Transaction buyerTrans = Transaction.builder()
-                    .amount(request.getTotalPrice())
-                    .transDate(boughtDate)
-                    .isDone(Boolean.TRUE)
-                    .type(TransactionType.BUYING)
-                    .user(getUserById(request.getBuyerId()))
-                    .transactionNo(randoTransactionNo())
-                    .build();
-            transactionRepository.save(buyerTrans);
 
-            // Add amount for admin
-            staffRepository.updateBalanceOfAdmin(request.getTotalPrice());
+            if (!request.getIsPaper()) {
+                // Update Transaction table
+                Transaction buyerTrans = Transaction.builder()
+                        .amount(request.getTotalPrice())
+                        .transDate(boughtDate)
+                        .isDone(Boolean.TRUE)
+                        .type(TransactionType.BUYING)
+                        .user(getUserById(request.getBuyerId()))
+                        .transactionNo(randoTransactionNo())
+                        .build();
+                transactionRepository.save(buyerTrans);
 
-            Transaction sellerTrans = Transaction.builder()
-                    .amount(request.getTotalPrice())
-                    .transDate(boughtDate)
-                    .isDone(Boolean.FALSE)
-                    .type(TransactionType.SELLING)
-                    .user(getUserById(request.getSellerId()))
-                    .transactionNo(randoTransactionNo())
-                    .build();
-            transactionRepository.save(sellerTrans);
+                // Add amount for admin
+                staffRepository.updateBalanceOfAdmin(request.getTotalPrice());
+
+                Transaction sellerTrans = Transaction.builder()
+                        .amount(request.getTotalPrice())
+                        .transDate(boughtDate)
+                        .isDone(Boolean.FALSE)
+                        .type(TransactionType.SELLING)
+                        .user(getUserById(request.getSellerId()))
+                        .transactionNo(randoTransactionNo())
+                        .build();
+                transactionRepository.save(sellerTrans);
+            }
         }
         catch (Exception exception) {
             log.info(exception.toString());
@@ -273,9 +284,11 @@ public class TicketService implements ITicketService {
                 .stream().map(ticketMapper::toResponse).toList();
 
         boughtTickets.forEach((item) -> {
-            item.setBuyer(
-                    userMapper.toBuyerResponse(this.getUserById(item.getBuyerId()))
-            );
+            if (item.getBuyerId() != null) {
+                item.setBuyer(
+                        userMapper.toBuyerResponse(this.getUserById(item.getBuyerId()))
+                );
+            }
             item.setGenericTicketObject(
                     genericTicketMapper.toResponse(
                             genericTicketRepository.findById(item.getGenericTicketId()).get()

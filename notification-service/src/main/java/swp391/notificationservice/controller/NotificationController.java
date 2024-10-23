@@ -33,6 +33,14 @@ public class NotificationController implements INotificationController {
     }
 
     @Override
+    @PostMapping("/send/order-ticket")
+    public Boolean sendOrderTicketNotification(
+            @RequestBody NotificationRequest notiRequest
+    ) {
+        return notificationService.sendOrderTicketNotification(notiRequest);
+    }
+
+    @Override
     @GetMapping("/get-all/receiver/{receiverId}")
     public List<NotificationFeign> getAllNotificationOfReceiver(
             @PathVariable("receiverId") Long receiverId

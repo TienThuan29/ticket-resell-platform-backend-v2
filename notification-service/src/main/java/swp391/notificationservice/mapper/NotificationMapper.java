@@ -31,22 +31,18 @@ public class NotificationMapper {
     }
 
     public Notification toVerificationNotification(NotificationRequest request) {
-        Date sentDateNow = getNowTime();
-        return Notification.builder()
-                .id(new ObjectId())
-                .sentDate(sentDateNow)
-                .senderId(request.getSenderId())
-                .receiverId(request.getReceiverId())
-                .header(request.getHeader())
-                .subHeader(request.getSubHeader())
-                .content(request.getContent())
-                .isRead(Boolean.FALSE)
-                .isDeleted(Boolean.FALSE)
-                .type(NotificationType.VERIFICATION)
-                .build();
+        return this.toNotificationFromType(request, NotificationType.VERIFICATION);
     }
 
     public Notification toCancelOrderNotification(NotificationRequest request) {
+        return this.toNotificationFromType(request, NotificationType.CANCEL_ORDER);
+    }
+
+    public Notification toOrderTicketNotification(NotificationRequest request) {
+        return this.toNotificationFromType(request, NotificationType.ORDER);
+    }
+
+    private Notification toNotificationFromType(NotificationRequest request, NotificationType type) {
         Date sentDateNow = getNowTime();
         return Notification.builder()
                 .id(new ObjectId())
@@ -58,10 +54,9 @@ public class NotificationMapper {
                 .content(request.getContent())
                 .isRead(Boolean.FALSE)
                 .isDeleted(Boolean.FALSE)
-                .type(NotificationType.CANCEL_ORDER)
+                .type(type)
                 .build();
     }
-
 
     private Date getNowTime() {
         LocalDateTime localDateTime = LocalDateTime.now();

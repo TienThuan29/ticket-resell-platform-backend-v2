@@ -31,6 +31,9 @@ public class AcceptOrDenySellingRequest {
     @JsonProperty("isAccepted")
     private Boolean isAccepted;
 
+    @JsonProperty("isPaper")
+    private Boolean isPaper;
+
     @JsonProperty("note")
     private String note;
 }

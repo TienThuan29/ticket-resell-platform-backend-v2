@@ -179,8 +179,22 @@ public class GenericTicketService implements IGenericTicketService {
             var user = userRepository.findById(orderTicketRequest.getBuyerId()).orElseThrow(
                     () -> new NotFoundException(message.INVALID_BUYER)
             );
-            user.setBalance(user.getBalance() - orderTicketRequest.getTotalPrice());
+            var genericTicket = genericTicketRepository.findById(orderTicketRequest.getGenericTicketId()).orElseThrow(null);
+            // If ticket is paper, not minus the balance
+            if (!orderTicketRequest.getIsPaper()) {
+                user.setBalance(user.getBalance() - orderTicketRequest.getTotalPrice());
+            }
             userRepository.save(user);
+            // Send order notification to seller
+            notificationServiceFeign.sendOrderTicketNotification(
+                    NotificationRequest.builder()
+                            .senderId(orderTicketRequest.getBuyerId())
+                            .receiverId(genericTicket.getSeller().getId())
+                            .header(constant.NOTIFICATION_TEMPLATE.ORDER_TICKET_HEADER)
+                            .subHeader(constant.NOTIFICATION_TEMPLATE.ORDER_TICKET_SUBHEADER)
+                            .content(constant.NOTIFICATION_TEMPLATE.ORDER_TICKET_CONTENT)
+                            .build()
+            );
         }
         catch (Exception ex) {
             System.out.println(ex);
