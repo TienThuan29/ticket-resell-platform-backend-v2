@@ -4,7 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import swp391.entity.Staff;
+import swp391.entity.fixed.Role;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -18,4 +20,7 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
     Optional<Staff> findByUsername(String username);
 
     Optional<Staff> findByEmail(String email);
+
+    @Query("SELECT st FROM Staff st WHERE st.roleCode =:role")
+    List<Staff> getAll(Role role);
 }

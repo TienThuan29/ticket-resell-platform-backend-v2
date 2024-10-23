@@ -5,11 +5,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import swp391.entity.Policy;
 import swp391.entity.Staff;
+import swp391.entity.Transaction;
 
 @SpringBootApplication
 @EntityScan(basePackageClasses = {
         Policy.class,
-        Staff.class
+        Staff.class,
+        Transaction.class
 })
 public class AdminServiceApplication {
 
