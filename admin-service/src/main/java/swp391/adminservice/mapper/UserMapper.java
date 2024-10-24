@@ -19,6 +19,7 @@ public class UserMapper {
                 .balance(user.getBalance())
                 .isSeller(user.getIsSeller())
                 .revenue(user.getRevenue())
+                .customerCode(user.getCustomerCode())
                 .build();
     }
 }

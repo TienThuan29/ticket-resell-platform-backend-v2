@@ -21,8 +21,12 @@ public class RegisterRequest {
     private String password;
 
     @JsonProperty("email")
-    @NotBlank
+    @NotBlank(message = "Email không được để trống")
     private String email;
+
+    @JsonProperty("phone")
+    @NotBlank(message = "Số điện thoại không được để trống")
+    private String phone;
 
     @JsonProperty("firstname")
     @NotBlank(message = "Tên không được để trống")

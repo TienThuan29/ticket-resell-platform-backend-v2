@@ -19,7 +19,7 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
             "SELECT s.id FROM Staff s LEFT JOIN Ticket t ON t.verifyStaff.id = s.id " +
             "WHERE s.roleCode != 'ADMIN' GROUP BY s.id " +
             "ORDER BY COUNT(t.id) ASC LIMIT 1 " +
-            ")"
+            ") AND s1.isEnable = true"
     )
     Optional<Staff> getStaffHasMinTicket();
 

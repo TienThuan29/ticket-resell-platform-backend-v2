@@ -1,14 +1,14 @@
 package swp391.adminservice.controller.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import swp391.adminservice.controller.def.IPolicyController;
+import swp391.adminservice.dto.request.PolicyUpdatingRequest;
 import swp391.adminservice.dto.response.ApiResponse;
 import swp391.adminservice.dto.response.PolicyResponse;
 import swp391.adminservice.service.impl.PolicyService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/policy")
@@ -35,5 +35,21 @@ public class PolicyController implements IPolicyController {
     public ApiResponse<PolicyResponse> getGeneralPolicy() {
         return policyService.getGeneralPolicy();
     }
+
+    @Override
+    @GetMapping("/get-all")
+    public ApiResponse<List<PolicyResponse>> getAllPolicy() {
+        return policyService.getAllPolicy();
+    }
+
+    @Override
+    @PutMapping("/update/{id}")
+    public ApiResponse<?> updatePolicy(
+            @PathVariable("id") Integer id,
+            @RequestBody PolicyUpdatingRequest policyUpdatingRequest
+    ) {
+        return policyService.updatePolicy(id, policyUpdatingRequest);
+    }
+
 
 }

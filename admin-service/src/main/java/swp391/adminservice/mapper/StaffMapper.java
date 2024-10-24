@@ -24,6 +24,7 @@ public class StaffMapper {
                 .username(registerRequest.getUsername())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .email(registerRequest.getEmail())
+                .phone(registerRequest.getPhone())
                 .staffCode(randomUtil.randomStaffCode())
                 .balance(0L)
                 .firstname(registerRequest.getFirstname())
