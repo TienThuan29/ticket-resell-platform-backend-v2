@@ -25,7 +25,9 @@ public class UserResponse {
 
     @JsonProperty("revenue") private Long revenue;
 
-    @JsonProperty("is_enable") private boolean isEnable;
+    @JsonProperty("isEnable") private boolean isEnable;
 
-    @JsonProperty("is_seller") private boolean isSeller;
+    @JsonProperty("isSeller") private boolean isSeller;
+
+    @JsonProperty("customerCode") private String customerCode;
 }

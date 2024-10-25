@@ -39,6 +39,8 @@ public class MessageConfiguration {
     public final String ERROR_RATING;
     public final String SUCCESS_MARK_IS_BOUGHT_TICKET;
     public final String ERROR_MARK_IS_BOUGHT_TICKET;
+    public final String SUCCESS_MARK_DELIVERED_PAPER_TICKET;
+    public final String ERROR_MARK_DELIVERED_PAPER_TICKET;
 
     public MessageConfiguration() {
         this.INVALID_GENERICTICKET = "Vé tổng quan không hợp lệ";
@@ -73,5 +75,7 @@ public class MessageConfiguration {
         this.ERROR_RATING = "Có sự cố xảy ra khi đánh giá!";
         this.SUCCESS_MARK_IS_BOUGHT_TICKET = "Đánh dấu thành công!";
         this.ERROR_MARK_IS_BOUGHT_TICKET = "Có sự cố khi chỉnh sửa! Vui lòng thử lại";
+        this.SUCCESS_MARK_DELIVERED_PAPER_TICKET = "Xác nhận đã giao thành công!";
+        this.ERROR_MARK_DELIVERED_PAPER_TICKET = "Có sụ cố khi xác nhận! Vui lòng thử lại!";
     }
 }

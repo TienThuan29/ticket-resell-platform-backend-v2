@@ -54,6 +54,12 @@ public class TicketController implements ITicketController {
         return ticketService.markBought(id);
     }
 
+    @Override
+    @PutMapping("/mark-delivered-paper-ticket/{ticketId}")
+    public ApiResponse<?> markDeliveredPaperTicket(@PathVariable("ticketId") Long ticketId) {
+        return ticketService.markDeliveredPaperTicket(ticketId);
+    }
+
     @PutMapping("/mark-staff-check/{id}/{staffId}")
     @Override
     public ApiResponse<?> markStaffCheck(@PathVariable Long id, @PathVariable Long staffId) {

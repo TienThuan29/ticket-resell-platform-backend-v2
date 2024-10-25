@@ -118,6 +118,21 @@ public class TicketService implements ITicketService {
     }
 
     @Override
+    public ApiResponse<?> markDeliveredPaperTicket(Long ticketId) {
+        try {
+            Ticket ticket= ticketRepository.findById(ticketId)
+                    .orElseThrow(() -> new NotFoundException(message.INVALID_TICKET+" :"+ticketId));
+            ticket.setProcess(GeneralProcess.SUCCESS);
+            ticketRepository.save(ticket);
+        }
+        catch (Exception ex) {
+            log.info(ex.toString());
+            return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, message.ERROR_MARK_DELIVERED_PAPER_TICKET);
+        }
+        return new ApiResponse<>(HttpStatus.OK, message.SUCCESS_MARK_DELIVERED_PAPER_TICKET);
+    }
+
+    @Override
     public ApiResponse<?> markStaffCheck(Long id, Long staffId) {
         Ticket ticket= ticketRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(message.INVALID_TICKET+" :"+id));

@@ -10,9 +10,11 @@ public class MessageConfiguration {
     public final String ERROR_EXIST_EMAIL = "Email này đã được đăng ký!";
     public final String ERROR_INVALID_TOKEN = "Token không hợp lệ!";
     public final String ERROR_USERNAME_NOTFOUND = "Tên đăng nhập không tồn tại";
+    public final String ERROR_UPDATE_POLICY = "Có sự cố xảy ra khi cập nhật chính sách! Vui lòng thử lại!";
+    public final String ERROR_INVALID_USERNAME_PASSWORD = "Tên đăng nhập hoặc mật khẩu không đúng!";
 
     // Success
     public final String SUCCESS_REGISTER_STAFF = "Đăng ký nhân viên thành công!";
-    public final String ERROR_INVALID_USERNAME_PASSWORD = "Tên đăng nhập hoặc mật khẩu không đúng!";
 
+    public final String SUCCESS_UPDATE_POLICY = "Cập nhật chính sách thành công!";
 }

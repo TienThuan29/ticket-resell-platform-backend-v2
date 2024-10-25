@@ -183,8 +183,8 @@ public class GenericTicketService implements IGenericTicketService {
             // If ticket is paper, not minus the balance
             if (!orderTicketRequest.getIsPaper()) {
                 user.setBalance(user.getBalance() - orderTicketRequest.getTotalPrice());
+                userRepository.save(user);
             }
-            userRepository.save(user);
             // Send order notification to seller
             notificationServiceFeign.sendOrderTicketNotification(
                     NotificationRequest.builder()

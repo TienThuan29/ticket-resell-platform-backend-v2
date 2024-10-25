@@ -25,6 +25,8 @@ public interface ITicketService {
 
     ApiResponse<?> markBought(Long id);
 
+    ApiResponse<?> markDeliveredPaperTicket(Long ticketId);
+
     ApiResponse<?> markStaffCheck(Long id, Long staffId);
 
     ApiResponse<?> updateProcess(Long id, String process);
