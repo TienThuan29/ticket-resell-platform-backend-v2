@@ -18,4 +18,12 @@ public interface IAdminService {
     ApiResponse<List<TransactionResponse>> getListTransactions();
 
     ApiResponse<List<UserResponse>> getListUsers();
+
+    ApiResponse<Long> getSumAmountOfDepositTransaction();
+
+    ApiResponse<Long> getSumAmountOfWithdrawalTransaction();
+
+    ApiResponse<Integer> countBoughtTickets();
+
+    ApiResponse<Integer> countSellingTickets();
 }

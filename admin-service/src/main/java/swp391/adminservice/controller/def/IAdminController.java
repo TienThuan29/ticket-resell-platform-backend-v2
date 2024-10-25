@@ -15,4 +15,12 @@ public interface IAdminController {
     ApiResponse<List<TransactionResponse>> getListTransactions();
 
     ApiResponse<List<UserResponse>> getAllUsers();
+
+    ApiResponse<Long> getSumAmountOfDepositTransaction();
+
+    ApiResponse<Long> getSumAmountOfWithdrawalTransaction();
+
+    ApiResponse<Integer> countBoughtTickets();
+
+    ApiResponse<Integer> countSellingTickets();
 }

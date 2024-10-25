@@ -42,4 +42,28 @@ public class AdminController implements IAdminController {
     public ApiResponse<List<UserResponse>> getAllUsers() {
         return adminService.getListUsers();
     }
+
+    @Override
+    @GetMapping("/get-sum-deposit")
+    public ApiResponse<Long> getSumAmountOfDepositTransaction() {
+        return adminService.getSumAmountOfDepositTransaction();
+    }
+
+    @Override
+    @GetMapping("/get-sum-withdrawal")
+    public ApiResponse<Long> getSumAmountOfWithdrawalTransaction() {
+        return adminService.getSumAmountOfWithdrawalTransaction();
+    }
+
+    @Override
+    @GetMapping("/get-count-boughtTickets")
+    public ApiResponse<Integer> countBoughtTickets() {
+        return adminService.countBoughtTickets();
+    }
+
+    @Override
+    @GetMapping("/get-count-sellingTickets")
+    public ApiResponse<Integer> countSellingTickets() {
+        return adminService.countSellingTickets();
+    }
 }
