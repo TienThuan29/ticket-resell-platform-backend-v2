@@ -70,7 +70,7 @@ public class GatewayConfiguration {
                 .route(
                         "chat-service",
                         r -> r.path(
-                                "/api/chat/**"
+                                "/**"
                         )
                         .uri("http://localhost:9009")
                 )

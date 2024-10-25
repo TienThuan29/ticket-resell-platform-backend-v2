@@ -23,7 +23,7 @@ public class HashtagController implements IHashtagController {
 
     @Override
     @GetMapping("/get-all")
-    public  ApiResponse<List<HashtagResponse>>  getAll(){
+    public  ApiResponse<List<HashtagResponse>> getAll(){
         return hashtagService.getAll();
     }
 

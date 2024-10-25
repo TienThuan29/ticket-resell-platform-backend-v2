@@ -102,7 +102,7 @@ public class TransactionService implements ITransactionService {
         return new ApiResponse<>(HttpStatus.OK, "", transDepositResponse);
     }
 
-    //Automation refund and transfer money to seller
+    //Automation refund to buyer and transfer money to seller
     @Scheduled(fixedDelay = 7200000) // 7200000 milliseconds = 2 hours
     public void checkTransaction(){
 //        List<Transaction> transactionRefundAndReport = new ArrayList<>();
@@ -119,8 +119,8 @@ public class TransactionService implements ITransactionService {
         // Get admin account
         var admin = staffRepo.findByRoleCode(Role.ADMIN).get(0);
 
-        long revenue = admin.getRevenue();
-        long balance = admin.getBalance();
+        long revenueAdmin = admin.getRevenue();
+        long balanceAdmin = admin.getBalance();
 
         for (Transaction transaction :transactions){
             transaction.setIsDone(true);
@@ -129,18 +129,31 @@ public class TransactionService implements ITransactionService {
 
             saveBalance(transaction.getUser(), priceAfterFee, true);
             saveRevenue(transaction.getUser(), priceAfterFee, true);
-            revenue += profit;
-            balance += profit;
+            revenueAdmin += profit;
+            balanceAdmin += profit;
         }
         transactionRepo.saveAll(transactions);
-        admin.setRevenue(revenue);
-        admin.setBalance(balance);
+
+        //Update balance and revenue of Admin after transfer money to seller
+        admin.setRevenue(revenueAdmin);
+        admin.setBalance(balanceAdmin);
         staffRepo.save(admin);
 
+        //Get report fraud is accepted by staff and is the genericTicket is out date 3 days
         var reports = reportFraudRepo.getReportByGenericTickets(genericTickets, GeneralProcess.REPORT_PROCESSING);
+
+        //Update the revenue and balance of Admin after implement refund to buyer and transfer money to seller
+        refundAndMinusByReport(reports, admin);
+    }
+
+    private void refundAndMinusByReport(List<ReportFraud> reports, Staff admin){
+        long revenueAdmin = admin.getRevenue();
+        long balanceAdmin = admin.getBalance();
+
         for (ReportFraud report : reports) {
             // Create transaction add money for accuser
-            long ticketPrice = priceAfterFee(getPriceByTicket(report.getTicket()));
+            long ticketPriceAfterFee = priceAfterFee(getPriceByTicket(report.getTicket()));
+            long ticketPrice = getPriceByTicket(report.getTicket());
 
             Transaction transactionRefund = Transaction.builder()
                     .transactionNo(randoTransactionNo())
@@ -153,6 +166,10 @@ public class TransactionService implements ITransactionService {
             transactionRepo.save(transactionRefund);
             saveBalance(report.getAccuser(), ticketPrice, true);
 
+            // Admin minus the balance and revenue when refund to buyer
+            revenueAdmin -= (ticketPrice - ticketPriceAfterFee);
+            balanceAdmin -= (ticketPrice - ticketPriceAfterFee);
+
             // Create transaction minus money of seller
             var reportedUser = userRepo.findById(report.getReportedUserId())
                     .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_REPORTED_USER));
@@ -164,12 +181,15 @@ public class TransactionService implements ITransactionService {
                     .isDone(Boolean.TRUE)
                     .user(reportedUser)
                     .build();
-            saveBalance(reportedUser, ticketPrice, false);
-            saveRevenue(reportedUser, ticketPrice, false);
+            saveBalance(reportedUser, ticketPriceAfterFee, false);
+            saveRevenue(reportedUser, ticketPriceAfterFee, false);
             transactionRepo.save(transactionReported);
 
             report.setProcess(GeneralProcess.SUCCESS);
         }
+        admin.setRevenue(revenueAdmin);
+        admin.setBalance(balanceAdmin);
+        staffRepo.save(admin);
         reportFraudRepo.saveAll(reports);
     }
 
@@ -231,7 +251,6 @@ public class TransactionService implements ITransactionService {
 
     private String randoTransactionNo() {
         String transactionNo= "";
-
         do {
             transactionNo= UUID.randomUUID().toString().substring(1,8) + UUID.randomUUID().toString().substring(1,3);
         }while (transactionRepo.findByTransactionNo(transactionNo).isPresent());
