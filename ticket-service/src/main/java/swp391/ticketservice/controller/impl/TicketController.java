@@ -55,6 +55,12 @@ public class TicketController implements ITicketController {
     }
 
     @Override
+    @DeleteMapping("/delete-ticket-from-shop/{id}")
+    public ApiResponse<?> deleteTicketFromShop(@PathVariable("id") Long id) {
+        return ticketService.deleteTicketFromShop(id);
+    }
+
+    @Override
     @PutMapping("/mark-delivered-paper-ticket/{ticketId}")
     public ApiResponse<?> markDeliveredPaperTicket(@PathVariable("ticketId") Long ticketId) {
         return ticketService.markDeliveredPaperTicket(ticketId);

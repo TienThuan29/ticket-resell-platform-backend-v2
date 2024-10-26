@@ -23,8 +23,8 @@ public class RatingController implements IRatingController {
     }
 
     @Override
-    @GetMapping("/getRates")
-    public ApiResponse<ListRatingReponse> getListRating(Long sellId) {
+    @GetMapping("/get-all-by-seller/{id}")
+    public ApiResponse<ListRatingReponse> getListRating(@PathVariable("id") Long sellId) {
         return ratingService.getListRating(sellId);
     }
 }

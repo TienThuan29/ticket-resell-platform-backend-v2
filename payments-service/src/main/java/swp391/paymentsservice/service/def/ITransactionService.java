@@ -9,9 +9,13 @@ import java.util.List;
 @Service
 public interface ITransactionService {
 
+    ApiResponse<List<TransactionResponse>> getAllTransactionByUser(Long id);
+
     ApiResponse<List<TransactionResponse>> getTransDepositByUserId(Long id);
 
     ApiResponse<List<TransactionResponse>> getTransWithdrawalByUserId(Long id);
+
     ApiResponse<List<TransactionResponse>> getTransSellingByUserId(Long id);
+
     ApiResponse<List<TransactionResponse>> getTransBuyingByUserId(Long id);
 }

@@ -182,19 +182,24 @@ public class GenericTicketService implements IGenericTicketService {
             var genericTicket = genericTicketRepository.findById(orderTicketRequest.getGenericTicketId()).orElseThrow(null);
             // If ticket is paper, not minus the balance
             if (!orderTicketRequest.getIsPaper()) {
-                user.setBalance(user.getBalance() - orderTicketRequest.getTotalPrice());
-                userRepository.save(user);
+                if (user.getBalance() >= orderTicketRequest.getTotalPrice()) {
+                    user.setBalance(user.getBalance() - orderTicketRequest.getTotalPrice());
+                    userRepository.save(user);
+                }
+                else {
+                    return new ApiResponse<>(HttpStatus.BAD_REQUEST, message.ERROR_NOT_ENOUGH_MONEY, null);
+                }
+                // Send order notification to seller
+                notificationServiceFeign.sendOrderTicketNotification(
+                        NotificationRequest.builder()
+                                .senderId(orderTicketRequest.getBuyerId())
+                                .receiverId(genericTicket.getSeller().getId())
+                                .header(constant.NOTIFICATION_TEMPLATE.ORDER_TICKET_HEADER)
+                                .subHeader(constant.NOTIFICATION_TEMPLATE.ORDER_TICKET_SUBHEADER)
+                                .content(constant.NOTIFICATION_TEMPLATE.ORDER_TICKET_CONTENT)
+                                .build()
+                );
             }
-            // Send order notification to seller
-            notificationServiceFeign.sendOrderTicketNotification(
-                    NotificationRequest.builder()
-                            .senderId(orderTicketRequest.getBuyerId())
-                            .receiverId(genericTicket.getSeller().getId())
-                            .header(constant.NOTIFICATION_TEMPLATE.ORDER_TICKET_HEADER)
-                            .subHeader(constant.NOTIFICATION_TEMPLATE.ORDER_TICKET_SUBHEADER)
-                            .content(constant.NOTIFICATION_TEMPLATE.ORDER_TICKET_CONTENT)
-                            .build()
-            );
         }
         catch (Exception ex) {
             System.out.println(ex);
@@ -211,6 +216,9 @@ public class GenericTicketService implements IGenericTicketService {
         try {
             orderTicket.setCanceled(Boolean.TRUE);
             orderTicketRepository.save(orderTicket);
+            // Refund money to buyer
+            var user = userRepository.findById(orderTicket.getBuyer().getId()).orElseThrow(null);
+            user.setBalance(user.getBalance() + orderTicket.getTotalPrice());
             // Send cancel order notification to seller
             notificationServiceFeign.sendCancelOrderNotification(
                     NotificationRequest.builder()

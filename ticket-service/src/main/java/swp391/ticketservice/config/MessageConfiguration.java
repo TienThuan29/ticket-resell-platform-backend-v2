@@ -41,8 +41,14 @@ public class MessageConfiguration {
     public final String ERROR_MARK_IS_BOUGHT_TICKET;
     public final String SUCCESS_MARK_DELIVERED_PAPER_TICKET;
     public final String ERROR_MARK_DELIVERED_PAPER_TICKET;
+    public final String ERROR_DELETE_TICKET_FROM_SHOP;
+
+    public final String ERROR_NOT_ENOUGH_MONEY;
 
     public MessageConfiguration() {
+        this.ERROR_NOT_ENOUGH_MONEY = "Bạn không đủ số dư để thanh toán!";
+        this.ERROR_DELETE_TICKET_FROM_SHOP = "Có sự cố khi xóa vé ra khỏi cửa hàng! Vui lòng thử lại!";
+        this.SUCCESS_DELETE_TICKET_FROM_SHOP = "Xóa vé khỏi cửa hàng thành công!";
         this.INVALID_GENERICTICKET = "Vé tổng quan không hợp lệ";
         this.INVALID_POLICY = "Chính sách không hợp lệ";
         this.INVALID_CATEGORY = "Danh mục không hợp lệ";

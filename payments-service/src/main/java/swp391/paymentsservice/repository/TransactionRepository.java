@@ -18,6 +18,9 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     List<Transaction> findByUserAndType(User user, TransactionType type);
 
+    @Query("SELECT tr FROM Transaction tr WHERE tr.user.id =:userId")
+    List<Transaction> findByUserId(Long userId);
+
     @Query("SELECT tr FROM GenericTicket gt " +
             "INNER JOIN User u ON gt.seller.id = u.id " +
             "INNER JOIN Transaction tr on tr.user.id=u.id " +

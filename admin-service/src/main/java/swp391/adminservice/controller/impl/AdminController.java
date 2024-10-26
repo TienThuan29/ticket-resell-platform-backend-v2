@@ -42,4 +42,16 @@ public class AdminController implements IAdminController {
     public ApiResponse<List<UserResponse>> getAllUsers() {
         return adminService.getListUsers();
     }
+
+    @Override
+    @PutMapping("/disable/user-acount/{userId}")
+    public ApiResponse<?> disableUserAccount(@PathVariable("userId") Long userId) {
+        return adminService.disableUserAccount(userId);
+    }
+
+    @Override
+    @PutMapping("/disable/staff-acount/{staffId}")
+    public ApiResponse<?> disableStaffAccount(@PathVariable("staffId") Long staffId) {
+        return adminService.disableStaffAccount(staffId);
+    }
 }

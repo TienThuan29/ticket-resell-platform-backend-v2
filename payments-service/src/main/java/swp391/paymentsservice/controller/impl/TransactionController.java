@@ -44,4 +44,10 @@ public class TransactionController implements ITransactionController {
         return transactionService.getTransBuyingByUserId(id);
     }
 
+    @Override
+    @GetMapping("/get-all-trans/{userid}")
+    public ApiResponse<List<TransactionResponse>> getAllTransactionByUser(@PathVariable("userid") Long id) {
+        return transactionService.getAllTransactionByUser(id);
+    }
+
 }

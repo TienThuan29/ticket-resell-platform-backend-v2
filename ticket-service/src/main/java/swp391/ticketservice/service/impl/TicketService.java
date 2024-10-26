@@ -118,6 +118,26 @@ public class TicketService implements ITicketService {
     }
 
     @Override
+    public ApiResponse<?> deleteTicketFromShop(Long id) {
+        try {
+            var ticket = ticketRepository.findById(id).orElseThrow(null);
+            ticketRepository.deleteById(id);
+            // Check the number of ticket in generic ticket to delete generic ticket
+            Integer numOfTicketInGenericTicket = genericTicketRepository.getTotalTicketsInGenericTicket(
+                    ticket.getGenericTicket().getId()
+            );
+            if (numOfTicketInGenericTicket == 0) {
+                genericTicketRepository.deleteById(ticket.getGenericTicket().getId());
+            }
+        }
+        catch (Exception ex) {
+            log.info(ex.toString());
+            return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, message.ERROR_DELETE_TICKET_FROM_SHOP, null);
+        }
+        return new ApiResponse<>(HttpStatus.OK, message.SUCCESS_DELETE_TICKET_FROM_SHOP, null);
+    }
+
+    @Override
     public ApiResponse<?> markDeliveredPaperTicket(Long ticketId) {
         try {
             Ticket ticket= ticketRepository.findById(ticketId)

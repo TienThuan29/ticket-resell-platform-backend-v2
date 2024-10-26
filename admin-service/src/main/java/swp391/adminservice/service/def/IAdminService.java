@@ -18,4 +18,8 @@ public interface IAdminService {
     ApiResponse<List<TransactionResponse>> getListTransactions();
 
     ApiResponse<List<UserResponse>> getListUsers();
+
+    ApiResponse<?> disableUserAccount(Long userId);
+
+    ApiResponse<?> disableStaffAccount(Long staffId);
 }

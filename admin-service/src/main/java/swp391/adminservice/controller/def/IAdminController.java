@@ -15,4 +15,8 @@ public interface IAdminController {
     ApiResponse<List<TransactionResponse>> getListTransactions();
 
     ApiResponse<List<UserResponse>> getAllUsers();
+
+    ApiResponse<?> disableUserAccount(Long userId);
+
+    ApiResponse<?> disableStaffAccount(Long staffId);
 }

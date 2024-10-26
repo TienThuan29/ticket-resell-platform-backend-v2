@@ -1,6 +1,7 @@
 package swp391.adminservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import swp391.adminservice.configuration.MessageConfiguration;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AdminService implements IAdminService {
@@ -66,7 +68,7 @@ public class AdminService implements IAdminService {
             staffDTOList.add(item);
         });
 
-        return new ApiResponse<>(HttpStatus.OK,"list Staffs",staffDTOList);
+        return new ApiResponse<>(HttpStatus.OK,"",staffDTOList);
     }
 
     @Override
@@ -74,7 +76,7 @@ public class AdminService implements IAdminService {
         List<Transaction> listTransactions = transactionRepository.findAll();
         List<TransactionResponse> transactionResponseList = listTransactions.stream()
                 .map(transactionMapper::toTransactionResponse).collect(Collectors.toList());
-        return new ApiResponse<>(HttpStatus.OK,"List transaction",transactionResponseList);
+        return new ApiResponse<>(HttpStatus.OK,"",transactionResponseList);
     }
 
     @Override
@@ -82,7 +84,35 @@ public class AdminService implements IAdminService {
         List<User> listUsers = userRepository.getAllUsers();
         List<UserResponse> userResponseList = new ArrayList<>();
         listUsers.stream().map(userMapper::toUserResponse).forEach(item -> userResponseList.add(item));
-        return new ApiResponse<>(HttpStatus.OK, "List users",userResponseList);
+        return new ApiResponse<>(HttpStatus.OK, "",userResponseList);
+    }
+
+    @Override
+    public ApiResponse<?> disableUserAccount(Long userId) {
+        try {
+            var account = userRepository.findById(userId).orElseThrow(null);
+            account.setIsEnable(Boolean.FALSE);
+            userRepository.save(account);
+        }
+        catch (Exception ex) {
+            log.info(ex.toString());
+            return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, messageConfig.ERROR_DISABLE_ACCOUNT, null);
+        }
+        return new ApiResponse<>(HttpStatus.OK, messageConfig.SUCCESS_DISABLE_ACCOUNT, null);
+    }
+
+    @Override
+    public ApiResponse<?> disableStaffAccount(Long staffId) {
+        try {
+            var account = staffRepository.findById(staffId).orElseThrow(null);
+            account.setIsEnable(Boolean.FALSE);
+            staffRepository.save(account);
+        }
+        catch (Exception ex) {
+            log.info(ex.toString());
+            return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, messageConfig.ERROR_DISABLE_ACCOUNT, null);
+        }
+        return new ApiResponse<>(HttpStatus.OK, messageConfig.SUCCESS_DISABLE_ACCOUNT, null);
     }
 
     private boolean isExistEmail(String email) {

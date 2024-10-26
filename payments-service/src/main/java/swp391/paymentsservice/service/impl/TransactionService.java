@@ -33,8 +33,6 @@ public class TransactionService implements ITransactionService {
 
     private final GenericTicketRepository genericTicketRepo;
 
-    private final OrderTicketRepository orderTicketRepo;
-
     private final MessageConfiguration messageConfig;
 
     private final TransactionMapper transactionMapper;
@@ -45,6 +43,16 @@ public class TransactionService implements ITransactionService {
 
     private final StaffRepository staffRepo;
 
+
+    @Override
+    public ApiResponse<List<TransactionResponse>> getAllTransactionByUser(Long id) {
+        return new ApiResponse<>(
+                HttpStatus.OK, "",
+                transactionRepo.findByUserId(id).stream().map(transactionMapper::toResponse)
+                        .sorted(Comparator.comparing(TransactionResponse::getTransDate).reversed())
+                        .toList()
+        );
+    }
 
     @Override
     public ApiResponse<List<TransactionResponse>> getTransDepositByUserId(Long id) {
