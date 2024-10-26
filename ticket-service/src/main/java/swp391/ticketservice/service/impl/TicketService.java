@@ -249,7 +249,7 @@ public class TicketService implements ITicketService {
                         .isDone(Boolean.TRUE)
                         .type(TransactionType.BUYING)
                         .user(getUserById(request.getBuyerId()))
-                        .transactionNo(randoTransactionNo())
+                        .transactionNo(randomTransactionNo())
                         .build();
                 transactionRepository.save(buyerTrans);
 
@@ -262,7 +262,7 @@ public class TicketService implements ITicketService {
                         .isDone(Boolean.FALSE)
                         .type(TransactionType.SELLING)
                         .user(getUserById(request.getSellerId()))
-                        .transactionNo(randoTransactionNo())
+                        .transactionNo(randomTransactionNo())
                         .build();
                 transactionRepository.save(sellerTrans);
             }
@@ -368,7 +368,7 @@ public class TicketService implements ITicketService {
         ).orElseThrow(() -> new NotFoundException(message.ERROR_ORDER_TICKET_NOT_FOUND));
     }
 
-    private String randoTransactionNo() {
+    private String randomTransactionNo() {
         return UUID.randomUUID().toString().substring(1,8) + UUID.randomUUID().toString().substring(1,3);
     }
 }

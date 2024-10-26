@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import swp391.paymentsservice.controller.def.IPaymentController;
+import swp391.paymentsservice.dto.request.WithdrawalRequest;
 import swp391.paymentsservice.dto.response.ApiResponse;
 import swp391.paymentsservice.service.def.IPaymentService;
 
@@ -40,5 +41,11 @@ public class PaymentController implements IPaymentController {
             );
         }
         return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Failed", Boolean.FALSE);
+    }
+
+    @Override
+    @PostMapping("/withdrawal")
+    public ApiResponse<?> withdrawalAmount(@RequestBody WithdrawalRequest withdrawalRequest) {
+        return paymentService.withdrawalAmount(withdrawalRequest);
     }
 }
