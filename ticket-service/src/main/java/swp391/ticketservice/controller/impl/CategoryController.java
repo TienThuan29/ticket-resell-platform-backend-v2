@@ -1,5 +1,6 @@
 package swp391.ticketservice.controller.impl;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
+@ApiResponses
 //@CrossOrigin("http://localhost:3000")
 public class CategoryController implements ICategoryController {
 

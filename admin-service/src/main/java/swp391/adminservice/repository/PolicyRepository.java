@@ -6,5 +6,4 @@ import swp391.entity.Policy;
 
 @Repository
 public interface PolicyRepository extends JpaRepository<Policy, Integer> {
-
 }

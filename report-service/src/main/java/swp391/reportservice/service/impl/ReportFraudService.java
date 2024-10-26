@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import swp391.entity.ReportFraud;
+import swp391.entity.Staff;
 import swp391.entity.Ticket;
 import swp391.entity.User;
 import swp391.entity.fixed.GeneralProcess;
@@ -14,6 +15,7 @@ import swp391.reportservice.dto.response.ReportFraudResponse;
 import swp391.reportservice.exception.def.NotFoundException;
 import swp391.reportservice.mapper.ReportFraudMapper;
 import swp391.reportservice.repository.ReportFraudRepository;
+import swp391.reportservice.repository.StaffRepository;
 import swp391.reportservice.repository.TicketRepository;
 import swp391.reportservice.repository.UserRepository;
 import swp391.reportservice.service.def.IReportFraudService;
@@ -30,6 +32,7 @@ public class ReportFraudService implements IReportFraudService {
     private final ReportFraudRepository reportFraudRepo;
     private final MessageConfiguration messageConfig;
     private final TicketRepository ticketRepo;
+    private final StaffRepository staffRepo;
 
     @Override
     public ApiResponse<?> create(ReportFraudRequest request) {
@@ -58,7 +61,7 @@ public class ReportFraudService implements IReportFraudService {
     //Staff
     @Override
     public List<ReportFraudResponse> getByStaff(Long id) {
-        ReportFraud report = reportFraudRepo.findById(id)
+        Staff staff = staffRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_STAFF + " :" + id));
         return reportFraudRepo.findByStaffId(id).stream()
                 .map(fraudMapper::toResponse)

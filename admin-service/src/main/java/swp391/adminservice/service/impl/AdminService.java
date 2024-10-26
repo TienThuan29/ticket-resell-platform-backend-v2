@@ -14,13 +14,16 @@ import swp391.adminservice.mapper.StaffMapper;
 import swp391.adminservice.mapper.TransactionMapper;
 import swp391.adminservice.mapper.UserMapper;
 import swp391.adminservice.repository.StaffRepository;
+import swp391.adminservice.repository.TicketRepository;
 import swp391.adminservice.repository.TransactionRepository;
 import swp391.adminservice.repository.UserRepository;
 import swp391.adminservice.service.def.IAdminService;
 import swp391.entity.Staff;
 import swp391.entity.Transaction;
 import swp391.entity.User;
+import swp391.entity.fixed.GeneralProcess;
 import swp391.entity.fixed.Role;
+import swp391.entity.fixed.TransactionType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,8 @@ public class AdminService implements IAdminService {
     private final UserRepository userRepository;
 
     private final UserMapper userMapper;
+
+    private final TicketRepository ticketRepository;
 
     @Override
     public ApiResponse<StaffDTO> registerStaff(RegisterRequest registerRequest) {
@@ -113,6 +118,30 @@ public class AdminService implements IAdminService {
             return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, messageConfig.ERROR_DISABLE_ACCOUNT, null);
         }
         return new ApiResponse<>(HttpStatus.OK, messageConfig.SUCCESS_DISABLE_ACCOUNT, null);
+    }
+
+    @Override
+    public ApiResponse<Long> getSumAmountOfDepositTransaction() {
+        Long sum = transactionRepository.sumTheAmountByTransactionType(TransactionType.DEPOSIT);
+        return new ApiResponse<>(HttpStatus.OK,"Sum of Deposit", sum);
+    }
+
+    @Override
+    public ApiResponse<Long> getSumAmountOfWithdrawalTransaction() {
+        Long sum = transactionRepository.sumTheAmountByTransactionType(TransactionType.WITHDRAWAL);
+        return new ApiResponse<>(HttpStatus.OK,"Sum of Withdrawal",sum);
+    }
+
+    @Override
+    public ApiResponse<Integer> countBoughtTickets() {
+        Integer count = ticketRepository.countBoughtTickets();
+        return new ApiResponse<>(HttpStatus.OK, "count bought tickets",count);
+    }
+
+    @Override
+    public ApiResponse<Integer> countSellingTickets() {
+        Integer count = ticketRepository.countSellingTickets(GeneralProcess.SELLING);
+        return new ApiResponse<>(HttpStatus.OK, "count selling tickets",count);
     }
 
     private boolean isExistEmail(String email) {

@@ -15,6 +15,4 @@ public interface IHashtagService {
     ApiResponse<?> deleteHashtag(Integer id);
 
     ApiResponse<List<HashtagResponse>> getAll();
-
-
 }

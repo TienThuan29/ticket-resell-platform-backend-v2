@@ -18,7 +18,7 @@ import java.util.List;
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
-public class SecurityConfiguration {
+public class    SecurityConfiguration {
 
     private final List<String> ORIGIN_SOURCES = List.of("http://localhost:3000");
     private final List<String> ALLOWED_METHODS = List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD");

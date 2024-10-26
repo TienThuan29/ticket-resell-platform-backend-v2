@@ -16,7 +16,17 @@ public interface IAdminController {
 
     ApiResponse<List<UserResponse>> getAllUsers();
 
+<<<<<<< HEAD
     ApiResponse<?> disableUserAccount(Long userId);
 
     ApiResponse<?> disableStaffAccount(Long staffId);
+=======
+    ApiResponse<Long> getSumAmountOfDepositTransaction();
+
+    ApiResponse<Long> getSumAmountOfWithdrawalTransaction();
+
+    ApiResponse<Integer> countBoughtTickets();
+
+    ApiResponse<Integer> countSellingTickets();
+>>>>>>> eac81e31b2e9187c5885e0f2b268ce711265d986
 }
