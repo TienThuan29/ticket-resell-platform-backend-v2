@@ -44,7 +44,6 @@ public class AdminController implements IAdminController {
     }
 
     @Override
-<<<<<<< HEAD
     @PutMapping("/disable/user-acount/{userId}")
     public ApiResponse<?> disableUserAccount(@PathVariable("userId") Long userId) {
         return adminService.disableUserAccount(userId);
@@ -54,7 +53,8 @@ public class AdminController implements IAdminController {
     @PutMapping("/disable/staff-acount/{staffId}")
     public ApiResponse<?> disableStaffAccount(@PathVariable("staffId") Long staffId) {
         return adminService.disableStaffAccount(staffId);
-=======
+    }
+
     @GetMapping("/get-sum-deposit")
     public ApiResponse<Long> getSumAmountOfDepositTransaction() {
         return adminService.getSumAmountOfDepositTransaction();
@@ -76,6 +76,6 @@ public class AdminController implements IAdminController {
     @GetMapping("/get-count-sellingTickets")
     public ApiResponse<Integer> countSellingTickets() {
         return adminService.countSellingTickets();
->>>>>>> eac81e31b2e9187c5885e0f2b268ce711265d986
+
     }
 }

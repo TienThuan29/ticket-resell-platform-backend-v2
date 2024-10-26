@@ -19,11 +19,11 @@ public interface IAdminService {
 
     ApiResponse<List<UserResponse>> getListUsers();
 
-<<<<<<< HEAD
+
     ApiResponse<?> disableUserAccount(Long userId);
 
     ApiResponse<?> disableStaffAccount(Long staffId);
-=======
+
     ApiResponse<Long> getSumAmountOfDepositTransaction();
 
     ApiResponse<Long> getSumAmountOfWithdrawalTransaction();
@@ -31,5 +31,5 @@ public interface IAdminService {
     ApiResponse<Integer> countBoughtTickets();
 
     ApiResponse<Integer> countSellingTickets();
->>>>>>> eac81e31b2e9187c5885e0f2b268ce711265d986
+
 }

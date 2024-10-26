@@ -175,21 +175,17 @@ public class GenericTicketService implements IGenericTicketService {
     @Override
     public ApiResponse<?> orderTicket(OrderTicketRequest orderTicketRequest) {
         try {
-            orderTicketRepository.save(orderTicketMapper.toEntity(orderTicketRequest));
             var user = userRepository.findById(orderTicketRequest.getBuyerId()).orElseThrow(
                     () -> new NotFoundException(message.INVALID_BUYER)
             );
-            var genericTicket = genericTicketRepository.findById(orderTicketRequest.getGenericTicketId()).orElseThrow(null);
-            // If ticket is paper, not minus the balance
-            if (!orderTicketRequest.getIsPaper()) {
-                if (user.getBalance() >= orderTicketRequest.getTotalPrice()) {
+            // If ticket is paper, not minus the balance and save the order
+            if (user.getBalance() >= orderTicketRequest.getTotalPrice()) {
+                orderTicketRepository.save(orderTicketMapper.toEntity(orderTicketRequest));
+                var genericTicket = genericTicketRepository.findById(orderTicketRequest.getGenericTicketId()).orElseThrow(null);
+                if (!orderTicketRequest.getIsPaper()) {
                     user.setBalance(user.getBalance() - orderTicketRequest.getTotalPrice());
                     userRepository.save(user);
                 }
-                else {
-                    return new ApiResponse<>(HttpStatus.BAD_REQUEST, message.ERROR_NOT_ENOUGH_MONEY, null);
-                }
-                // Send order notification to seller
                 notificationServiceFeign.sendOrderTicketNotification(
                         NotificationRequest.builder()
                                 .senderId(orderTicketRequest.getBuyerId())
@@ -199,6 +195,9 @@ public class GenericTicketService implements IGenericTicketService {
                                 .content(constant.NOTIFICATION_TEMPLATE.ORDER_TICKET_CONTENT)
                                 .build()
                 );
+            }
+            else {
+                return new ApiResponse<>(HttpStatus.BAD_REQUEST, message.ERROR_NOT_ENOUGH_MONEY, null);
             }
         }
         catch (Exception ex) {
@@ -214,21 +213,26 @@ public class GenericTicketService implements IGenericTicketService {
                 () -> new NotFoundException(message.ERROR_ORDER_TICKET_NOT_FOUND)
         );
         try {
-            orderTicket.setCanceled(Boolean.TRUE);
-            orderTicketRepository.save(orderTicket);
-            // Refund money to buyer
-            var user = userRepository.findById(orderTicket.getBuyer().getId()).orElseThrow(null);
-            user.setBalance(user.getBalance() + orderTicket.getTotalPrice());
-            // Send cancel order notification to seller
-            notificationServiceFeign.sendCancelOrderNotification(
-                    NotificationRequest.builder()
-                            .senderId(senderId)
-                            .receiverId(orderTicket.getGenericTicket().getSeller().getId())
-                            .header(constant.NOTIFICATION_TEMPLATE.VERIFICATION_TICKET_HEADER)
-                            .subHeader(constant.NOTIFICATION_TEMPLATE.VERIFICATION_TICKET_SUBHEADER)
-                            .content(constant.NOTIFICATION_TEMPLATE.VERIFICATION_TICKET_CONTENT)
-                            .build()
-            );
+            // If the order is not canceled, then cancel it
+            if (!orderTicket.isCanceled()) {
+                orderTicket.setCanceled(Boolean.TRUE);
+                orderTicketRepository.save(orderTicket);
+                // Refund money to buyer
+                var user = userRepository.findById(orderTicket.getBuyer().getId()).orElseThrow(null);
+                user.setBalance(user.getBalance() + orderTicket.getTotalPrice());
+                userRepository.save(user);
+                // Send cancel order notification to seller
+                notificationServiceFeign.sendCancelOrderNotification(
+                        NotificationRequest.builder()
+                                .senderId(senderId)
+                                .receiverId(orderTicket.getGenericTicket().getSeller().getId())
+                                .header(constant.NOTIFICATION_TEMPLATE.VERIFICATION_TICKET_HEADER)
+                                .subHeader(constant.NOTIFICATION_TEMPLATE.VERIFICATION_TICKET_SUBHEADER)
+                                .content(constant.NOTIFICATION_TEMPLATE.VERIFICATION_TICKET_CONTENT)
+                                .build()
+                );
+            }
+            else return new ApiResponse<>(HttpStatus.BAD_REQUEST, message.ERROR_CANNOT_DUPLICATE_CANCEL_ORDER, null);
         }
         catch (Exception ex) {
             return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, message.ERROR_CANCEL_TICKET_ORDER, null);
