@@ -145,6 +145,12 @@ public class AdminService implements IAdminService {
         return new ApiResponse<>(HttpStatus.OK, "", eventRepository.getEventRevenue());
     }
 
+    @Override
+    public ApiResponse<Long> getRevenue() {
+        Long revenue = staffRepository.getAll(Role.ADMIN).get(0).getRevenue();
+        return new ApiResponse<>(HttpStatus.OK, "", revenue);
+    }
+
     private boolean isExistEmail(String email) {
         var user = staffRepository.findByEmail(email);
         return user.isPresent();

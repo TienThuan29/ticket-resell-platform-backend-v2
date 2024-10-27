@@ -76,6 +76,11 @@ public class AdminController implements IAdminController {
     }
 
     @Override
+    @GetMapping("/get-revenue")
+    public ApiResponse<Long> getRevenue() {
+        return adminService.getRevenue();
+    }
+    @Override
     @GetMapping("/get-events-revenue")
     public ApiResponse<List<EventRevenueResponse>> getEventsRevenue() {
         return adminService.getEventsRevenue();

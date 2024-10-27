@@ -29,5 +29,6 @@ public interface IAdminService {
 
     ApiResponse<Integer> countSellingTickets();
 
+    ApiResponse<Long> getRevenue();
     ApiResponse<List<EventRevenueResponse>> getEventsRevenue();
 }

@@ -136,7 +136,7 @@ public class EventService implements IEventService {
                 .stream().map(HashtagRequest::getId).toList();
 
         event.setName(updateEventRequest.getName());
-        event.setImage(ImageUtil.compressImage(updateEventRequest.getImage()));
+        //event.setImage(ImageUtil.compressImage(updateEventRequest.getImage()));
         event.setStartDate(DateUtil.fixDateTimeRequest(updateEventRequest.getStartDate()));
         event.setEndDate(DateUtil.fixDateTimeRequest(updateEventRequest.getEndDate()));
         event.setDetail(updateEventRequest.getDetail());
