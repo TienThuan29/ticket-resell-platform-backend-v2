@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
  */
 @Component("ticketServiceMessageConfig")
 public class MessageConfiguration {
-
+    public final String ERROR_NOT_ENOUGH_TICKET_TO_BUY = "Bạn không đủ số lượng vé để bán! Vui lòng kiểm tra lại!";
     public  final String ERROR_CANNOT_DUPLICATE_CANCEL_ORDER = "Đơn hàng đã được hủy! Vui lòng kiểm tra lại!";
     public final String INVALID_GENERICTICKET = "Vé tổng quan không hợp lệ";
     public final String INVALID_POLICY = "Chính sách không hợp lệ";

@@ -218,13 +218,6 @@ public class TicketService implements ITicketService {
         ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
         Date boughtDate = Date.from(zonedDateTime.toInstant());
         try {
-            // Update order ticket
-            OrderTicket orderTicket = getOrderTicketById(
-                    request.getGenericTicketId(), request.getBuyerId(), request.getOrderNo()
-            );
-            orderTicket.setAccepted(request.getIsAccepted());
-            orderTicketRepository.save(orderTicket);
-
             // Automatic transact tickets to buyer
             List<Ticket> notBoughtTickets = ticketRepository.getNotBoughtTicketByGenericTicket(
                     request.getGenericTicketId()
@@ -238,33 +231,43 @@ public class TicketService implements ITicketService {
                                 request.getIsPaper() ? GeneralProcess.DELIVERING : GeneralProcess.SUCCESS
                         );
                     }
+                // Update order ticket
+                OrderTicket orderTicket = getOrderTicketById(
+                        request.getGenericTicketId(), request.getBuyerId(), request.getOrderNo()
+                );
+
+                orderTicket.setAccepted(request.getIsAccepted());
+                orderTicketRepository.save(orderTicket);
+                ticketRepository.saveAll(notBoughtTickets);
+
+                if (!request.getIsPaper()) {
+                    // Update Transaction table
+                    Transaction buyerTrans = Transaction.builder()
+                            .amount(request.getTotalPrice())
+                            .transDate(boughtDate)
+                            .isDone(Boolean.TRUE)
+                            .type(TransactionType.BUYING)
+                            .user(getUserById(request.getBuyerId()))
+                            .transactionNo(randomTransactionNo())
+                            .build();
+                    transactionRepository.save(buyerTrans);
+
+                    // Add amount for admin
+                    staffRepository.updateBalanceOfAdmin(request.getTotalPrice());
+
+                    Transaction sellerTrans = Transaction.builder()
+                            .amount(request.getTotalPrice())
+                            .transDate(boughtDate)
+                            .isDone(Boolean.FALSE)
+                            .type(TransactionType.SELLING)
+                            .user(getUserById(request.getSellerId()))
+                            .transactionNo(randomTransactionNo())
+                            .build();
+                    transactionRepository.save(sellerTrans);
+                }
             }
-            ticketRepository.saveAll(notBoughtTickets);
-
-            if (!request.getIsPaper()) {
-                // Update Transaction table
-                Transaction buyerTrans = Transaction.builder()
-                        .amount(request.getTotalPrice())
-                        .transDate(boughtDate)
-                        .isDone(Boolean.TRUE)
-                        .type(TransactionType.BUYING)
-                        .user(getUserById(request.getBuyerId()))
-                        .transactionNo(randomTransactionNo())
-                        .build();
-                transactionRepository.save(buyerTrans);
-
-                // Add amount for admin
-                staffRepository.updateBalanceOfAdmin(request.getTotalPrice());
-
-                Transaction sellerTrans = Transaction.builder()
-                        .amount(request.getTotalPrice())
-                        .transDate(boughtDate)
-                        .isDone(Boolean.FALSE)
-                        .type(TransactionType.SELLING)
-                        .user(getUserById(request.getSellerId()))
-                        .transactionNo(randomTransactionNo())
-                        .build();
-                transactionRepository.save(sellerTrans);
+            else {
+                return new ApiResponse<>(HttpStatus.BAD_REQUEST, message.ERROR_NOT_ENOUGH_TICKET_TO_BUY);
             }
         }
         catch (Exception exception) {
@@ -276,9 +279,6 @@ public class TicketService implements ITicketService {
 
     @Override
     public ApiResponse<?> denyToSellTicket(AcceptOrDenySellingRequest request) {
-        LocalDateTime localDateTime = LocalDateTime.now();
-        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
-        Date denyingDate = Date.from(zonedDateTime.toInstant());
         try {
             // Update order ticket
             OrderTicket orderTicket = getOrderTicketById(
@@ -295,16 +295,6 @@ public class TicketService implements ITicketService {
 
             // Minus balance of admin
             staffRepository.updateBalanceOfAdmin(-1 * request.getTotalPrice());
-            // Update transaction
-//            Transaction buyerTransaction = Transaction.builder()
-//                    .amount(request.getTotalPrice())
-//                    .transDate(denyingDate)
-//                    .isDone(Boolean.TRUE)
-//                    .type(TransactionType.DENIED_TO_SELL)
-//                    .user(buyer)
-//                    .transactionNo(randoTransactionNo())
-//                    .build();
-//            transactionRepository.save(buyerTransaction);
         }
         catch (Exception ex) {
             log.info(ex.toString());
