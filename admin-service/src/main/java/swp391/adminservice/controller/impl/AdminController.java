@@ -9,8 +9,8 @@ import swp391.adminservice.dto.response.ApiResponse;
 import swp391.adminservice.dto.response.StaffDTO;
 import swp391.adminservice.dto.response.TransactionResponse;
 import swp391.adminservice.dto.response.UserResponse;
+import swp391.adminservice.dto.response.*;
 import swp391.adminservice.service.def.IAdminService;
-
 import java.util.List;
 
 @RestController
@@ -108,7 +108,17 @@ public class AdminController implements IAdminController {
     @GetMapping("/get-count-sellingTickets")
     public ApiResponse<Integer> countSellingTickets() {
         return adminService.countSellingTickets();
+    }
 
+    @Override
+    @GetMapping("/get-revenue")
+    public ApiResponse<Long> getRevenue() {
+        return adminService.getRevenue();
+    }
+    @Override
+    @GetMapping("/get-events-revenue")
+    public ApiResponse<List<EventRevenueResponse>> getEventsRevenue() {
+        return adminService.getEventsRevenue();
     }
 
 }

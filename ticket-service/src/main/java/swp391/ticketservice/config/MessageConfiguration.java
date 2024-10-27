@@ -46,6 +46,8 @@ public class MessageConfiguration {
     public final String ERROR_DELETE_TICKET_FROM_SHOP = "Có sự cố khi xóa vé ra khỏi cửa hàng! Vui lòng thử lại!";
     public final String SUCCESS_DELETE_TICKET_FROM_SHOP = "Xóa vé khỏi cửa hàng thành công!";
     public final String ERROR_NOT_ENOUGH_MONEY = "Bạn không đủ số dư để thanh toán!";
+    public final String SUCCESS_UPDATE_EVENT = "Cập nhật sự kiện thành công";
+    public final String ERROR_UPDATE_EVENT = "Cập nhật sự kiên thất bại";
 }
 
 //public class MessageConfiguration {

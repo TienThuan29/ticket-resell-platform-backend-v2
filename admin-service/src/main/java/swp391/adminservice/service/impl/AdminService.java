@@ -6,18 +6,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import swp391.adminservice.configuration.MessageConfiguration;
 import swp391.adminservice.dto.request.RegisterRequest;
+<<<<<<< HEAD
 import swp391.adminservice.dto.request.UpdateStaffRequest;
 import swp391.adminservice.dto.response.ApiResponse;
 import swp391.adminservice.dto.response.StaffDTO;
 import swp391.adminservice.dto.response.TransactionResponse;
 import swp391.adminservice.dto.response.UserResponse;
+=======
+import swp391.adminservice.dto.response.*;
+>>>>>>> 631da0007bae0fc0816d06503f57c52745b73589
 import swp391.adminservice.mapper.StaffMapper;
 import swp391.adminservice.mapper.TransactionMapper;
 import swp391.adminservice.mapper.UserMapper;
-import swp391.adminservice.repository.StaffRepository;
-import swp391.adminservice.repository.TicketRepository;
-import swp391.adminservice.repository.TransactionRepository;
-import swp391.adminservice.repository.UserRepository;
+import swp391.adminservice.repository.*;
 import swp391.adminservice.service.def.IAdminService;
 import swp391.entity.Staff;
 import swp391.entity.Transaction;
@@ -49,6 +50,8 @@ public class AdminService implements IAdminService {
     private final UserMapper userMapper;
 
     private final TicketRepository ticketRepository;
+
+    private final EventRepository eventRepository;
 
     @Override
     public ApiResponse<StaffDTO> registerStaff(RegisterRequest registerRequest) {
@@ -189,6 +192,17 @@ public class AdminService implements IAdminService {
     public ApiResponse<Integer> countSellingTickets() {
         Integer count = ticketRepository.countSellingTickets(GeneralProcess.SELLING);
         return new ApiResponse<>(HttpStatus.OK, "count selling tickets",count);
+    }
+
+    @Override
+    public ApiResponse<List<EventRevenueResponse>> getEventsRevenue() {
+        return new ApiResponse<>(HttpStatus.OK, "", eventRepository.getEventRevenue());
+    }
+
+    @Override
+    public ApiResponse<Long> getRevenue() {
+        Long revenue = staffRepository.getAll(Role.ADMIN).get(0).getRevenue();
+        return new ApiResponse<>(HttpStatus.OK, "", revenue);
     }
 
     private boolean isExistEmail(String email) {

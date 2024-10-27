@@ -25,4 +25,6 @@ public interface IEventService {
     ApiResponse<List<EventResponse>> getHotEvents();
 
     ApiResponse<List<EventResponse>> getSpecialEvent();
+
+    ApiResponse<?> updateEvent(Integer eventId, EventRequest eventRequest);
 }

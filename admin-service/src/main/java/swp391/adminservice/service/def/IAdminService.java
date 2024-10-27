@@ -6,6 +6,7 @@ import swp391.adminservice.dto.response.ApiResponse;
 import swp391.adminservice.dto.response.StaffDTO;
 import swp391.adminservice.dto.response.TransactionResponse;
 import swp391.adminservice.dto.response.UserResponse;
+import swp391.adminservice.dto.response.*;
 
 
 import java.util.List;
@@ -38,4 +39,6 @@ public interface IAdminService {
 
     ApiResponse<Integer> countSellingTickets();
 
+    ApiResponse<Long> getRevenue();
+    ApiResponse<List<EventRevenueResponse>> getEventsRevenue();
 }
