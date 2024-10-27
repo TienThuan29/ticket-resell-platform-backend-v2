@@ -1,9 +1,9 @@
 package swp391.adminservice.controller.def;
 
-import org.springframework.web.bind.annotation.PathVariable;
 import swp391.adminservice.dto.request.RegisterRequest;
 import swp391.adminservice.dto.request.UpdateStaffRequest;
 import swp391.adminservice.dto.response.*;
+import swp391.adminservice.dto.response.EventRevenueResponse;
 
 
 import java.util.List;

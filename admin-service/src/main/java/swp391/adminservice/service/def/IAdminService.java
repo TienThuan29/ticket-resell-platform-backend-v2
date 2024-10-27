@@ -6,7 +6,7 @@ import swp391.adminservice.dto.response.ApiResponse;
 import swp391.adminservice.dto.response.StaffDTO;
 import swp391.adminservice.dto.response.TransactionResponse;
 import swp391.adminservice.dto.response.UserResponse;
-import swp391.adminservice.dto.response.*;
+import swp391.adminservice.dto.response.EventRevenueResponse;
 
 
 import java.util.List;

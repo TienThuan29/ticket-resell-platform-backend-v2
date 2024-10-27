@@ -46,6 +46,6 @@ public class Event {
     )
     private Collection<Hashtag> hashtags;
 
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
     private Collection<GenericTicket> genericTickets;
 }

@@ -1,25 +1,21 @@
 package swp391.adminservice.service.impl;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import swp391.adminservice.configuration.MessageConfiguration;
 import swp391.adminservice.dto.request.RegisterRequest;
-<<<<<<< HEAD
 import swp391.adminservice.dto.request.UpdateStaffRequest;
-import swp391.adminservice.dto.response.ApiResponse;
-import swp391.adminservice.dto.response.StaffDTO;
-import swp391.adminservice.dto.response.TransactionResponse;
-import swp391.adminservice.dto.response.UserResponse;
-=======
 import swp391.adminservice.dto.response.*;
->>>>>>> 631da0007bae0fc0816d06503f57c52745b73589
 import swp391.adminservice.mapper.StaffMapper;
 import swp391.adminservice.mapper.TransactionMapper;
 import swp391.adminservice.mapper.UserMapper;
 import swp391.adminservice.repository.*;
 import swp391.adminservice.service.def.IAdminService;
+import swp391.entity.Policy;
 import swp391.entity.Staff;
 import swp391.entity.Transaction;
 import swp391.entity.User;
@@ -28,6 +24,7 @@ import swp391.entity.fixed.Role;
 import swp391.entity.fixed.TransactionType;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +48,9 @@ public class AdminService implements IAdminService {
 
     private final TicketRepository ticketRepository;
 
-    private final EventRepository eventRepository;
+    private final EntityManager entityManager;
+
+    private final PolicyRepository policyRepository;
 
     @Override
     public ApiResponse<StaffDTO> registerStaff(RegisterRequest registerRequest) {
@@ -195,8 +194,25 @@ public class AdminService implements IAdminService {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ApiResponse<List<EventRevenueResponse>> getEventsRevenue() {
-        return new ApiResponse<>(HttpStatus.OK, "", eventRepository.getEventRevenue());
+        List<Object[]> results = entityManager.createNativeQuery("EXEC SelectEventRevenue").getResultList();
+
+        Policy sellingPolicy = policyRepository.findById(3).get();
+
+        // Transform each row (Object[]) into an EventRevenueResponse object
+        List<EventRevenueResponse> eventRevenueResponses = results.stream()
+                .map(row -> new EventRevenueResponse(
+                        (String) row[0],           // name
+                        ((Integer) row[1]),        // boughtQuantity
+                        (Date) row[2],             // startDate
+                        (Double) row[3]            // revenueEvent
+                ))
+                .collect(Collectors.toList());
+        eventRevenueResponses.stream()
+                .forEach(e -> e.setRevenueEvent
+                        (e.getRevenueEvent()*sellingPolicy.getFee()/100));
+        return new ApiResponse<>(HttpStatus.OK, "", eventRevenueResponses);
     }
 
     @Override
