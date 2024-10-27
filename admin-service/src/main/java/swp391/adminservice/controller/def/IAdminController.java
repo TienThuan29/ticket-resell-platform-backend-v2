@@ -27,4 +27,5 @@ public interface IAdminController {
 
     ApiResponse<Integer> countSellingTickets();
 
+    ApiResponse<List<EventRevenueResponse>> getEventsRevenue();
 }

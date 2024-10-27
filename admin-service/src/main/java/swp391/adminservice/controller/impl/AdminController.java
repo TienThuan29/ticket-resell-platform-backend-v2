@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import swp391.adminservice.controller.def.IAdminController;
 import swp391.adminservice.dto.request.RegisterRequest;
-import swp391.adminservice.dto.response.ApiResponse;
-import swp391.adminservice.dto.response.StaffDTO;
-import swp391.adminservice.dto.response.TransactionResponse;
-import swp391.adminservice.dto.response.UserResponse;
+import swp391.adminservice.dto.response.*;
 import swp391.adminservice.service.def.IAdminService;
 
 import java.util.List;
@@ -76,6 +73,11 @@ public class AdminController implements IAdminController {
     @GetMapping("/get-count-sellingTickets")
     public ApiResponse<Integer> countSellingTickets() {
         return adminService.countSellingTickets();
+    }
 
+    @Override
+    @GetMapping("/get-events-revenue")
+    public ApiResponse<List<EventRevenueResponse>> getEventsRevenue() {
+        return adminService.getEventsRevenue();
     }
 }

@@ -3,15 +3,16 @@ package swp391.adminservice;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import swp391.entity.Policy;
-import swp391.entity.Staff;
-import swp391.entity.Transaction;
+import swp391.entity.*;
 
 @SpringBootApplication
 @EntityScan(basePackageClasses = {
         Policy.class,
         Staff.class,
-        Transaction.class
+        Transaction.class,
+        Ticket.class,
+        User.class,
+        Event.class
 })
 public class AdminServiceApplication {
 

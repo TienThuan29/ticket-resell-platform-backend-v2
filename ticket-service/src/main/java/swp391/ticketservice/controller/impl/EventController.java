@@ -70,4 +70,5 @@ public class EventController implements IEventController {
         return eventService.getSpecialEvent();
     }
 
+
 }
