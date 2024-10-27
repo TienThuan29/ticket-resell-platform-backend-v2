@@ -70,5 +70,11 @@ public class EventController implements IEventController {
         return eventService.getSpecialEvent();
     }
 
-
+    @Override
+    @PutMapping("/update-event/{eventId}")
+    public ApiResponse<?> updateEvent(@PathVariable Integer eventId,
+                                      @RequestBody EventRequest eventRequest)
+    {
+        return eventService.updateEvent(eventId, eventRequest);
+    }
 }

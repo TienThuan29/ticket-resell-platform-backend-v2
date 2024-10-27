@@ -8,13 +8,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import swp391.entity.Event;
+import swp391.ticketservice.dto.request.HashtagRequest;
 import swp391.ticketservice.dto.response.ApiResponse;
 import swp391.ticketservice.dto.response.EventResponse;
+import swp391.ticketservice.exception.def.NotFoundException;
 import swp391.ticketservice.mapper.EventMapper;
 import swp391.ticketservice.repository.EventRepository;
 import swp391.ticketservice.repository.HashtagRepository;
 import swp391.ticketservice.service.def.IEventService;
 import swp391.ticketservice.config.MessageConfiguration;
+import swp391.ticketservice.utils.DateUtil;
+import swp391.ticketservice.utils.ImageUtil;
 
 import java.io.IOException;
 import java.util.Date;
@@ -121,6 +125,25 @@ public class EventService implements IEventService {
                         eventMapper::toResponse
                 ).toList();
         return new ApiResponse<>(HttpStatus.OK, "", events);
+    }
+
+    @Override
+    public ApiResponse<?> updateEvent(Integer eventId, EventRequest updateEventRequest) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException(messageConfig.INVALID_EVENT+" :"+eventId));
+
+        List<Integer> hashtags = updateEventRequest.getHashtagsRequest()
+                .stream().map(HashtagRequest::getId).toList();
+
+        event.setName(updateEventRequest.getName());
+        event.setImage(ImageUtil.compressImage(updateEventRequest.getImage()));
+        event.setStartDate(DateUtil.fixDateTimeRequest(updateEventRequest.getStartDate()));
+        event.setEndDate(DateUtil.fixDateTimeRequest(updateEventRequest.getEndDate()));
+        event.setDetail(updateEventRequest.getDetail());
+        event.setHashtags(hashtagRepository.findAllById(hashtags));
+
+        eventRepository.save(event);
+        return new ApiResponse<>(HttpStatus.OK, messageConfig.SUCCESS_UPDATE_EVENT);
     }
 
 }
