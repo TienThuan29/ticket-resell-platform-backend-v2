@@ -19,7 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUsername(String username);
 
-    @Query("SELECT u FROM User u WHERE u.username =:username AND u.isEnable = true")
+    @Query("SELECT u FROM User u WHERE u.username =:username")
     Optional<User> findEnableAccount(String username);
 
     Optional<User> findByCustomerCode(String customerCode);

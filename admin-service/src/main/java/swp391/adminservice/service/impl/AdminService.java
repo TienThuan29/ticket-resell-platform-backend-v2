@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import swp391.adminservice.configuration.MessageConfiguration;
 import swp391.adminservice.dto.request.RegisterRequest;
+import swp391.adminservice.dto.request.UpdateStaffRequest;
 import swp391.adminservice.dto.response.ApiResponse;
 import swp391.adminservice.dto.response.StaffDTO;
 import swp391.adminservice.dto.response.TransactionResponse;
@@ -65,6 +66,24 @@ public class AdminService implements IAdminService {
     }
 
     @Override
+    public ApiResponse<StaffDTO> updateStaff(Long staffId, UpdateStaffRequest updateStaffRequest) {
+        StaffDTO staffDTO = null;
+        try {
+            var staff = staffRepository.findById(staffId).orElseThrow(null);
+            staff.setFirstname(updateStaffRequest.getFirstname());
+            staff.setLastname(updateStaffRequest.getLastname());
+            staff.setEmail(updateStaffRequest.getEmail());
+            staff.setPhone(updateStaffRequest.getPhone());
+            staffDTO = staffMapper.toDTO(staffRepository.save(staff));
+        }
+        catch (Exception ex) {
+            log.info(ex.toString());
+            return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, messageConfig.ERROR_UPDATE_STAFF, staffDTO);
+        }
+        return new ApiResponse<>(HttpStatus.OK, messageConfig.SUCCESS_UPDATE_STAFF, staffDTO);
+    }
+
+    @Override
     public ApiResponse<List<StaffDTO>> getListStaffs() {
         List<Staff> listStaff = staffRepository.getAll(Role.STAFF);
         List<StaffDTO> staffDTOList = new ArrayList<>();
@@ -93,6 +112,20 @@ public class AdminService implements IAdminService {
     }
 
     @Override
+    public ApiResponse<?> enableUserAccount(Long userId) {
+        try {
+            var account = userRepository.findById(userId).orElseThrow(null);
+            account.setIsEnable(Boolean.TRUE);
+            userRepository.save(account);
+        }
+        catch (Exception ex) {
+            log.info(ex.toString());
+            return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, messageConfig.ERROR_ENABLE_ACCOUNT, null);
+        }
+        return new ApiResponse<>(HttpStatus.OK, messageConfig.SUCCESS_ENABLE_ACCOUNT, null);
+    }
+
+    @Override
     public ApiResponse<?> disableUserAccount(Long userId) {
         try {
             var account = userRepository.findById(userId).orElseThrow(null);
@@ -118,6 +151,20 @@ public class AdminService implements IAdminService {
             return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, messageConfig.ERROR_DISABLE_ACCOUNT, null);
         }
         return new ApiResponse<>(HttpStatus.OK, messageConfig.SUCCESS_DISABLE_ACCOUNT, null);
+    }
+
+    @Override
+    public ApiResponse<?> enableStaffAccount(Long staffId) {
+        try {
+            var account = staffRepository.findById(staffId).orElseThrow(null);
+            account.setIsEnable(Boolean.TRUE);
+            staffRepository.save(account);
+        }
+        catch (Exception ex) {
+            log.info(ex.toString());
+            return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, messageConfig.ERROR_ENABLE_ACCOUNT, null);
+        }
+        return new ApiResponse<>(HttpStatus.OK, messageConfig.SUCCESS_ENABLE_ACCOUNT, null);
     }
 
     @Override

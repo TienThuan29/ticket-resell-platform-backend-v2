@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 public class MessageConfiguration {
 
     // Error message
+    public final String ERROR_ACCOUNT_FORBIDDEN = "Tài khoản này đã bị cấm!";
     public final String ERROR_USERNAME_EXIST = "Tên đăng nhập đã tồn tại!";
     public final String ERROR_REGISTER_FAIL = "Đăng ký không thành công!";
     public final String ERROR_REGISTER_SUCCESS = "Đăng ký thành công!";

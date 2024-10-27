@@ -13,9 +13,13 @@ public class MessageConfiguration {
     public final String ERROR_UPDATE_POLICY = "Có sự cố xảy ra khi cập nhật chính sách! Vui lòng thử lại!";
     public final String ERROR_INVALID_USERNAME_PASSWORD = "Tên đăng nhập hoặc mật khẩu không đúng!";
     public final String ERROR_DISABLE_ACCOUNT = "Có sự cố khi cấm tài khoản!";
+    public final String ERROR_UPDATE_STAFF = "Cập nhật nhân viên không thành công!";
+    public final String ERROR_ENABLE_ACCOUNT = "Mở tài khoản không thành công! Vui lòng thử lại!";
 
     // Success
     public final String SUCCESS_REGISTER_STAFF = "Đăng ký nhân viên thành công!";
     public final String SUCCESS_UPDATE_POLICY = "Cập nhật chính sách thành công!";
     public final String SUCCESS_DISABLE_ACCOUNT = "Cấm tài khoản thành công!";
+    public final String SUCCESS_UPDATE_STAFF = "Cập nhật nhân viên thành công!";
+    public final String SUCCESS_ENABLE_ACCOUNT = "Mở tài khoản thành công!";
 }

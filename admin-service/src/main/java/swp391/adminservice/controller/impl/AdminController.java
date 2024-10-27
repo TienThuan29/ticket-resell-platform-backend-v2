@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import swp391.adminservice.controller.def.IAdminController;
 import swp391.adminservice.dto.request.RegisterRequest;
+import swp391.adminservice.dto.request.UpdateStaffRequest;
 import swp391.adminservice.dto.response.ApiResponse;
 import swp391.adminservice.dto.response.StaffDTO;
 import swp391.adminservice.dto.response.TransactionResponse;
@@ -26,6 +27,25 @@ public class AdminController implements IAdminController {
     }
 
     @Override
+    @PutMapping("/update-staff/{staffId}")
+    public ApiResponse<StaffDTO> updateStaff(
+            @PathVariable("staffId") Long staffId,
+            @RequestBody UpdateStaffRequest updateStaffRequest
+    ) {
+        return adminService.updateStaff(staffId, updateStaffRequest);
+    }
+
+//    @GetMapping("/get-all-staffs")
+//    public ApiResponse<List<StaffDTO>> getAllStaffAccount() {
+//        return adminService.getListStaffs();
+//    }
+//
+//    @GetMapping("/get-all-user-accounts")
+//    public ApiResponse<List<UserResponse>> getAllUserAccount(){
+//        return adminService.getListUsers();
+//    }
+
+    @Override
     @GetMapping("/get-list-staff")
     public ApiResponse<List<StaffDTO>> getListStaffs() {
         return adminService.getListStaffs();
@@ -44,6 +64,12 @@ public class AdminController implements IAdminController {
     }
 
     @Override
+    @PutMapping("/enable/user-acount/{userId}")
+    public ApiResponse<?> enableUserAccount(@PathVariable("userId") Long userId) {
+        return adminService.enableUserAccount(userId);
+    }
+
+    @Override
     @PutMapping("/disable/user-acount/{userId}")
     public ApiResponse<?> disableUserAccount(@PathVariable("userId") Long userId) {
         return adminService.disableUserAccount(userId);
@@ -53,6 +79,12 @@ public class AdminController implements IAdminController {
     @PutMapping("/disable/staff-acount/{staffId}")
     public ApiResponse<?> disableStaffAccount(@PathVariable("staffId") Long staffId) {
         return adminService.disableStaffAccount(staffId);
+    }
+
+    @Override
+    @PutMapping("/enable/staff-acount/{staffId}")
+    public ApiResponse<?> enableStaffAccount(@PathVariable("staffId") Long staffId) {
+        return adminService.enableStaffAccount(staffId);
     }
 
     @GetMapping("/get-sum-deposit")
@@ -78,4 +110,5 @@ public class AdminController implements IAdminController {
         return adminService.countSellingTickets();
 
     }
+
 }

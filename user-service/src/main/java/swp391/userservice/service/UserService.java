@@ -135,6 +135,8 @@ public class UserService implements IUserService {
         );
 
         if (user.isPresent()) {
+            if (!user.get().isEnabled())
+                return new ApiResponse<>(HttpStatus.FORBIDDEN, messageConfig.ERROR_ACCOUNT_FORBIDDEN);
             var matchedPassword = BCrypt.checkpw(authRequest.getPassword(), user.get().getPassword());
             if (matchedPassword){
                 String jwtToken = jwtService.generateToken(user.get()); // Access token
@@ -163,6 +165,8 @@ public class UserService implements IUserService {
         try {
             var user = userRepository.findByEmail(email).orElseThrow(null);
             if (user != null) {
+                if (!user.isEnabled())
+                    return new ApiResponse<>(HttpStatus.UNAUTHORIZED, messageConfig.ERROR_ACCOUNT_FORBIDDEN);
                 jwtToken = jwtService.generateToken(user); // Access token
                 refreshToken = jwtService.generateRefreshToken(user);  // Refresh token
 

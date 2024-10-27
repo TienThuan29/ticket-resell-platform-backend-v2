@@ -126,7 +126,7 @@ public class TicketService implements ITicketService {
             Integer numOfTicketInGenericTicket = genericTicketRepository.getTotalTicketsInGenericTicket(
                     ticket.getGenericTicket().getId()
             );
-            if (numOfTicketInGenericTicket == 0) {
+            if (numOfTicketInGenericTicket == null || numOfTicketInGenericTicket == 0) {
                 genericTicketRepository.deleteById(ticket.getGenericTicket().getId());
             }
         }
