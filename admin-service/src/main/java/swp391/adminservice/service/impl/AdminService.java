@@ -6,15 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import swp391.adminservice.configuration.MessageConfiguration;
 import swp391.adminservice.dto.request.RegisterRequest;
-<<<<<<< HEAD
 import swp391.adminservice.dto.request.UpdateStaffRequest;
 import swp391.adminservice.dto.response.ApiResponse;
 import swp391.adminservice.dto.response.StaffDTO;
 import swp391.adminservice.dto.response.TransactionResponse;
 import swp391.adminservice.dto.response.UserResponse;
-=======
 import swp391.adminservice.dto.response.*;
->>>>>>> 631da0007bae0fc0816d06503f57c52745b73589
 import swp391.adminservice.mapper.StaffMapper;
 import swp391.adminservice.mapper.TransactionMapper;
 import swp391.adminservice.mapper.UserMapper;
