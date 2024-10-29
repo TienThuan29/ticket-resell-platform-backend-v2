@@ -354,13 +354,13 @@ public class UserService implements IUserService {
 
     @Override
     public ApiResponse<?> verifyResetOTP(String verificationOTP) {
-        var verifyUser = verificationRepository.findByVerificationCode(verificationOTP)
-                .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_OTP_INVALID+" :"+verificationOTP));
-        var user = userRepository.findById(verifyUser.getUserId())
-                .orElseThrow(() -> new NotFoundException(messageConfig.ERROR_NOT_FOUND_USERID));
-
+        VerificationUser verifyUser = null;
+        if(verificationRepository.findByVerificationCode(verificationOTP).isPresent()){
+            verifyUser = verificationRepository.findByVerificationCode(verificationOTP).get();
+        }else
+            return new ApiResponse<>(HttpStatus.NOT_FOUND, messageConfig.ERROR_OTP_INVALID, Boolean.FALSE);
+        var user = userRepository.findById(verifyUser.getUserId()).get();
         long period = System.currentTimeMillis() - verifyUser.getStartTime();
-
         if (period < 300000) {
             user.setIsEnable(Boolean.TRUE);
             userRepository.save(user);
