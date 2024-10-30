@@ -16,6 +16,13 @@ public class NotificationController implements INotificationController {
 
     private final INotificationService notificationService;
 
+
+    @Override
+    @PostMapping("/send/report")
+    public Boolean sendReportNotification(NotificationRequest request) {
+        return notificationService.sendReportNotification(request);
+    }
+
     @Override
     @PostMapping("/send/verification")
     public Boolean sendVerificationNotification(

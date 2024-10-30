@@ -27,6 +27,21 @@ public class NotificationService implements INotificationService {
 
 
     @Override
+    public Boolean sendReportNotification(NotificationRequest request) {
+        Boolean flag = true;
+        try {
+            notificationRepository.save(
+                    notificationMapper.toReportNotification(request)
+            );
+        }
+        catch (Exception ex) {
+            log.info(ex.toString());
+            flag = false;
+        }
+        return flag;
+    }
+
+    @Override
     public Boolean sendVerificationNotification(NotificationRequest request) {
         Boolean flag = true;
         try {

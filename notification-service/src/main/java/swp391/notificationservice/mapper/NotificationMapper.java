@@ -30,6 +30,10 @@ public class NotificationMapper {
                 .build();
     }
 
+    public Notification toReportNotification(NotificationRequest request) {
+        return this.toNotificationFromType(request, NotificationType.REPORT);
+    }
+
     public Notification toVerificationNotification(NotificationRequest request) {
         return this.toNotificationFromType(request, NotificationType.VERIFICATION);
     }

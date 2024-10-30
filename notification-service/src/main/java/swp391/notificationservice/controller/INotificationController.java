@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface INotificationController {
 
+    Boolean sendReportNotification(NotificationRequest request);
+
     Boolean sendVerificationNotification(NotificationRequest notiRequest);
 
     Boolean sendCancelOrderNotification(NotificationRequest notiRequest);

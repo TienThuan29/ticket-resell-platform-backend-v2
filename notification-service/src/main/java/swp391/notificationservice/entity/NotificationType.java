@@ -4,6 +4,7 @@ public enum NotificationType {
     VERIFICATION,
     ORDER,
     INFORMATION,
-    CANCEL_ORDER
+    CANCEL_ORDER,
+    REPORT
 
 }

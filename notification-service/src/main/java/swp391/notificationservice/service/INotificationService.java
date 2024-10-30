@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface INotificationService {
 
+    Boolean sendReportNotification(NotificationRequest request);
+
     Boolean sendVerificationNotification(NotificationRequest notiRequest);
 
     Boolean sendCancelOrderNotification(NotificationRequest notiRequest);
