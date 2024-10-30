@@ -11,6 +11,7 @@ import swp391.entity.*;
         Staff.class,
         Transaction.class,
         Ticket.class,
+        GenericTicket.class,
         User.class,
         Event.class
 })

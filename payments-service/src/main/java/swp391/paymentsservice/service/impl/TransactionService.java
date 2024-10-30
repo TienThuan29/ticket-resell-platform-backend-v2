@@ -43,6 +43,8 @@ public class TransactionService implements ITransactionService {
 
     private final StaffRepository staffRepo;
 
+    private final TicketRepository ticketRepo;
+
 
     @Override
     public ApiResponse<List<TransactionResponse>> getAllTransactionByUser(Long id) {
@@ -151,10 +153,14 @@ public class TransactionService implements ITransactionService {
         var reports = reportFraudRepo.getReportByGenericTickets(genericTickets, GeneralProcess.REPORT_PROCESSING);
 
         //Update the revenue and balance of Admin after implement refund to buyer and transfer money to seller
-        refundAndMinusByReport(reports, admin);
+        refundAndMinusByReport(reports);
+        markTicketRejectByReports(reports);
     }
 
-    private void refundAndMinusByReport(List<ReportFraud> reports, Staff admin){
+
+    private void refundAndMinusByReport(List<ReportFraud> reports){
+        Staff admin = staffRepo.findByRoleCode(Role.ADMIN).get(0);
+
         long revenueAdmin = admin.getRevenue();
         long balanceAdmin = admin.getBalance();
 
@@ -162,6 +168,7 @@ public class TransactionService implements ITransactionService {
             // Create transaction add money for accuser
             long ticketPriceAfterFee = priceAfterFee(getPriceByTicket(report.getTicket()));
             long ticketPrice = getPriceByTicket(report.getTicket());
+            long profit= ticketPrice-ticketPriceAfterFee;
 
             Transaction transactionRefund = Transaction.builder()
                     .transactionNo(randoTransactionNo())
@@ -175,8 +182,8 @@ public class TransactionService implements ITransactionService {
             saveBalance(report.getAccuser(), ticketPrice, true);
 
             // Admin minus the balance and revenue when refund to buyer
-            revenueAdmin -= (ticketPrice - ticketPriceAfterFee);
-            balanceAdmin -= (ticketPrice - ticketPriceAfterFee);
+            revenueAdmin = revenueAdmin - profit;
+            balanceAdmin = balanceAdmin - profit;
 
             // Create transaction minus money of seller
             var reportedUser = userRepo.findById(report.getReportedUserId())
@@ -199,6 +206,15 @@ public class TransactionService implements ITransactionService {
         admin.setBalance(balanceAdmin);
         staffRepo.save(admin);
         reportFraudRepo.saveAll(reports);
+    }
+
+    private void markTicketRejectByReports(List<ReportFraud> reportFrauds){
+        List<Ticket> tickets = new ArrayList<>();
+        for(ReportFraud reportFraud: reportFrauds){
+            Ticket ticket= ticketRepo.findById(reportFraud.getTicket().getId()).get();
+            ticket.setProcess(GeneralProcess.FAIL);
+            ticketRepo.save(ticket);
+        }
     }
 
     private long priceAfterFee(Long price){
@@ -253,7 +269,7 @@ public class TransactionService implements ITransactionService {
         }else {
             newRevenue= saveUser.getRevenue() - amount;
         }
-        saveUser.setBalance(newRevenue);
+        saveUser.setRevenue(newRevenue);
         userRepo.save(saveUser);
     }
 

@@ -11,7 +11,8 @@ import swp391.entity.*;
         Transaction.class,
         Ticket.class,
         User.class,
-        Event.class
+        Event.class,
+        GenericTicket.class
 })
 public class EntityConfiguration {
 }

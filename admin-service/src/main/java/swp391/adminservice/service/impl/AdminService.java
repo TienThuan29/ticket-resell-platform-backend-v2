@@ -19,14 +19,14 @@ import swp391.adminservice.mapper.TransactionMapper;
 import swp391.adminservice.mapper.UserMapper;
 import swp391.adminservice.repository.*;
 import swp391.adminservice.service.def.IAdminService;
-import swp391.entity.Policy;
-import swp391.entity.Staff;
-import swp391.entity.Transaction;
-import swp391.entity.User;
+import swp391.entity.*;
 import swp391.entity.fixed.GeneralProcess;
 import swp391.entity.fixed.Role;
 import swp391.entity.fixed.TransactionType;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,6 +55,8 @@ public class AdminService implements IAdminService {
     private final EntityManager entityManager;
 
     private final PolicyRepository policyRepository;
+
+    private final GenericTicketRepository genericTicketRepo;
 
     @Override
     public ApiResponse<StaffDTO> registerStaff(RegisterRequest registerRequest) {
@@ -187,13 +189,18 @@ public class AdminService implements IAdminService {
 
     @Override
     public ApiResponse<Integer> countBoughtTickets() {
-        Integer count = ticketRepository.countBoughtTickets();
+        var genericTickets = genericTicketRepo.findAll().stream()
+                .filter(genericTicket ->
+                        isExpiredMoreThanThreeDays(genericTicket.getExpiredDateTime()))
+                .toList();
+//        var genericTickets = genericTicketRepo.findAll();
+        Integer count = ticketRepository.countBoughtTickets(genericTickets);
         return new ApiResponse<>(HttpStatus.OK, "count bought tickets",count);
     }
 
     @Override
     public ApiResponse<Integer> countSellingTickets() {
-        Integer count = ticketRepository.countSellingTickets(GeneralProcess.SELLING);
+        Integer count = ticketRepository.countSellingTickets(GeneralProcess.SUCCESS);
         return new ApiResponse<>(HttpStatus.OK, "count selling tickets",count);
     }
 
@@ -228,5 +235,22 @@ public class AdminService implements IAdminService {
     private boolean isExistEmail(String email) {
         var user = staffRepository.findByEmail(email);
         return user.isPresent();
+    }
+
+    private boolean isExpiredMoreThanThreeDays(Date expiredDate){
+        Date presentDate = getPresentDate();
+        if(expiredDate.before(presentDate)){
+            long periodMilli= Math.abs(expiredDate.getTime()-presentDate.getTime());
+            // 259200000 milliseconds = 3 days
+            return periodMilli > 259200000;
+        }
+        return false;
+    }
+
+    private Date getPresentDate(){
+        LocalDateTime localDateTime = LocalDateTime.now();
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+
+        return Date.from(zonedDateTime.toInstant());
     }
 }
