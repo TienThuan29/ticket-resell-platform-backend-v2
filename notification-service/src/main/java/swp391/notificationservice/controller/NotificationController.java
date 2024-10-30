@@ -19,7 +19,7 @@ public class NotificationController implements INotificationController {
 
     @Override
     @PostMapping("/send/report")
-    public Boolean sendReportNotification(NotificationRequest request) {
+    public Boolean sendReportNotification(@RequestBody NotificationRequest request) {
         return notificationService.sendReportNotification(request);
     }
 
