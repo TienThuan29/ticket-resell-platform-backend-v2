@@ -2,10 +2,8 @@ package swp391.paymentsservice.controller.impl;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import swp391.paymentsservice.controller.def.ITransactionController;
 import swp391.paymentsservice.dto.response.ApiResponse;
 import swp391.paymentsservice.dto.response.TransactionResponse;
@@ -48,6 +46,12 @@ public class TransactionController implements ITransactionController {
     @GetMapping("/get-all-trans/{userid}")
     public ApiResponse<List<TransactionResponse>> getAllTransactionByUser(@PathVariable("userid") Long id) {
         return transactionService.getAllTransactionByUser(id);
+    }
+
+    @Override
+    @GetMapping("/automation-scan-report")
+    public ApiResponse<?> automationScanReport() {
+        return transactionService.automationScanReportByButton();
     }
 
 }

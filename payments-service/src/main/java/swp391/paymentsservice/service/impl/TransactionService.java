@@ -112,9 +112,16 @@ public class TransactionService implements ITransactionService {
         return new ApiResponse<>(HttpStatus.OK, "", transDepositResponse);
     }
 
+    @Override
+    public ApiResponse<?> automationScanReportByButton() {
+        automationScanReport();
+        markTicketRejectByReports();
+        return new ApiResponse<>(HttpStatus.OK, "Automation scan report");
+    }
+
     //Automation refund to buyer and transfer money to seller
     @Scheduled(fixedDelay = 7200000) // 7200000 milliseconds = 2 hours
-    public void checkTransaction(){
+    public void automationScanReport(){
 //        List<Transaction> transactionRefundAndReport = new ArrayList<>();
 
         // Get generic ticket is expired 3 days
@@ -207,6 +214,7 @@ public class TransactionService implements ITransactionService {
         reportFraudRepo.saveAll(reports);
     }
 
+    //Automation mark ticket reject by reports
     @Scheduled(fixedDelay = 7200000)
     private void markTicketRejectByReports(){
         var reportFrauds = reportFraudRepo.findAll();

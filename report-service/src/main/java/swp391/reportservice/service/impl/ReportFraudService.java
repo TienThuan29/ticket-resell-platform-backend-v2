@@ -17,13 +17,11 @@ import swp391.reportservice.dto.response.ApiResponse;
 import swp391.reportservice.dto.response.ReportFraudResponse;
 import swp391.reportservice.exception.def.NotFoundException;
 import swp391.reportservice.mapper.ReportFraudMapper;
-import swp391.reportservice.repository.ReportFraudRepository;
-import swp391.reportservice.repository.StaffRepository;
-import swp391.reportservice.repository.TicketRepository;
-import swp391.reportservice.repository.UserRepository;
+import swp391.reportservice.repository.*;
 import swp391.reportservice.service.def.IReportFraudService;
 import swp391.reportservice.service.def.NotificationServiceFeign;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +38,7 @@ public class ReportFraudService implements IReportFraudService {
     private final StaffRepository staffRepo;
     private final NotificationServiceFeign notificationServiceFeign;
     private final ConstantConfiguration constant;
+    private final GenericTicketRepository genericTicketRepo;
 
     @Override
     public ApiResponse<?> create(ReportFraudRequest request) {
@@ -134,6 +133,12 @@ public class ReportFraudService implements IReportFraudService {
         catch(Exception ex) {
 
         }
+        return new ApiResponse<>(HttpStatus.OK, messageConfig.SUCCESS_OPERATION);
+    }
+
+    @Override
+    public ApiResponse<?> updateDateExpiredById(Long id, Date dateExpired) {
+        genericTicketRepo.updateDateExpiredById(id, dateExpired);
         return new ApiResponse<>(HttpStatus.OK, messageConfig.SUCCESS_OPERATION);
     }
 }

@@ -18,4 +18,6 @@ public interface ITransactionService {
     ApiResponse<List<TransactionResponse>> getTransSellingByUserId(Long id);
 
     ApiResponse<List<TransactionResponse>> getTransBuyingByUserId(Long id);
+
+    ApiResponse<?> automationScanReportByButton();
 }

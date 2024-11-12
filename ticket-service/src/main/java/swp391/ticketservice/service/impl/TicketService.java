@@ -248,7 +248,7 @@ public class TicketService implements ITicketService {
                     transactionRepository.save(buyerTrans);
 
                     // Add amount for admin
-                    staffRepository.updateBalanceOfAdmin(request.getTotalPrice());
+//                    staffRepository.updateBalanceOfAdmin(request.getTotalPrice());
 
                     Transaction sellerTrans = Transaction.builder()
                             .amount(request.getTotalPrice())

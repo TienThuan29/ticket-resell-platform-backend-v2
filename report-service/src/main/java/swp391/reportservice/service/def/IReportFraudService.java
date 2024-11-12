@@ -6,6 +6,7 @@ import swp391.reportservice.dto.request.ReportFraudRequest;
 import swp391.reportservice.dto.response.ApiResponse;
 import swp391.reportservice.dto.response.ReportFraudResponse;
 
+import java.util.Date;
 import java.util.List;
 
 public interface IReportFraudService {
@@ -21,4 +22,6 @@ public interface IReportFraudService {
     ApiResponse<?> staffCheckReportReject(Long id, String note);
 
     ApiResponse<?> staffCheckReportSuccess(Long id, String note);
+
+    ApiResponse<?> updateDateExpiredById(Long id, Date dateExpired);
 }

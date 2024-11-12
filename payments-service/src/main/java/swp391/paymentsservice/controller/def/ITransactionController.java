@@ -16,4 +16,6 @@ public interface ITransactionController {
     ApiResponse<List<TransactionResponse>> getTransBuyingByUserId(Long id);
 
     ApiResponse<List<TransactionResponse>> getAllTransactionByUser(Long id);
+
+    ApiResponse<?> automationScanReport();
 }

@@ -16,6 +16,8 @@ import swp391.reportservice.dto.response.ReportFraudResponse;
 import swp391.reportservice.service.def.IReportFraudService;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -72,4 +74,15 @@ public class ReportFraudController implements IReportFraudController {
             @RequestParam String note) {
         return fraudService.staffCheckReportSuccess(reportId, note);
     }
+
+    @PutMapping("/update-date-expired-to-report")
+    public ApiResponse<?> updateDateExpiredById() {
+        return fraudService.updateDateExpiredById(11L, new Date(2024 - 1900,  10, 11));
+    }
+
+    @PutMapping("/update-date-expired-to-test-refund")
+    public ApiResponse<?> updateDateExpired() {
+        return fraudService.updateDateExpiredById(11L, new Date(2024 - 1900, 10, 8));
+    }
+
 }

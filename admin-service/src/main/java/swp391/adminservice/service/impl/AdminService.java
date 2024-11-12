@@ -65,7 +65,7 @@ public class AdminService implements IAdminService {
         if (staff.isPresent())
             return new ApiResponse<>(HttpStatus.CONFLICT, messageConfig.ERROR_EXIST_USERNAME, null);
 
-        if(this.isExistEmail(registerRequest.getEmail()))
+        if (this.isExistEmail(registerRequest.getEmail()))
             return new ApiResponse<>(HttpStatus.CONFLICT, messageConfig.ERROR_EXIST_EMAIL, null);
 
         Staff savedStaff = staffRepository.save(staffMapper.toEntity(registerRequest));
@@ -83,8 +83,7 @@ public class AdminService implements IAdminService {
             staff.setEmail(updateStaffRequest.getEmail());
             staff.setPhone(updateStaffRequest.getPhone());
             staffDTO = staffMapper.toDTO(staffRepository.save(staff));
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             log.info(ex.toString());
             return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, messageConfig.ERROR_UPDATE_STAFF, staffDTO);
         }
@@ -100,7 +99,7 @@ public class AdminService implements IAdminService {
             staffDTOList.add(item);
         });
 
-        return new ApiResponse<>(HttpStatus.OK,"",staffDTOList);
+        return new ApiResponse<>(HttpStatus.OK, "", staffDTOList);
     }
 
     @Override
@@ -108,7 +107,7 @@ public class AdminService implements IAdminService {
         List<Transaction> listTransactions = transactionRepository.findAll();
         List<TransactionResponse> transactionResponseList = listTransactions.stream()
                 .map(transactionMapper::toTransactionResponse).collect(Collectors.toList());
-        return new ApiResponse<>(HttpStatus.OK,"",transactionResponseList);
+        return new ApiResponse<>(HttpStatus.OK, "", transactionResponseList);
     }
 
     @Override
@@ -116,7 +115,7 @@ public class AdminService implements IAdminService {
         List<User> listUsers = userRepository.getAllUsers();
         List<UserResponse> userResponseList = new ArrayList<>();
         listUsers.stream().map(userMapper::toUserResponse).forEach(item -> userResponseList.add(item));
-        return new ApiResponse<>(HttpStatus.OK, "",userResponseList);
+        return new ApiResponse<>(HttpStatus.OK, "", userResponseList);
     }
 
     @Override
@@ -125,8 +124,7 @@ public class AdminService implements IAdminService {
             var account = userRepository.findById(userId).orElseThrow(null);
             account.setIsEnable(Boolean.TRUE);
             userRepository.save(account);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             log.info(ex.toString());
             return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, messageConfig.ERROR_ENABLE_ACCOUNT, null);
         }
@@ -139,8 +137,7 @@ public class AdminService implements IAdminService {
             var account = userRepository.findById(userId).orElseThrow(null);
             account.setIsEnable(Boolean.FALSE);
             userRepository.save(account);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             log.info(ex.toString());
             return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, messageConfig.ERROR_DISABLE_ACCOUNT, null);
         }
@@ -153,8 +150,7 @@ public class AdminService implements IAdminService {
             var account = staffRepository.findById(staffId).orElseThrow(null);
             account.setIsEnable(Boolean.FALSE);
             staffRepository.save(account);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             log.info(ex.toString());
             return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, messageConfig.ERROR_DISABLE_ACCOUNT, null);
         }
@@ -167,8 +163,7 @@ public class AdminService implements IAdminService {
             var account = staffRepository.findById(staffId).orElseThrow(null);
             account.setIsEnable(Boolean.TRUE);
             staffRepository.save(account);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             log.info(ex.toString());
             return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, messageConfig.ERROR_ENABLE_ACCOUNT, null);
         }
@@ -178,13 +173,13 @@ public class AdminService implements IAdminService {
     @Override
     public ApiResponse<Long> getSumAmountOfDepositTransaction() {
         Long sum = transactionRepository.sumTheAmountByTransactionType(TransactionType.DEPOSIT);
-        return new ApiResponse<>(HttpStatus.OK,"Sum of Deposit", sum);
+        return new ApiResponse<>(HttpStatus.OK, "Sum of Deposit", sum);
     }
 
     @Override
     public ApiResponse<Long> getSumAmountOfWithdrawalTransaction() {
         Long sum = transactionRepository.sumTheAmountByTransactionType(TransactionType.WITHDRAWAL);
-        return new ApiResponse<>(HttpStatus.OK,"Sum of Withdrawal",sum);
+        return new ApiResponse<>(HttpStatus.OK, "Sum of Withdrawal", sum);
     }
 
     @Override
@@ -195,18 +190,17 @@ public class AdminService implements IAdminService {
                 .toList();
 //        var genericTickets = genericTicketRepo.findAll();
         Integer count = ticketRepository.countBoughtTickets(genericTickets);
-        return new ApiResponse<>(HttpStatus.OK, "count bought tickets",count);
+        return new ApiResponse<>(HttpStatus.OK, "count bought tickets", count);
     }
 
     @Override
     public ApiResponse<Integer> countSellingTickets() {
         Integer count = ticketRepository.countSellingTickets(GeneralProcess.SUCCESS);
-        return new ApiResponse<>(HttpStatus.OK, "count selling tickets",count);
+        return new ApiResponse<>(HttpStatus.OK, "count selling tickets", count);
     }
 
-    @Override
     @SuppressWarnings("unchecked")
-    public ApiResponse<List<EventRevenueResponse>> getEventsRevenue() {
+    private List<EventRevenueResponse> getEventRevenue() {
         List<Object[]> results = entityManager.createNativeQuery("EXEC SelectEventRevenue").getResultList();
 
         Policy sellingPolicy = policyRepository.findById(3).get();
@@ -222,13 +216,21 @@ public class AdminService implements IAdminService {
                 .collect(Collectors.toList());
         eventRevenueResponses.stream()
                 .forEach(e -> e.setRevenueEvent
-                        (e.getRevenueEvent()*sellingPolicy.getFee()/100));
-        return new ApiResponse<>(HttpStatus.OK, "", eventRevenueResponses);
+                        (e.getRevenueEvent() * sellingPolicy.getFee() / 100));
+
+        return eventRevenueResponses;
+    }
+
+    @Override
+    public ApiResponse<List<EventRevenueResponse>> getEventsRevenue() {
+        return new ApiResponse<>(HttpStatus.OK, "", getEventRevenue());
     }
 
     @Override
     public ApiResponse<Long> getRevenue() {
-        Long revenue = staffRepository.getAll(Role.ADMIN).get(0).getRevenue();
+        Long revenue = getEventRevenue().stream()
+                .mapToLong(event -> event.getRevenueEvent().longValue())
+                .sum();
         return new ApiResponse<>(HttpStatus.OK, "", revenue);
     }
 
@@ -237,17 +239,17 @@ public class AdminService implements IAdminService {
         return user.isPresent();
     }
 
-    private boolean isExpiredMoreThanThreeDays(Date expiredDate){
+    private boolean isExpiredMoreThanThreeDays(Date expiredDate) {
         Date presentDate = getPresentDate();
-        if(expiredDate.before(presentDate)){
-            long periodMilli= Math.abs(expiredDate.getTime()-presentDate.getTime());
+        if (expiredDate.before(presentDate)) {
+            long periodMilli = Math.abs(expiredDate.getTime() - presentDate.getTime());
             // 259200000 milliseconds = 3 days
             return periodMilli > 259200000;
         }
         return false;
     }
 
-    private Date getPresentDate(){
+    private Date getPresentDate() {
         LocalDateTime localDateTime = LocalDateTime.now();
         ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
 
