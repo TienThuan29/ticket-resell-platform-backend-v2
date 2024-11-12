@@ -213,8 +213,23 @@ public class TicketService implements ITicketService {
         ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
         Date boughtDate = Date.from(zonedDateTime.toInstant());
         try {
+            // Update order ticket
+            OrderTicket orderTicket = getOrderTicketById(
+                    request.getGenericTicketId(), request.getBuyerId(), request.getOrderNo()
+            );
+
+            if (!orderTicket.isAccepted() && !orderTicket.getNote().isEmpty()) {
+                return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Đơn hàng đã được từ chối");
+            }
+            else if (orderTicket.isAccepted()) {
+                return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Đơn hàng này đã được xác nhận");
+            }
+            else if (orderTicket.isCanceled()) {
+                return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Đơn hàng này đã bị hủy bởi người mua!");
+            }
+
             // Automatic transact tickets to buyer
-            List<Ticket> notBoughtTickets = ticketRepository.getNotBoughtTicketByGenericTicket(
+            List<Ticket> notBoughtTickets = ticketRepository.getNotBoughtTicketByGenericTicketNotBought(
                     request.getGenericTicketId()
             );
             if (request.getQuantity() <= notBoughtTickets.size()) {
@@ -226,10 +241,7 @@ public class TicketService implements ITicketService {
                                 request.getIsPaper() ? GeneralProcess.DELIVERING : GeneralProcess.SUCCESS
                         );
                     }
-                // Update order ticket
-                OrderTicket orderTicket = getOrderTicketById(
-                        request.getGenericTicketId(), request.getBuyerId(), request.getOrderNo()
-                );
+
 
                 orderTicket.setAccepted(request.getIsAccepted());
                 orderTicketRepository.save(orderTicket);
@@ -263,8 +275,8 @@ public class TicketService implements ITicketService {
 
                 notificationServiceFeign.sendAcceptToSellNotification(
                         NotificationRequest.builder()
-                                .senderId(getUserById(request.getSellerId()).getId())
-                                .receiverId(getUserById(request.getBuyerId()).getId())
+                                .senderId(request.getSellerId())
+                                .receiverId(request.getBuyerId())
                                 .header(constant.NOTIFICATION_TEMPLATE.ACCEPT_TO_SELL_TICKET_HEADER)
                                 .subHeader(constant.NOTIFICATION_TEMPLATE.ACCEPT_TO_SELL_SUBHEADER)
                                 .content(constant.NOTIFICATION_TEMPLATE.ACCEPT_TO_SELL_CONTENT)
@@ -289,6 +301,17 @@ public class TicketService implements ITicketService {
             OrderTicket orderTicket = getOrderTicketById(
                     request.getGenericTicketId(), request.getBuyerId(), request.getOrderNo()
             );
+
+            if (!orderTicket.isAccepted() && !orderTicket.getNote().isEmpty()) {
+                return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Đơn hàng đã được từ chối");
+            }
+            else if (orderTicket.isAccepted()) {
+                return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Đơn hàng này đã được xác nhận");
+            }
+            else if (orderTicket.isCanceled()) {
+                return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Đơn hàng này đã bị hủy bởi người mua!");
+            }
+
             orderTicket.setAccepted(request.getIsAccepted());
             orderTicket.setNote(request.getNote());
             orderTicketRepository.save(orderTicket);
