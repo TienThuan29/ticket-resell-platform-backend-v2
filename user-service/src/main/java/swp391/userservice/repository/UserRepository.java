@@ -34,4 +34,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE CONCAT(u.firstname, ' ', u.lastname) LIKE %:name%")
     List<User> findByName(String name);
 
+    @Query("SELECT DISTINCT gt.seller.id FROM User u " +
+            "INNER JOIN OrderTicket ot ON u.id = ot.buyer.id " +
+            "INNER JOIN GenericTicket gt ON ot.genericTicket.id = gt.id " +
+            "WHERE u.id = :userId " +
+            "UNION " +
+            "SELECT DISTINCT t.buyerId FROM User u " +
+            "INNER JOIN GenericTicket gt ON gt.seller.id = u.id " +
+            "INNER JOIN Ticket t ON t.genericTicket.id = gt.id " +
+            "WHERE gt.seller.id = :userId")
+    List<Long> findUsersIdBoxChat(Long userId);
+
+    @Query("SELECT DISTINCT u FROM User u WHERE u.id IN :userIds")
+    List<User> findUsersBoxChat(List<Long> userIds);
 }

@@ -49,4 +49,6 @@ public interface IUserService {
     ApiResponse<List<NotificationResponse>> getAllNotificationOfReceiver(Long receiverId);
 
     ApiResponse<List<UserDTO>> getUsersByName(String name);
+
+    ApiResponse<List<UserDTO>> getUsersInBoxChat(Long userId);
 }

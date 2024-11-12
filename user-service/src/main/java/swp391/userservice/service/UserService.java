@@ -412,6 +412,15 @@ public class UserService implements IUserService {
                 .toList());
     }
 
+    @Override
+    public ApiResponse<List<UserDTO>> getUsersInBoxChat(Long userId) {
+        var usersId = userRepository.findUsersIdBoxChat(userId);
+        return new ApiResponse<>(HttpStatus.OK, "",
+                userRepository.findUsersBoxChat(usersId).stream()
+                .map(userMapper::toUserDTO)
+                .toList());
+    }
+
     @Scheduled(fixedDelay = 300000)// 5 phút reset một lần
     public void resetVerifyCode() {
         long currentTime = System.currentTimeMillis();

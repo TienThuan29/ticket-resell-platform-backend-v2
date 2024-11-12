@@ -154,7 +154,6 @@ public class TransactionService implements ITransactionService {
 
         //Update the revenue and balance of Admin after implement refund to buyer and transfer money to seller
         refundAndMinusByReport(reports);
-        markTicketRejectByReports(reports);
     }
 
 
@@ -208,8 +207,9 @@ public class TransactionService implements ITransactionService {
         reportFraudRepo.saveAll(reports);
     }
 
-    private void markTicketRejectByReports(List<ReportFraud> reportFrauds){
-        List<Ticket> tickets = new ArrayList<>();
+    @Scheduled(fixedDelay = 7200000)
+    private void markTicketRejectByReports(){
+        var reportFrauds = reportFraudRepo.findAll();
         for(ReportFraud reportFraud: reportFrauds){
             Ticket ticket= ticketRepo.findById(reportFraud.getTicket().getId()).get();
             ticket.setProcess(GeneralProcess.FAIL);
