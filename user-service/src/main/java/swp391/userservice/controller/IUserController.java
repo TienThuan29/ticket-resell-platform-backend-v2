@@ -46,4 +46,6 @@ public interface IUserController {
     ApiResponse<?> changePass(String newPass, String email);
 
     ApiResponse<List<UserDTO>> getUsersByName(String name);
+
+    ApiResponse<List<UserDTO>> getUsersInBoxChat(Long userId);
 }

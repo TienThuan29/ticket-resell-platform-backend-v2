@@ -98,12 +98,6 @@ public class UserController implements IUserController {
     }
 
     @Override
-    @GetMapping("/get-by-name")
-    public ApiResponse<List<UserDTO>> getUsersByName(@RequestParam String name) {
-        return userService.getUsersByName(name);
-    }
-
-    @Override
     @PostMapping("/authenticate")
     public ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
         return userService.authenticate(authenticationRequest);
@@ -143,4 +137,15 @@ public class UserController implements IUserController {
         return userService.getAllNotificationOfReceiver(receiverId);
     }
 
+    @Override
+    @GetMapping("/get-by-name")
+    public ApiResponse<List<UserDTO>> getUsersByName(@RequestParam String name) {
+        return userService.getUsersByName(name);
+    }
+
+    @Override
+    @GetMapping("/get-box-chat/{userId}")
+    public ApiResponse<List<UserDTO>> getUsersInBoxChat(@PathVariable Long userId) {
+        return userService.getUsersInBoxChat(userId);
+    }
 }

@@ -120,7 +120,7 @@ public class EventService implements IEventService {
         List<EventResponse> events = eventRepository.getHappeningEvents()
                 .stream().filter(
                         event -> event.getHashtags().contains(hotHashtag)
-                                && event.getEndDate().before(new Date())
+                                && event.getEndDate().after(new Date())
                 ).map(
                         eventMapper::toResponse
                 ).toList();
