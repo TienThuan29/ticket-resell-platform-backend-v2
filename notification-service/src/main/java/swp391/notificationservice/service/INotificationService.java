@@ -15,6 +15,10 @@ public interface INotificationService {
 
     Boolean sendOrderTicketNotification(NotificationRequest notiRequest);
 
+    Boolean sendAcceptToSellNotification(NotificationRequest notiRequest);
+
+    Boolean sendRejectToSellNotification(NotificationRequest notiRequest);
+
     List<NotificationFeign> getAllNotificationOfReceiver(Long receiverId);
 
     ApiResponse<?> markReadNotification(String ojectIdString);

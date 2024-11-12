@@ -13,4 +13,10 @@ public interface NotificationServiceFeign {
 
     @PostMapping("/send/order-ticket")
     Boolean sendOrderTicketNotification(@RequestBody NotificationRequest notiRequest);
+
+    @PostMapping("/send/accept-to-sell")
+    Boolean sendAcceptToSellNotification(@RequestBody NotificationRequest notiRequest);
+
+    @PostMapping("/send/reject-to-sell")
+    Boolean sendRejectToSellNotification(@RequestBody NotificationRequest notiRequest);
 }

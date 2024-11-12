@@ -48,6 +48,22 @@ public class NotificationController implements INotificationController {
     }
 
     @Override
+    @PostMapping("/send/accept-to-sell")
+    public Boolean sendAcceptToSellNotification(
+            @RequestBody NotificationRequest notiRequest
+    ) {
+        return notificationService.sendAcceptToSellNotification(notiRequest);
+    }
+
+    @Override
+    @PostMapping("/send/reject-to-sell")
+    public Boolean sendRejectToSellNotification(
+            @RequestBody NotificationRequest notiRequest
+    ) {
+        return notificationService.sendRejectToSellNotification(notiRequest);
+    }
+
+    @Override
     @GetMapping("/get-all/receiver/{receiverId}")
     public List<NotificationFeign> getAllNotificationOfReceiver(
             @PathVariable("receiverId") Long receiverId

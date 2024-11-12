@@ -86,6 +86,36 @@ public class NotificationService implements INotificationService {
         return flag;
     }
 
+    @Override
+    public Boolean sendAcceptToSellNotification(NotificationRequest notiRequest) {
+        boolean flag = true;
+        try {
+            notificationRepository.save(
+                    notificationMapper.toAcceptToSellNotification(notiRequest)
+            );
+        }
+        catch (Exception ex) {
+            log.info(ex.toString());
+            flag = false;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sendRejectToSellNotification(NotificationRequest notiRequest) {
+        boolean flag = true;
+        try {
+            notificationRepository.save(
+                    notificationMapper.toRejectToSellNotification(notiRequest)
+            );
+        }
+        catch (Exception ex) {
+            log.info(ex.toString());
+            flag = false;
+        }
+        return flag;
+    }
+
 
     @Override
     public List<NotificationFeign> getAllNotificationOfReceiver(Long receiverId) {
