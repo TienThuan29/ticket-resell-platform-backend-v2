@@ -20,7 +20,7 @@ import java.util.List;
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
-    private final List<String> ORIGIN_SOURCES = List.of("http://localhost:3000");
+    private final List<String> ORIGIN_SOURCES = List.of("http://localhost:3000", "http://localhost:3001");
     private final List<String> ALLOWED_METHODS = List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD");
     private final List<String> ALLOWED_HEADERS = List.of("*");
     private final Long MAX_AGE = 7200L;
