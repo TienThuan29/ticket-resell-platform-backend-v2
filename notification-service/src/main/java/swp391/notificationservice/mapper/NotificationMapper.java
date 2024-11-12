@@ -30,6 +30,14 @@ public class NotificationMapper {
                 .build();
     }
 
+    public Notification toAcceptToSellNotification(NotificationRequest request) {
+        return this.toNotificationFromType(request, NotificationType.ACCEPT_TO_SELL);
+    }
+
+    public Notification toRejectToSellNotification(NotificationRequest request) {
+        return this.toNotificationFromType(request, NotificationType.REJECT_TO_SELL);
+    }
+
     public Notification toReportNotification(NotificationRequest request) {
         return this.toNotificationFromType(request, NotificationType.REPORT);
     }
@@ -45,6 +53,7 @@ public class NotificationMapper {
     public Notification toOrderTicketNotification(NotificationRequest request) {
         return this.toNotificationFromType(request, NotificationType.ORDER);
     }
+
 
     private Notification toNotificationFromType(NotificationRequest request, NotificationType type) {
         Date sentDateNow = getNowTime();

@@ -5,6 +5,8 @@ public enum NotificationType {
     ORDER,
     INFORMATION,
     CANCEL_ORDER,
-    REPORT
+    REPORT,
+    ACCEPT_TO_SELL,
+    REJECT_TO_SELL
 
 }

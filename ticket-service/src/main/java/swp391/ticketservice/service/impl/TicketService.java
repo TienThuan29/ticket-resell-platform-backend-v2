@@ -9,8 +9,10 @@ import swp391.entity.*;
 import swp391.entity.embedable.OrderTicketID;
 import swp391.entity.fixed.GeneralProcess;
 import swp391.entity.fixed.TransactionType;
+import swp391.ticketservice.config.ConstantConfiguration;
 import swp391.ticketservice.config.MessageConfiguration;
 import swp391.ticketservice.dto.request.AcceptOrDenySellingRequest;
+import swp391.ticketservice.dto.request.NotificationRequest;
 import swp391.ticketservice.dto.request.TicketRequest;
 import swp391.ticketservice.dto.response.ApiResponse;
 import swp391.ticketservice.dto.response.GenericTicketResponse;
@@ -22,6 +24,7 @@ import swp391.ticketservice.mapper.TicketMapper;
 import swp391.ticketservice.mapper.UserMapper;
 import swp391.ticketservice.repository.*;
 import swp391.ticketservice.service.def.ITicketService;
+import swp391.ticketservice.service.def.NotificationServiceFeign;
 import swp391.ticketservice.utils.ImageUtil;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -39,26 +42,18 @@ import java.util.stream.Collectors;
 public class TicketService implements ITicketService {
 
     private final TicketRepository ticketRepository;
-
     private final TicketMapper ticketMapper;
-
     private final StaffRepository staffRepository;
-
     private final MessageConfiguration message;
-
     private final UserRepository userRepository;
-
     private final GenericTicketRepository genericTicketRepository;
-
     private final GenericTicketMapper genericTicketMapper;
-
     private final TransactionRepository transactionRepository;
-
     private final OrderTicketRepository orderTicketRepository;
-
     private final UserMapper userMapper;
-
     private final RatingRepository ratingRepository;
+    private final NotificationServiceFeign notificationServiceFeign;
+    private final ConstantConfiguration constant;
 
     @Override
     public ApiResponse<List<TicketResponse>> getAll() {
@@ -265,6 +260,16 @@ public class TicketService implements ITicketService {
                             .build();
                     transactionRepository.save(sellerTrans);
                 }
+
+                notificationServiceFeign.sendAcceptToSellNotification(
+                        NotificationRequest.builder()
+                                .senderId(getUserById(request.getSellerId()).getId())
+                                .receiverId(getUserById(request.getBuyerId()).getId())
+                                .header(constant.NOTIFICATION_TEMPLATE.ACCEPT_TO_SELL_TICKET_HEADER)
+                                .subHeader(constant.NOTIFICATION_TEMPLATE.ACCEPT_TO_SELL_SUBHEADER)
+                                .content(constant.NOTIFICATION_TEMPLATE.ACCEPT_TO_SELL_CONTENT)
+                                .build()
+                );
             }
             else {
                 return new ApiResponse<>(HttpStatus.BAD_REQUEST, message.ERROR_NOT_ENOUGH_TICKET_TO_BUY);
@@ -294,7 +299,18 @@ public class TicketService implements ITicketService {
             userRepository.save(buyer);
 
             // Minus balance of admin
+            // Cho nay can xem lai
             staffRepository.updateBalanceOfAdmin(-1 * request.getTotalPrice());
+
+            notificationServiceFeign.sendRejectToSellNotification(
+                    NotificationRequest.builder()
+                            .senderId(getUserById(request.getSellerId()).getId())
+                            .receiverId(getUserById(request.getBuyerId()).getId())
+                            .header(constant.NOTIFICATION_TEMPLATE.REJECT_TO_SELL_HEADER)
+                            .subHeader(constant.NOTIFICATION_TEMPLATE.REJECT_TO_SELL_SUBHEADER)
+                            .content(constant.NOTIFICATION_TEMPLATE.REJECT_TO_SELL_CONTENT)
+                            .build()
+            );
         }
         catch (Exception ex) {
             log.info(ex.toString());
